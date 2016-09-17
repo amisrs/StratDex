@@ -111,6 +111,7 @@ public class PokemonSpecies {
             try {
                 InputStream in = new URL(strings[0]).openStream();
                 pic = BitmapFactory.decodeStream(in);
+                in.close();
                 System.out.println("inside async...got sprite as bitmap for " + name);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
