@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private static RecyclerView rv;
     private static LinearLayoutManager llm;
-    private static Context context;
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

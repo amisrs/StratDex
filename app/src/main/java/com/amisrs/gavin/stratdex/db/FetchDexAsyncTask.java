@@ -79,7 +79,9 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
         }
 
         PokemonFromPokeAPIService pokemonService = retrofitPokeAPI.create(PokemonFromPokeAPIService.class);
-        Call<ResponseBody> getPokemonCall = pokemonService.getPokemonFromPokeAPI(count);
+
+        //!!!!IMPROTANT CHANGE THIS BACK TO TAKE COUNT!!!!!
+        Call<ResponseBody> getPokemonCall = pokemonService.getPokemonFromPokeAPI("20");
 
         retrofit2.Response<ResponseBody> fullListResponse = null;
         String fullListString = "";

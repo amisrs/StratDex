@@ -32,14 +32,9 @@ public class SpeciesQueries {
         Bitmap letssee = dummy.fillDetailsWithRequests();
         System.out.println("smallsprite = " + dummy.getSmallSprite());
 
-        boolean hasPic = false;
-        while(!hasPic) {
-            if (dummy.getSmallSprite() != null) {
                 byte[] spriteBlob = DbBitmapUtility.getBytes(dummy.getSmallSprite());
                 contentValues.put(DexContract.PokemonTable.COLUMN_NAME_SPRITE, spriteBlob);
-                hasPic = true;
-            }
-        }
+
         System.out.println("adding to database: url = " + url + " name = " + name);
 
 
@@ -74,6 +69,7 @@ public class SpeciesQueries {
             Bitmap smallSpriteBitmap = DbBitmapUtility.getImage(c.getBlob(3));
             PokemonSpecies newPkmn = new PokemonSpecies(c.getString(2), c.getString(1));
             newPkmn.setIdFromUrl();
+            newPkmn.fillDetailsWithRequests();
             pokemonSpecies.add(newPkmn);
             c.moveToNext();
         }

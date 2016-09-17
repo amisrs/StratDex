@@ -61,7 +61,7 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
             data = pokemonSpecies;
             urlTextView.setText(data.getUrl());
             nameTextView.setText(data.getName());
-            System.out.println(data.getId());
+            System.out.println("try loading image for " + data.getId());
             idTextView.setText(data.getId());
             ssImageView.setImageBitmap(data.getSmallSprite());
         }

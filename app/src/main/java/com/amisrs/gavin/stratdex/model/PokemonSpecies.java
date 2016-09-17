@@ -1,9 +1,17 @@
 package com.amisrs.gavin.stratdex.model;
 
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
+
+import com.amisrs.gavin.stratdex.MainActivity;
+import com.amisrs.gavin.stratdex.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,8 +42,11 @@ public class PokemonSpecies {
     public PokemonSpecies(String url, String name) {
 
         this.url = url;
-
         this.name = name;
+        Bitmap bmp = BitmapFactory.decodeResource(MainActivity.context.getResources(), R.drawable.default_sprite);
+        smallSprite = bmp;
+
+
     }
 
     public String getUrl() {
@@ -53,6 +64,7 @@ public class PokemonSpecies {
     public Bitmap getSmallSprite() {
         return smallSprite;
     }
+
 
     public void setSmallSprite(Bitmap smallSprite) {
         this.smallSprite = smallSprite;
