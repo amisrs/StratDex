@@ -12,18 +12,23 @@ import android.widget.ImageView;
 
 import com.amisrs.gavin.stratdex.MainActivity;
 import com.amisrs.gavin.stratdex.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -37,12 +42,16 @@ public class PokemonSpecies {
     private String id;
     private Bitmap smallSprite;
     private Boolean isDefaultSprite;
+    private String type1 = "";
+    private String type2 = "";
 
 
-    public PokemonSpecies(String url, String name) {
+    public PokemonSpecies(String url, String name, String type1, String type2) {
 
         this.url = url;
         this.name = name;
+        this.type1 = type1;
+        this.type2 = type2;
         Bitmap bmp = BitmapFactory.decodeResource(MainActivity.context.getResources(), R.drawable.default_sprite);
         smallSprite = bmp;
         isDefaultSprite = true;
@@ -50,6 +59,21 @@ public class PokemonSpecies {
     }
 
 
+    public String getType1() {
+        return type1;
+    }
+
+    public void setType1(String type1) {
+        this.type1 = type1;
+    }
+
+    public String getType2() {
+        return type2;
+    }
+
+    public void setType2(String type2) {
+        this.type2 = type2;
+    }
 
     public String getUrl() {
         return url;
@@ -115,6 +139,54 @@ public class PokemonSpecies {
 
         return retval;*/
         return spriteUrl;
+    }
+
+    public void pullDetailsAfterClick() {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .build();
+        Retrofit retrofitPokeAPI = new Retrofit.Builder()
+                .baseUrl("http://pokeapi.co/")
+                .client(okHttpClient)
+                .build();
+
+        DetailsService detailsService = retrofitPokeAPI.create(DetailsService.class);
+        System.out.println("id shold not be null " + getId());
+        Call<ResponseBody> detailsServiceCall = detailsService.getDetails(getId());
+        Response detResponse = null;
+        ResponseBody responseBody = null;
+        String detString = "";
+        try {
+            detResponse = detailsServiceCall.execute();
+            responseBody = (ResponseBody) detResponse.body();
+            detString = responseBody.string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        GsonBuilder gsonBuilder1 = new GsonBuilder();
+        Gson gson1 = gsonBuilder1.create();
+        TypeContainerContainer typeContainer = gson1.fromJson(detString, TypeContainerContainer.class);
+        System.out.println("looking at " + getName());
+        System.out.println("got types = " + typeContainer.getTypeContainers()[0].getSlot() + " " + typeContainer.getTypeContainers()[0].getType().getName());
+
+        if(typeContainer.getTypeContainers()[0].getSlot() == "1") {
+            setType1(typeContainer.getTypeContainers()[0].getType().getName());
+        } else {
+            setType2(typeContainer.getTypeContainers()[0].getType().getName());
+        }
+        if(typeContainer.getTypeContainers().length == 2) {
+            if (typeContainer.getTypeContainers()[1].getSlot() == "1") {
+                setType1(typeContainer.getTypeContainers()[1].getType().getName());
+            } else {
+                setType2(typeContainer.getTypeContainers()[1].getType().getName());
+            }
+        }
+
+    }
+    public interface DetailsService {
+        @GET("api/v2/pokemon/{id}")
+        Call<ResponseBody> getDetails(@Path(value="id", encoded = true) String id);
     }
 
     public interface getDetailsService {

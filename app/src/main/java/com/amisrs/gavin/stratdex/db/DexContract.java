@@ -20,7 +20,8 @@ public final class DexContract     {
 //        public static final String COLUMN_NAME_BIGNAME = "bigname";
         public static final String COLUMN_NAME_LEARNSET = "learnset";
         public static final String COLUMN_NAME_STRATEGIES = "strategies";
-        public static final String COLUMN_NAME_TYPE = "type";
+        public static final String COLUMN_NAME_TYPE1 = "type1";
+        public static final String COLUMN_NAME_TYPE2 = "type2";
         public static final String COLUMN_NAME_ABILITIES = "abilities";
         public static final String COLUMN_NAME_EVOCHAIN = "evolution-chain";
         public static final String COLUMN_NAME_FORMS = "forms";

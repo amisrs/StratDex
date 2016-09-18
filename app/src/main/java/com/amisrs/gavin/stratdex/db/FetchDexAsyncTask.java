@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 
 import com.amisrs.gavin.stratdex.MainActivity;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
+import com.amisrs.gavin.stratdex.model.TypeContainer;
+import com.amisrs.gavin.stratdex.model.TypeContainerContainer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -111,9 +114,11 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
                 .build();
 
         for(int i=0; i < allPokemon.length; i++) {
+
+
+            allPokemon[i].setIdFromUrl();
             System.out.println("created pokemon " + allPokemon[i].getName());
             pokemonSpecies.add(allPokemon[i]);
-            //getsprite
         }
 
         return pokemonSpecies;
@@ -126,13 +131,15 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
         addSpeciesQuery.open();
         System.out.println("inside fetchdexasync");
 
+
         for(PokemonSpecies p : pokemonSpecies) {
-            System.out.println("looking at " + p.getName());
-            addSpeciesQuery.addSpecies(p.getUrl(),p.getName());
+
+            addSpeciesQuery.addSpecies(p.getUrl(),p.getName(), p.getType1(), p.getType2());
+
             System.out.println(p.getUrl() + "added name = " +p.getName() + "id = " + p.getId());
 
+
         }
-        MainActivity.refreshRecycler();
         addSpeciesQuery.close();
 
         System.out.println("done");
@@ -145,9 +152,5 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
     public interface PokemonFromPokeAPIService {
         @GET("api/v2/pokemon-species/")
         Call<ResponseBody> getPokemonFromPokeAPI(@Query(value="limit", encoded = true) String count);
-    }
-    public interface SpriteService {
-        @GET("PokeAPI/sprites/master/sprites/pokemon/{id}")
-        Call<ResponseBody> getSprite(@Path(value="id", encoded = true) String id);
     }
 }

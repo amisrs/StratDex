@@ -53,6 +53,9 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
         public TextView urlTextView;
         public TextView nameTextView;
         public TextView idTextView;
+        public TextView t1TextView;
+        public TextView t2TextView;
+
         public ImageView ssImageView;
         public Bitmap bmp;
         public PokemonSpecies data;
@@ -73,76 +76,8 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
 
             bmp = data.getSmallSprite();
 
-            /*LoadImageAsyncTask loadImageAsyncTask = new LoadImageAsyncTask();
-            try {
-                bmp = loadImageAsyncTask.execute(data).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }*/
             idTextView.setText(data.getId());
             ssImageView.setImageBitmap(bmp);
         }
-
-        class LoadImageAsyncTask extends AsyncTask<PokemonSpecies, Void, Bitmap> {
-            Boolean isDefault = false;
-            String spriteString = "";
-            @Override
-            protected Bitmap doInBackground(PokemonSpecies... params) {
-                Bitmap pic = null;
-                pic = params[0].getSmallSprite();
-                if(params[0].getDefaultSprite()) {
-                    isDefault = true;
-                    params[0].setIdFromUrl();
-                    spriteString = params[0].fillDetailsWithRequests();
-                }
-                return pic;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap bitmap) {
-                if(isDefault) {
-                    try {
-                        DownloadImageAsync downloadImageAsync = new DownloadImageAsync();
-                        Bitmap fromDL = downloadImageAsync.execute(spriteString).get();
-                        bmp = fromDL;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        class DownloadImageAsync extends AsyncTask<String, Void, Bitmap> {
-            @Override
-            protected Bitmap doInBackground(String... strings) {
-                Bitmap pic = null;
-
-                try {
-                    System.out.println("opening input stream");
-                    InputStream in = new URL(strings[0]).openStream();
-                    pic = BitmapFactory.decodeStream(in);
-                    in.close();
-                    //System.out.println("inside async...got sprite as bitmap for " + name);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //smallSprite = pic;
-                //System.out.println("picture gotten for " + name + "smallsprite = " + smallSprite.getByteCount());
-
-                return pic;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap bitmap) {
-            }
-        }
-
-
     }
 }

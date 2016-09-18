@@ -6,45 +6,45 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/entryLight">
-    <TextView
-        android:id="@+id/tv_id"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:text="512"
-        android:gravity="center"
-        android:background="@color/entryDark"
-        />
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_toEndOf="@id/tv_id"
-        android:src="@drawable/spritecircle"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
+        <TextView
+            android:id="@+id/tv_id"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:text="512"
+            android:gravity="center"
+            android:background="@color/entryDark"
+            />
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toEndOf="@id/tv_id"
+            android:src="@drawable/spritecircle"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+    
+            />
+    
+        <ImageView
+            android:id="@+id/iv_ss"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toEndOf="@id/tv_id"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            />
+    
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@id/iv_ss"
+            android:gravity="center_vertical"
+            android:text="name" 
+            />
 
-        />
-
-    <ImageView
-        android:id="@+id/iv_ss"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_toEndOf="@id/tv_id"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        />
-
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_toEndOf="@id/iv_ss"
-        android:gravity="center_vertical"
-
-
-        android:text="name"/>
     </RelativeLayout>
 
 </RelativeLayout>

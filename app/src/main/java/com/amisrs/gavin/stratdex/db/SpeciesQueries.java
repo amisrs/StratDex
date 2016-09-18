@@ -31,14 +31,14 @@ public class SpeciesQueries {
         dsh = new DexSQLHelper(context);
     }
 
-    public void addSpecies(String url, String name) {
+    public void addSpecies(String url, String name, String type1, String type2) {
         open();
-        PokemonSpecies dummy = new PokemonSpecies(url, name);
+        PokemonSpecies dummy = new PokemonSpecies(url, name, type1, type2);
 
         dummy.setIdFromUrl();
 
         InputStream in = null;
-        new DownloadImageAsync().execute(dummy.fillDetailsWithRequests(), url, name);
+        new DownloadImageAsync().execute(dummy.fillDetailsWithRequests(), url, name, type1, type2);
 
         //Bitmap letssee = dummy.fillDetailsWithRequests();
         //System.out.println("smallsprite = " + dummy.getSmallSprite());
@@ -54,7 +54,9 @@ public class SpeciesQueries {
                 DexContract.PokemonTable.COLUMN_NAME_ID,
                 DexContract.PokemonTable.COLUMN_NAME_NAME,
                 DexContract.PokemonTable.COLUMN_NAME_URL,
-                DexContract.PokemonTable.COLUMN_NAME_SPRITE
+                DexContract.PokemonTable.COLUMN_NAME_SPRITE,
+                DexContract.PokemonTable.COLUMN_NAME_TYPE1,
+                DexContract.PokemonTable.COLUMN_NAME_TYPE2
 //                DexContract.PokemonTable.COLUMN_NAME_BIGNAME
         };
 
@@ -72,7 +74,7 @@ public class SpeciesQueries {
             System.out.println("getting from database: url = " + c.getString(1) + " name = " + c.getString(2));
 
             Bitmap smallSpriteBitmap = DbBitmapUtility.getImage(c.getBlob(3));
-            PokemonSpecies newPkmn = new PokemonSpecies(c.getString(2), c.getString(1));
+            PokemonSpecies newPkmn = new PokemonSpecies(c.getString(2), c.getString(1), c.getString(4), c.getString(5));
             newPkmn.setIdFromUrl();
             newPkmn.setSmallSprite(smallSpriteBitmap);
             pokemonSpecies.add(newPkmn);
@@ -110,6 +112,9 @@ public class SpeciesQueries {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(DexContract.PokemonTable.COLUMN_NAME_URL, strings[1]);
                 contentValues.put(DexContract.PokemonTable.COLUMN_NAME_NAME, strings[2]);
+                contentValues.put(DexContract.PokemonTable.COLUMN_NAME_TYPE1, strings[3]);
+                contentValues.put(DexContract.PokemonTable.COLUMN_NAME_TYPE2, strings[4]);
+
 
 
                 byte[] spriteBlob = DbBitmapUtility.getBytes(pic);
@@ -131,7 +136,7 @@ public class SpeciesQueries {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            MainActivity.refreshRecycler();
+            //MainActivity.refreshRecycler();
 
         }
     }
