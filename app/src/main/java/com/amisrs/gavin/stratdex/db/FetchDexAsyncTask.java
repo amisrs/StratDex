@@ -81,7 +81,7 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
         PokemonFromPokeAPIService pokemonService = retrofitPokeAPI.create(PokemonFromPokeAPIService.class);
 
         //!!!!IMPROTANT CHANGE THIS BACK TO TAKE COUNT!!!!!
-        Call<ResponseBody> getPokemonCall = pokemonService.getPokemonFromPokeAPI("20");
+        Call<ResponseBody> getPokemonCall = pokemonService.getPokemonFromPokeAPI("123");
 
         retrofit2.Response<ResponseBody> fullListResponse = null;
         String fullListString = "";
@@ -132,8 +132,8 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
             System.out.println(p.getUrl() + "added name = " +p.getName() + "id = " + p.getId());
 
         }
-        addSpeciesQuery.close();
         MainActivity.refreshRecycler();
+        addSpeciesQuery.close();
 
         System.out.println("done");
     }

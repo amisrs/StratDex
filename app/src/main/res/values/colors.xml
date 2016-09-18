@@ -3,4 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="spriteCircle"> #E5E5E5 </color>
+    <color name="entryDark"> #D8D8D8 </color>
+    <color name="entryLight"> #F2F2F2</color>
 </resources>

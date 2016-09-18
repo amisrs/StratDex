@@ -17,11 +17,20 @@ public final class DexContract     {
         public static final String COLUMN_NAME_URL = "url";
         public static final String COLUMN_NAME_NAME = "name";
         public static final String COLUMN_NAME_SPRITE = "sprite";
+//        public static final String COLUMN_NAME_BIGNAME = "bigname";
         public static final String COLUMN_NAME_LEARNSET = "learnset";
         public static final String COLUMN_NAME_STRATEGIES = "strategies";
         public static final String COLUMN_NAME_TYPE = "type";
         public static final String COLUMN_NAME_ABILITIES = "abilities";
         public static final String COLUMN_NAME_EVOCHAIN = "evolution-chain";
         public static final String COLUMN_NAME_FORMS = "forms";
+    }
+
+    public static class PokemonNames implements BaseColumns {
+        public static final String TABLE_NAME = "pokemonnames";
+        public static final String COLUMN_NAME_ID = "id";
+        public static final String COLUMN_NAME_POKEMONID = "pokemon";
+        public static final String COLUMN_NAME_LANGUAGE = "language";
+        public static final String COLUMN_NAME_NAME = "name";
     }
 }

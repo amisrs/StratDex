@@ -5,11 +5,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 
+import com.amisrs.gavin.stratdex.MainActivity;
+import com.amisrs.gavin.stratdex.model.Name;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Gavin on 15/09/2016.
@@ -18,39 +26,36 @@ public class SpeciesQueries {
     private SQLiteDatabase db;
     private DexSQLHelper dsh;
 
+
     public SpeciesQueries(Context context) {
         dsh = new DexSQLHelper(context);
     }
 
     public void addSpecies(String url, String name) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DexContract.PokemonTable.COLUMN_NAME_URL, url);
-        contentValues.put(DexContract.PokemonTable.COLUMN_NAME_NAME, name);
-
+        open();
         PokemonSpecies dummy = new PokemonSpecies(url, name);
-        dummy.setIdFromUrl();
-        Bitmap letssee = dummy.fillDetailsWithRequests();
-        System.out.println("smallsprite = " + dummy.getSmallSprite());
 
-                byte[] spriteBlob = DbBitmapUtility.getBytes(dummy.getSmallSprite());
-                contentValues.put(DexContract.PokemonTable.COLUMN_NAME_SPRITE, spriteBlob);
+        dummy.setIdFromUrl();
+
+        InputStream in = null;
+        new DownloadImageAsync().execute(dummy.fillDetailsWithRequests(), url, name);
+
+        //Bitmap letssee = dummy.fillDetailsWithRequests();
+        //System.out.println("smallsprite = " + dummy.getSmallSprite());
+
 
         System.out.println("adding to database: url = " + url + " name = " + name);
-
-
-
-        long newRowId = db.insert(DexContract.PokemonTable.TABLE_NAME, null, contentValues);
+        close();
     }
 
     public ArrayList<PokemonSpecies> getBasicSpecies() {
-        open();
-
         ArrayList<PokemonSpecies> pokemonSpecies = new ArrayList<>();
         String[] projection = {
                 DexContract.PokemonTable.COLUMN_NAME_ID,
                 DexContract.PokemonTable.COLUMN_NAME_NAME,
                 DexContract.PokemonTable.COLUMN_NAME_URL,
                 DexContract.PokemonTable.COLUMN_NAME_SPRITE
+//                DexContract.PokemonTable.COLUMN_NAME_BIGNAME
         };
 
         Cursor c = db.query(
@@ -69,12 +74,11 @@ public class SpeciesQueries {
             Bitmap smallSpriteBitmap = DbBitmapUtility.getImage(c.getBlob(3));
             PokemonSpecies newPkmn = new PokemonSpecies(c.getString(2), c.getString(1));
             newPkmn.setIdFromUrl();
-            newPkmn.fillDetailsWithRequests();
+            newPkmn.setSmallSprite(smallSpriteBitmap);
             pokemonSpecies.add(newPkmn);
             c.moveToNext();
         }
         c.close();
-        close();
         return pokemonSpecies;
     }
 
@@ -88,5 +92,47 @@ public class SpeciesQueries {
 
     public void close() {
         dsh.close();
+    }
+
+
+    class DownloadImageAsync extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... strings) {
+            Bitmap pic = null;
+
+            try {
+                System.out.println("opening input stream to get sprite for " + strings[2]);
+                InputStream in = new URL(strings[0]).openStream();
+                pic = BitmapFactory.decodeStream(in);
+                in.close();
+
+
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(DexContract.PokemonTable.COLUMN_NAME_URL, strings[1]);
+                contentValues.put(DexContract.PokemonTable.COLUMN_NAME_NAME, strings[2]);
+
+
+                byte[] spriteBlob = DbBitmapUtility.getBytes(pic);
+                contentValues.put(DexContract.PokemonTable.COLUMN_NAME_SPRITE, spriteBlob);
+                open();
+                long newRowId = db.insert(DexContract.PokemonTable.TABLE_NAME, null, contentValues);
+                close();
+                //System.out.println("inside async...got sprite as bitmap for " + name);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+           // smallSprite = pic;
+            //System.out.println("picture gotten for " + name + "smallsprite = " + smallSprite.getByteCount());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            MainActivity.refreshRecycler();
+
+        }
     }
 }

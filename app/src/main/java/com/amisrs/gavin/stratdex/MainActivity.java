@@ -39,6 +39,14 @@ public class MainActivity extends AppCompatActivity {
                 updateButtonClick(v);
             }
         });
+
+        Button refreshButton = (Button)findViewById(R.id.btn_refresh);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshRecycler();
+            }
+        });
     }
 
     public void updateButtonClick(View v) {
@@ -49,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static void refreshRecycler() {
         SpeciesQueries speciesQueries = new SpeciesQueries(context);
+        speciesQueries.open();
         PokemonSpeciesAdapter pokemonSpeciesAdapter = new PokemonSpeciesAdapter(speciesQueries.getBasicSpecies());
+        speciesQueries.close();
         System.out.println("new recylcer");
         rv.setAdapter(pokemonSpeciesAdapter);
         rv.setLayoutManager(llm);

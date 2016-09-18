@@ -36,7 +36,7 @@ public class PokemonSpecies {
 
     private String id;
     private Bitmap smallSprite;
-
+    private Boolean isDefaultSprite;
 
 
     public PokemonSpecies(String url, String name) {
@@ -45,9 +45,11 @@ public class PokemonSpecies {
         this.name = name;
         Bitmap bmp = BitmapFactory.decodeResource(MainActivity.context.getResources(), R.drawable.default_sprite);
         smallSprite = bmp;
-
+        isDefaultSprite = true;
 
     }
+
+
 
     public String getUrl() {
         return url;
@@ -65,9 +67,23 @@ public class PokemonSpecies {
         return smallSprite;
     }
 
+    public Boolean getDefaultSprite() {
+        return isDefaultSprite;
+    }
 
     public void setSmallSprite(Bitmap smallSprite) {
         this.smallSprite = smallSprite;
+    }
+
+    public String getFullName() {
+        String capName = "";
+        capName = name.replaceFirst(".", Character.toUpperCase(name.charAt(0))+"");
+        if(capName.contains("-")) {
+            int hyphenIndex = capName.indexOf("-");
+            capName = capName.replaceFirst("-.", "-"+Character.toUpperCase(capName.charAt(hyphenIndex+1))+"");
+        }
+
+        return capName;
     }
 
     public void setIdFromUrl() {
@@ -79,23 +95,26 @@ public class PokemonSpecies {
         System.out.println(id);
     }
 
-    public Bitmap fillDetailsWithRequests() {
+    public String fillDetailsWithRequests() {
         System.out.println("filling details with requests... for " + name);
         String spriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
 
-        DownloadImageAsync downloadImageAsync = new DownloadImageAsync();
+        /*DownloadImageAsync downloadImageAsync = new DownloadImageAsync();
         Bitmap retval = null;
 
         try {
+            System.out.println("about to execute downloadImageAsync");
             retval = downloadImageAsync.execute(spriteUrl).get();
             System.out.println("got the sprite");
+            isDefaultSprite = false;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
-        return retval;
+        return retval;*/
+        return spriteUrl;
     }
 
     public interface getDetailsService {
@@ -103,12 +122,13 @@ public class PokemonSpecies {
         Call<ResponseBody> getDetails(@Path(value = "id", encoded = true) String id);
     }
 
-    class DownloadImageAsync extends AsyncTask<String, Void, Bitmap> {
+    /*class DownloadImageAsync extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... strings) {
             Bitmap pic = null;
 
             try {
+                System.out.println("opening input stream");
                 InputStream in = new URL(strings[0]).openStream();
                 pic = BitmapFactory.decodeStream(in);
                 in.close();
@@ -127,6 +147,7 @@ public class PokemonSpecies {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
         }
-    }
+
+    }*/
 
 }
