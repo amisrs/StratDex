@@ -1,5 +1,9 @@
 package com.amisrs.gavin.stratdex;
 
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -26,9 +30,12 @@ import java.util.concurrent.ExecutionException;
  */
 public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAdapter.SpeciesViewHolder> {
     private ArrayList<PokemonSpecies> species;
+    private Context context;
+    public static String LIST_KEY = "LIST";
 
-    public PokemonSpeciesAdapter(ArrayList<PokemonSpecies> pokemonSpecies) {
+    public PokemonSpeciesAdapter(ArrayList<PokemonSpecies> pokemonSpecies, Context context) {
         species = pokemonSpecies;
+        this.context = context;
     }
 
     @Override
@@ -38,33 +45,40 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
 
     @Override
     public PokemonSpeciesAdapter.SpeciesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View inflatedView = LayoutInflater.from(parent.getContext()).inflate(R.layout.species_layout, parent, false);
-        return new SpeciesViewHolder(inflatedView);
+        final View inflatedView = LayoutInflater.from(parent.getContext()).inflate(R.layout.species_layout, parent, false);
+        return new SpeciesViewHolder(inflatedView, context);
     }
 
     @Override
     public void onBindViewHolder(PokemonSpeciesAdapter.SpeciesViewHolder holder, int position) {
         PokemonSpecies pokemonSpecies = species.get(position);
         holder.bindSpecies(pokemonSpecies);
-
     }
 
+
+
     public static class SpeciesViewHolder extends RecyclerView.ViewHolder {
+        public View view;
         public TextView urlTextView;
         public TextView nameTextView;
         public TextView idTextView;
         public TextView t1TextView;
         public TextView t2TextView;
+        public Context context;
 
         public ImageView ssImageView;
         public Bitmap bmp;
         public PokemonSpecies data;
 
-        public SpeciesViewHolder(View v) {
+        public SpeciesViewHolder(View v, Context context) {
             super(v);
+            this.context = context;
+            this.view = v;
             nameTextView = (TextView)v.findViewById(R.id.tv_name);
             idTextView = (TextView)v.findViewById(R.id.tv_id);
             ssImageView = (ImageView)v.findViewById(R.id.iv_ss);
+
+
 
         }
 
@@ -78,6 +92,40 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
 
             idTextView.setText(data.getId());
             ssImageView.setImageBitmap(bmp);
+
+            OnPokemonClick onPokemonClick = new OnPokemonClick(pokemonSpecies, context);
+            getView().setOnClickListener(onPokemonClick);
+
+
         }
+
+        public View getView() {
+            return view;
+        }
+
+        public class OnPokemonClick implements View.OnClickListener {
+            PokemonSpecies clickedSpecies;
+            Context context;
+
+            public OnPokemonClick(PokemonSpecies clickedSpecies, Context context) {
+                this.clickedSpecies = clickedSpecies;
+                this.context = context;
+            }
+
+            @Override
+            public void onClick(View v) {
+                Activity activity = (Activity)v.getContext();
+
+                Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+                intent.putExtra(LIST_KEY, clickedSpecies.getId());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.rightoleft,R.anim.blank);
+
+            }
+
+        }
+
     }
 }

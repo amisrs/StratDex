@@ -49,16 +49,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.blank, R.anim.lefttoright);
+
+    }
+
     public void updateButtonClick(View v) {
         FetchDexAsyncTask fetch = new FetchDexAsyncTask(getApplicationContext());
         fetch.execute();
+    }
+
+    public void goToDetails() {
 
     }
 
     public static void refreshRecycler() {
         SpeciesQueries speciesQueries = new SpeciesQueries(context);
         speciesQueries.open();
-        PokemonSpeciesAdapter pokemonSpeciesAdapter = new PokemonSpeciesAdapter(speciesQueries.getBasicSpecies());
+        PokemonSpeciesAdapter pokemonSpeciesAdapter = new PokemonSpeciesAdapter(speciesQueries.getBasicSpecies(), MainActivity.context);
         speciesQueries.close();
         System.out.println("new recylcer");
         rv.setAdapter(pokemonSpeciesAdapter);
