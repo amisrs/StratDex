@@ -119,8 +119,8 @@ public class PokemonSpecies {
         System.out.println(id);
     }
 
-    public String fillDetailsWithRequests() {
-        System.out.println("filling details with requests... for " + name);
+    public String getSpriteString() {
+        System.out.println("get sprite string... for " + name);
         String spriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
 
         /*DownloadImageAsync downloadImageAsync = new DownloadImageAsync();

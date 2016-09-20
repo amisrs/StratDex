@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
+import com.bumptech.glide.Glide;
 
 
 import java.io.IOException;
@@ -77,13 +78,12 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
             nameTextView = (TextView)v.findViewById(R.id.tv_name);
             idTextView = (TextView)v.findViewById(R.id.tv_id);
             ssImageView = (ImageView)v.findViewById(R.id.iv_ss);
-
-
-
         }
 
         public void bindSpecies(PokemonSpecies pokemonSpecies) {
             data = pokemonSpecies;
+
+            //get/set sprite
             nameTextView.setText(data.getFullName());
 
             System.out.println("try loading image for " + data.getId());
@@ -91,7 +91,9 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
             bmp = data.getSmallSprite();
 
             idTextView.setText(data.getId());
-            ssImageView.setImageBitmap(bmp);
+
+            Glide.with(context).load(data.getSpriteString()).into(ssImageView);
+            //ssImageView.setImageBitmap(bmp);
 
             OnPokemonClick onPokemonClick = new OnPokemonClick(pokemonSpecies, context);
             getView().setOnClickListener(onPokemonClick);

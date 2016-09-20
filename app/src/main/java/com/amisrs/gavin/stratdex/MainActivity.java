@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private static RecyclerView rv;
     private static LinearLayoutManager llm;
     public static Context context;
+    public static PokemonSpeciesAdapter psa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +66,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static void dataSetChange() {
+        psa.notifyDataSetChanged();
+    }
+
     public static void refreshRecycler() {
         SpeciesQueries speciesQueries = new SpeciesQueries(context);
         speciesQueries.open();
         PokemonSpeciesAdapter pokemonSpeciesAdapter = new PokemonSpeciesAdapter(speciesQueries.getBasicSpecies(), MainActivity.context);
+        psa = pokemonSpeciesAdapter;
         speciesQueries.close();
         System.out.println("new recylcer");
         rv.setAdapter(pokemonSpeciesAdapter);

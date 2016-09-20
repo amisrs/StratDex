@@ -38,7 +38,7 @@ public class SpeciesQueries {
         dummy.setIdFromUrl();
 
         InputStream in = null;
-        new DownloadImageAsync().execute(dummy.fillDetailsWithRequests(), url, name, type1, type2);
+        new DownloadImageAsync().execute(dummy.getSpriteString(), url, name, type1, type2);
 
         //Bitmap letssee = dummy.fillDetailsWithRequests();
         //System.out.println("smallsprite = " + dummy.getSmallSprite());
@@ -102,11 +102,11 @@ public class SpeciesQueries {
         protected Void doInBackground(String... strings) {
             Bitmap pic = null;
 
-            try {
-                System.out.println("opening input stream to get sprite for " + strings[2]);
-                InputStream in = new URL(strings[0]).openStream();
-                pic = BitmapFactory.decodeStream(in);
-                in.close();
+            //try {
+//                System.out.println("opening input stream to get sprite for " + strings[2]);
+//                InputStream in = new URL(strings[0]).openStream();
+//                pic = BitmapFactory.decodeStream(in);
+//                in.close();
 
 
                 ContentValues contentValues = new ContentValues();
@@ -117,18 +117,18 @@ public class SpeciesQueries {
 
 
 
-                byte[] spriteBlob = DbBitmapUtility.getBytes(pic);
-                contentValues.put(DexContract.PokemonTable.COLUMN_NAME_SPRITE, spriteBlob);
-                open();
-                long newRowId = db.insert(DexContract.PokemonTable.TABLE_NAME, null, contentValues);
-                close();
+//                byte[] spriteBlob = DbBitmapUtility.getBytes(pic);
+//                contentValues.put(DexContract.PokemonTable.COLUMN_NAME_SPRITE, spriteBlob);
+//                open();
+//                long newRowId = db.insert(DexContract.PokemonTable.TABLE_NAME, null, contentValues);
+//                close();
                 //System.out.println("inside async...got sprite as bitmap for " + name);
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            } catch (MalformedURLException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
            // smallSprite = pic;
             //System.out.println("picture gotten for " + name + "smallsprite = " + smallSprite.getByteCount());
             return null;
@@ -136,7 +136,7 @@ public class SpeciesQueries {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            //MainActivity.refreshRecycler();
+            MainActivity.dataSetChange();
 
         }
     }
