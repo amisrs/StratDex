@@ -99,7 +99,7 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
         }
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
-
+        System.out.println(fullListString);
         jsonObject = gson.fromJson(fullListString, JsonObject.class);
 
         resultsArray = jsonObject.getAsJsonArray("results");
@@ -121,7 +121,7 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
             pokemonSpecies.add(allPokemon[i]);
             SpeciesQueries addSpeciesQuery = new SpeciesQueries(context);
             addSpeciesQuery.open();
-            addSpeciesQuery.addSpecies(allPokemon[i].getUrl(),allPokemon[i].getName(), allPokemon[i].getType1(), allPokemon[i].getType2());
+            addSpeciesQuery.addSpecies(allPokemon[i].getUrl(),allPokemon[i].getName(), allPokemon[i].getType1(), allPokemon[i].getType2(), allPokemon[i].getSpritePath());
             addSpeciesQuery.close();
         }
 

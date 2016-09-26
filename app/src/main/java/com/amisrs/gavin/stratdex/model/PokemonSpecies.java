@@ -40,24 +40,49 @@ public class PokemonSpecies {
     private String name;
 
     private String id;
+    private String spritePath;
+    private String bigspritePath;
     private Bitmap smallSprite;
     private Boolean isDefaultSprite;
     private String type1 = "";
     private String type2 = "";
 
 
-    public PokemonSpecies(String url, String name, String type1, String type2) {
+    public PokemonSpecies(String url, String name, String type1, String type2, String spritePath) {
 
         this.url = url;
         this.name = name;
         this.type1 = type1;
         this.type2 = type2;
-        Bitmap bmp = BitmapFactory.decodeResource(MainActivity.context.getResources(), R.drawable.default_sprite);
-        smallSprite = bmp;
+        this.spritePath = spritePath;
+        //Bitmap bmp = BitmapFactory.decodeResource(MainActivity.context.getResources(), R.drawable.default_sprite);
+        //smallSprite = bmp;
         isDefaultSprite = true;
 
     }
 
+    public PokemonSpecies(String url, String name, String type1, String type2, String spritePath, String bigspritePath) {
+
+        System.out.println("tihs is the second constructor for " + name + " that takes spritepath " + spritePath + " and bigspritepath " + bigspritePath);
+        this.url = url;
+        this.name = name;
+        this.type1 = type1;
+        this.type2 = type2;
+        this.bigspritePath = bigspritePath;
+        //Bitmap bmp = BitmapFactory.decodeResource(MainActivity.context.getResources(), R.drawable.default_sprite);
+        //smallSprite = bmp;
+        isDefaultSprite = true;
+
+    }
+
+
+    public String getSpritePath() {
+        return spritePath;
+    }
+
+    public String getBigspritePath() {
+        return bigspritePath;
+    }
 
     public String getType1() {
         return type1;
@@ -91,6 +116,7 @@ public class PokemonSpecies {
         return smallSprite;
     }
 
+
     public Boolean getDefaultSprite() {
         return isDefaultSprite;
     }
@@ -98,6 +124,7 @@ public class PokemonSpecies {
     public void setSmallSprite(Bitmap smallSprite) {
         this.smallSprite = smallSprite;
     }
+
 
     public String getFullName() {
         String capName = "";
@@ -117,6 +144,15 @@ public class PokemonSpecies {
         System.out.println("trying to match for " + url + "  " + idMatcher.find());
         id = idMatcher.group(1);
         System.out.println(id);
+    }
+
+
+
+    public String getBigspriteString() {
+        String bigSpriteLink = "http://www.smogon.com/dex/media/sprites/xy/"+name+".gif";
+        bigspritePath = bigSpriteLink;
+
+        return bigSpriteLink;
     }
 
     public String getSpriteString() {

@@ -9,8 +9,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.amisrs.gavin.stratdex.DetailsActivity">
 
+
+    <ImageView
+        android:id="@+id/iv_bigsprite"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:src="@drawable/placeholder"
+        />
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:layout_toRightOf="@id/iv_bigsprite"/>
+
 </RelativeLayout>
