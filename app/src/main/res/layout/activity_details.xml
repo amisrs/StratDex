@@ -12,14 +12,19 @@
 
     <ImageView
         android:id="@+id/iv_bigsprite"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="20dp"
+        android:adjustViewBounds="true"
+        android:scaleType="center"
         android:src="@drawable/placeholder"
         />
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:textSize="50dp"
+        android:gravity="center"
         android:layout_toRightOf="@id/iv_bigsprite"/>
 
 </RelativeLayout>

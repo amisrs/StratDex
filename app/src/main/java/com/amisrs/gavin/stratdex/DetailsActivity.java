@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,9 +41,10 @@ public class DetailsActivity extends AppCompatActivity {
         String id = intent.getStringExtra(PokemonSpeciesAdapter.LIST_KEY);
         SpeciesQueries speciesQueries = new SpeciesQueries(MainActivity.context);
         final PokemonSpecies theOne = speciesQueries.getOneSpeciesById(id);
-        nameTextView.setText(theOne.getId());
+        nameTextView.setText(theOne.getFullName());
 
-        SimpleTarget<GifDrawable> simpleTarget = new SimpleTarget<GifDrawable>(130,130) {
+        SimpleTarget<GifDrawable> simpleTarget = new SimpleTarget<GifDrawable>(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL) {
+
             @Override
             public void onResourceReady(GifDrawable resource, GlideAnimation<? super GifDrawable> glideAnimation) {
                 System.out.println("onresourceready simpletarget");
@@ -79,11 +81,11 @@ public class DetailsActivity extends AppCompatActivity {
                         .asGif()
                         .into(simpleTarget);
 
-                Glide.with(this).load(theOne.getBigspriteString()).asGif().into(bigspriteImageView);
+                Glide.with(this).load(theOne.getBigspriteString()).asGif().dontTransform().fitCenter().placeholder(R.drawable.placeholder).into(bigspriteImageView);
 
         } else {
             System.out.println("could find bigspritepath at "+theOne.getBigspritePath()+" so loading from file.. this pokemon is " + theOne.getName());
-            Glide.with(this).load(new File(theOne.getBigspritePath())).asGif().into(bigspriteImageView);
+            Glide.with(this).load(new File(theOne.getBigspritePath())).asGif().dontTransform().fitCenter().placeholder(R.drawable.placeholder).into(bigspriteImageView);
         }
 
 
