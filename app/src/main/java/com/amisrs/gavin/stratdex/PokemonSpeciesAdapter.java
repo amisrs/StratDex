@@ -6,16 +6,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
+import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
 
 
@@ -78,6 +82,7 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
             nameTextView = (TextView)v.findViewById(R.id.tv_name);
             idTextView = (TextView)v.findViewById(R.id.tv_id);
             ssImageView = (ImageView)v.findViewById(R.id.iv_ss);
+
         }
 
         public void bindSpecies(PokemonSpecies pokemonSpecies) {
@@ -92,8 +97,9 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
 
             idTextView.setText(data.getId());
 
-            Glide.with(context).load(data.getSpriteString()).into(ssImageView);
-            //ssImageView.setImageBitmap(bmp);
+            Glide.with(context).load(data.getSpriteString()).placeholder(R.drawable.sprite_spinner).into(ssImageView);
+
+            Drawable d = ssImageView.getDrawable();
 
             OnPokemonClick onPokemonClick = new OnPokemonClick(pokemonSpecies, context);
             getView().setOnClickListener(onPokemonClick);

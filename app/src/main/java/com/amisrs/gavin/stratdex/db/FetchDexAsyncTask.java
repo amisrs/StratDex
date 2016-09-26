@@ -119,6 +119,10 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
             allPokemon[i].setIdFromUrl();
             System.out.println("created pokemon " + allPokemon[i].getName());
             pokemonSpecies.add(allPokemon[i]);
+            SpeciesQueries addSpeciesQuery = new SpeciesQueries(context);
+            addSpeciesQuery.open();
+            addSpeciesQuery.addSpecies(allPokemon[i].getUrl(),allPokemon[i].getName(), allPokemon[i].getType1(), allPokemon[i].getType2());
+            addSpeciesQuery.close();
         }
 
         return pokemonSpecies;
@@ -127,20 +131,20 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
     @Override
     protected void onPostExecute(ArrayList<PokemonSpecies> pokemonSpecies) {
 
-        SpeciesQueries addSpeciesQuery = new SpeciesQueries(context);
-        addSpeciesQuery.open();
+        //SpeciesQueries addSpeciesQuery = new SpeciesQueries(context);
+        //addSpeciesQuery.open();
         System.out.println("inside fetchdexasync");
 
 
-        for(PokemonSpecies p : pokemonSpecies) {
-
-            addSpeciesQuery.addSpecies(p.getUrl(),p.getName(), p.getType1(), p.getType2());
-
-            System.out.println(p.getUrl() + "added name = " +p.getName() + "id = " + p.getId());
-
-
-        }
-        addSpeciesQuery.close();
+//        for(PokemonSpecies p : pokemonSpecies) {
+//
+//            addSpeciesQuery.addSpecies(p.getUrl(),p.getName(), p.getType1(), p.getType2());
+//
+//            System.out.println(p.getUrl() + "added name = " +p.getName() + "id = " + p.getId());
+//
+//
+//        }
+        //addSpeciesQuery.close();
 
         System.out.println("done");
     }

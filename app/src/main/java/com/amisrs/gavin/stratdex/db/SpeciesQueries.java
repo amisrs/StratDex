@@ -37,8 +37,15 @@ public class SpeciesQueries {
 
         dummy.setIdFromUrl();
 
-        InputStream in = null;
-        new DownloadImageAsync().execute(dummy.getSpriteString(), url, name, type1, type2);
+        //InputStream in = null;
+        //new DownloadImageAsync().execute(dummy.getSpriteString(), url, name, type1, type2);
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DexContract.PokemonTable.COLUMN_NAME_URL, dummy.getUrl());
+        contentValues.put(DexContract.PokemonTable.COLUMN_NAME_NAME, dummy.getName());
+        contentValues.put(DexContract.PokemonTable.COLUMN_NAME_TYPE1, dummy.getType1());
+        contentValues.put(DexContract.PokemonTable.COLUMN_NAME_TYPE2, dummy.getType2());
+        long newRowId = db.insert(DexContract.PokemonTable.TABLE_NAME, null, contentValues);
 
         //Bitmap letssee = dummy.fillDetailsWithRequests();
         //System.out.println("smallsprite = " + dummy.getSmallSprite());
@@ -73,10 +80,10 @@ public class SpeciesQueries {
             System.out.println("cursorcount = " + c.getCount());
             System.out.println("getting from database: url = " + c.getString(1) + " name = " + c.getString(2));
 
-            Bitmap smallSpriteBitmap = DbBitmapUtility.getImage(c.getBlob(3));
+            //Bitmap smallSpriteBitmap = DbBitmapUtility.getImage(c.getBlob(3));
             PokemonSpecies newPkmn = new PokemonSpecies(c.getString(2), c.getString(1), c.getString(4), c.getString(5));
             newPkmn.setIdFromUrl();
-            newPkmn.setSmallSprite(smallSpriteBitmap);
+            //newPkmn.setSmallSprite(smallSpriteBitmap);
             pokemonSpecies.add(newPkmn);
             c.moveToNext();
         }
