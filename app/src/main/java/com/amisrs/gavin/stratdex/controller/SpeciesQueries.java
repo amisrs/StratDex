@@ -144,6 +144,7 @@ public class SpeciesQueries {
         System.out.println(" has smallsp " + toGet.getSpritePath() + " and bigsp " + toGet.getBigspritePath());
         toGet.setIdFromUrl();
         c.close();
+        close();
 
         return toGet;
     }

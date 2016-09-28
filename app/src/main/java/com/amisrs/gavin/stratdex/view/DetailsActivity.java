@@ -1,6 +1,9 @@
 package com.amisrs.gavin.stratdex.view;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -28,10 +31,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class DetailsActivity extends AppCompatActivity implements AsyncResponse {
+public class DetailsActivity extends AppCompatActivity implements AsyncResponse, DetailsBottom.OnFragmentInteractionListener{
     private TextView nameTextView;
     private ImageView bigspriteImageView;
     private ProgressBar bottomProgressBar;
+    private PokemonSpecies thePokemon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse 
 
         } else {
             System.out.println("you got the details for this one already");
+            giveFilledPokemon(theOne);
         }
         //show progress spinner
 
@@ -120,6 +125,15 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse 
     public void giveFilledPokemon(PokemonSpecies pokemonSpecies) {
         bottomProgressBar.setVisibility(View.GONE);
         System.out.println("hey i filled the details for " + pokemonSpecies.getName() + " the color is " + pokemonSpecies.getColorString());
+        thePokemon = pokemonSpecies;
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        DetailsBottom detailsBottom = new DetailsBottom();
+        fragmentTransaction.add(R.id.rl_fragmentcontainer, detailsBottom);
+        fragmentTransaction.commit();
+
+
         int themeToSet = 0;
 
         switch(pokemonSpecies.getColorString()) {
@@ -137,5 +151,14 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse 
         super.onPause();
         overridePendingTransition(R.anim.lefttoright, R.anim.lefttoright);
 
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    public PokemonSpecies getThePokemon() {
+        return thePokemon;
     }
 }

@@ -15,9 +15,11 @@
 
     </style>
 
-    <style name="detailGreen">
+    <style name="detailGreen" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/greenBackground</item>
         <item name="colorPrimaryDark">@color/greenAccent</item>
+        <item name="android:colorBackground">@color/greenBackground</item>
+        <item name="android:textColorPrimary">#33691E</item>
 
     </style>
 

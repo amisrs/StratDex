@@ -9,6 +9,27 @@
     <color name="entryLight"> #F2F2F2</color>
 
 
-    <color name="greenBackground">#DCEDC8</color>
+    <color name="defaultBackground">#FFFFFF</color>
+
+    <color name="greenBackground">#F1F8E9</color>
     <color name="greenAccent">#76FF03</color>
+    <color name="greenText">#33691E</color>
+
+    <color name="redBackground">#FFEBEE</color>
+
+    <color name="blueBackground">#E3F2FD</color>
+
+    <color name="yellowBackground">#FFFDE7</color>
+
+    <color name="blackBackground">#F5F5F5</color>
+
+    <color name="greyBackground">#ECEFF1</color>
+
+    <color name="purpleBackground">#EDE7F6</color>
+
+    <color name="brownBackground">#EFEBE9</color>
+
+    <color name="whiteBackrgound">#FFFFFF</color>
+
+    <color name="pinkBackground">#FCE4EC</color>
 </resources>
