@@ -1,15 +1,20 @@
-package com.amisrs.gavin.stratdex;
+package com.amisrs.gavin.stratdex.view;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.amisrs.gavin.stratdex.db.SpeciesQueries;
+import com.amisrs.gavin.stratdex.controller.PokemonSpeciesAdapter;
+import com.amisrs.gavin.stratdex.R;
+import com.amisrs.gavin.stratdex.db.AsyncResponse;
+import com.amisrs.gavin.stratdex.controller.FetchDetailsAsyncTask;
+import com.amisrs.gavin.stratdex.controller.SpeciesQueries;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
@@ -23,9 +28,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements AsyncResponse {
     private TextView nameTextView;
     private ImageView bigspriteImageView;
+    private ProgressBar bottomProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,8 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         nameTextView = (TextView)findViewById(R.id.tv_name);
         bigspriteImageView = (ImageView)findViewById(R.id.iv_bigsprite);
+        bottomProgressBar = (ProgressBar)findViewById(R.id.pb_spinner);
+        bottomProgressBar.setVisibility(View.GONE);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra(PokemonSpeciesAdapter.LIST_KEY);
@@ -88,9 +96,36 @@ public class DetailsActivity extends AppCompatActivity {
             Glide.with(this).load(new File(theOne.getBigspritePath())).asGif().dontTransform().fitCenter().placeholder(R.drawable.placeholder).into(bigspriteImageView);
         }
 
+        //get details
+        if(theOne.getColorString() == null) {
+            FetchDetailsAsyncTask fetchDetailsAsyncTask = new FetchDetailsAsyncTask(this);
+            fetchDetailsAsyncTask.delegate = this;
+            fetchDetailsAsyncTask.execute(theOne);
+            bottomProgressBar.setVisibility(View.VISIBLE);
+
+        } else {
+            System.out.println("you got the details for this one already");
+        }
+        //show progress spinner
+
+//        while(fetchDetailsAsyncTask.getStatus() != AsyncTask.Status.FINISHED) {
+//            //
+//        }
+        //
+
 
     }
 
+    @Override
+    public void giveFilledPokemon(PokemonSpecies pokemonSpecies) {
+        bottomProgressBar.setVisibility(View.GONE);
+        System.out.println("hey i filled the details for " + pokemonSpecies.getName() + " the color is " + pokemonSpecies.getColorString());
+        int themeToSet = 0;
+
+        switch(pokemonSpecies.getColorString()) {
+            case "green" : themeToSet = R.style.detailGreen;
+        }
+    }
 
     @Override
     public void onBackPressed() {

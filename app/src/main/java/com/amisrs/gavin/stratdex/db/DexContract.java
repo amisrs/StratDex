@@ -18,6 +18,7 @@ public final class DexContract     {
         public static final String COLUMN_NAME_NAME = "name";
         public static final String COLUMN_NAME_SPRITE = "sprite";
         public static final String COLUMN_NAME_BIGSPRITE = "bigsprite";
+        public static final String COLUMN_NAME_COLOR = "color";
 //        public static final String COLUMN_NAME_BIGNAME = "bigname";
         public static final String COLUMN_NAME_LEARNSET = "learnset";
         public static final String COLUMN_NAME_STRATEGIES = "strategies";

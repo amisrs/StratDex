@@ -15,4 +15,10 @@
 
     </style>
 
+    <style name="detailGreen">
+        <item name="colorPrimary">@color/greenBackground</item>
+        <item name="colorPrimaryDark">@color/greenAccent</item>
+
+    </style>
+
 </resources>

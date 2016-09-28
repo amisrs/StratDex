@@ -1,10 +1,9 @@
-package com.amisrs.gavin.stratdex;
+package com.amisrs.gavin.stratdex.view;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,13 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
-import com.amisrs.gavin.stratdex.db.AsyncResponse;
-import com.amisrs.gavin.stratdex.db.DexSQLHelper;
-import com.amisrs.gavin.stratdex.db.FetchDexAsyncTask;
-import com.amisrs.gavin.stratdex.db.SpeciesQueries;
-import com.amisrs.gavin.stratdex.model.PokemonSpecies;
-
-import java.util.ArrayList;
+import com.amisrs.gavin.stratdex.controller.PokemonSpeciesAdapter;
+import com.amisrs.gavin.stratdex.R;
+import com.amisrs.gavin.stratdex.controller.FetchDexAsyncTask;
+import com.amisrs.gavin.stratdex.controller.SpeciesQueries;
 
 public class MainActivity extends AppCompatActivity {
     private static RecyclerView rv;

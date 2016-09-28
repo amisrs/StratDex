@@ -1,25 +1,11 @@
 package com.amisrs.gavin.stratdex.model;
 
-import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
-import android.widget.ImageView;
 
-import com.amisrs.gavin.stratdex.MainActivity;
-import com.amisrs.gavin.stratdex.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +24,8 @@ import retrofit2.http.Path;
 public class PokemonSpecies {
     private String url = "blank/pokemon-species/0/";
     private String name;
+    private Color color;
+
 
     private String id;
     private String spritePath;
@@ -46,6 +34,7 @@ public class PokemonSpecies {
     private Boolean isDefaultSprite;
     private String type1 = "";
     private String type2 = "";
+    private String colorString = "";
 
 
     public PokemonSpecies(String url, String name, String type1, String type2, String spritePath) {
@@ -61,7 +50,8 @@ public class PokemonSpecies {
 
     }
 
-    public PokemonSpecies(String url, String name, String type1, String type2, String spritePath, String bigspritePath) {
+    //constructor for details
+    public PokemonSpecies(String url, String name, String type1, String type2, String spritePath, String bigspritePath, String colorString) {
 
         System.out.println("tihs is the second constructor for " + name + " that takes spritepath " + spritePath + " and bigspritepath " + bigspritePath);
         this.url = url;
@@ -69,12 +59,20 @@ public class PokemonSpecies {
         this.type1 = type1;
         this.type2 = type2;
         this.bigspritePath = bigspritePath;
+        this.colorString = colorString;
         //Bitmap bmp = BitmapFactory.decodeResource(MainActivity.context.getResources(), R.drawable.default_sprite);
         //smallSprite = bmp;
         isDefaultSprite = true;
 
     }
 
+    public String getColorString() {
+        return colorString;
+    }
+
+    public void setColorString(String colorString) {
+        this.colorString = colorString;
+    }
 
     public String getSpritePath() {
         return spritePath;

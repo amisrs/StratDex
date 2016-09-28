@@ -1,14 +1,12 @@
-package com.amisrs.gavin.stratdex.db;
+package com.amisrs.gavin.stratdex.controller;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
-import com.amisrs.gavin.stratdex.MainActivity;
+import com.amisrs.gavin.stratdex.controller.SpeciesQueries;
+import com.amisrs.gavin.stratdex.db.DexSQLHelper;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
-import com.amisrs.gavin.stratdex.model.TypeContainer;
-import com.amisrs.gavin.stratdex.model.TypeContainerContainer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -18,18 +16,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**

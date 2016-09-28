@@ -7,4 +7,8 @@
     <color name="spriteCircle"> #E5E5E5 </color>
     <color name="entryDark"> #D8D8D8 </color>
     <color name="entryLight"> #F2F2F2</color>
+
+
+    <color name="greenBackground">#DCEDC8</color>
+    <color name="greenAccent">#76FF03</color>
 </resources>
