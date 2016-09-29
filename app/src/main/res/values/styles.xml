@@ -20,6 +20,7 @@
         <item name="colorPrimaryDark">@color/greenAccent</item>
         <item name="android:colorBackground">@color/greenBackground</item>
         <item name="android:textColorPrimary">#33691E</item>
+        <item name="android:navigationBarColor">@color/black</item>
 
     </style>
 

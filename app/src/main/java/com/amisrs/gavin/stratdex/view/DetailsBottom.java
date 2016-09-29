@@ -3,7 +3,7 @@ package com.amisrs.gavin.stratdex.view;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.view.ContextThemeWrapper;
@@ -60,6 +60,7 @@ public class DetailsBottom extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -72,10 +73,14 @@ public class DetailsBottom extends Fragment {
                              Bundle savedInstanceState) {
 
         //http://stackoverflow.com/questions/9469174/set-theme-for-a-fragment
-        Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.detailGreen);
-        LayoutInflater newInflater = inflater.cloneInContext(contextThemeWrapper);
-
-        View view = newInflater.inflate(R.layout.fragment_details_bottom, container, false);
+//        System.out.println("Hey APPLY THE THEME!!!!");
+//
+//        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.detailGreen);
+//        contextThemeWrapper.getTheme().applyStyle(R.style.detailGreen, true);
+//        LayoutInflater newInflater = inflater.cloneInContext(contextThemeWrapper);
+        View view = inflater.inflate(R.layout.fragment_details_bottom, container, false);
+//
+//        System.out.println("theme is : " + view.getContext().getTheme());
         DetailsActivity parentActivity = (DetailsActivity) getActivity();
         int colorToSet = R.color.defaultBackground;
         switch(parentActivity.getThePokemon().getColorString()) {
@@ -102,11 +107,22 @@ public class DetailsBottom extends Fragment {
             default      : colorToSet = R.color.defaultBackground;
                             break;
         }
+        onCreate(savedInstanceState);
 
         frameLayout = (FrameLayout)view.findViewById(R.id.fl_main);
-//        frameLayout.setBackgroundColor(ContextCompat.getColor(this.getContext(),colorToSet));
+        frameLayout.setBackgroundColor(ContextCompat.getColor(this.getContext(),colorToSet));
         // Inflate the layout for this fragment
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        System.out.println("THIS IS ONACTIVITYCREATE");
+        //System.out.println("activity: "+ getView().getContext().getTheme().applyStyle(R.style.detailGreen,true));
+
+
+
+        super.onActivityCreated(savedInstanceState);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

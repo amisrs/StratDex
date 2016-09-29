@@ -1,13 +1,17 @@
 package com.amisrs.gavin.stratdex.view;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -31,11 +35,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class DetailsActivity extends AppCompatActivity implements AsyncResponse, DetailsBottom.OnFragmentInteractionListener{
+public class DetailsActivity extends AppCompatActivity implements AsyncResponse, DetailsBottom.OnFragmentInteractionListener {
     private TextView nameTextView;
     private ImageView bigspriteImageView;
     private ProgressBar bottomProgressBar;
     private PokemonSpecies thePokemon;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +49,9 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         getWindow().setEnterTransition(null);
 
         setContentView(R.layout.activity_details);
-        nameTextView = (TextView)findViewById(R.id.tv_name);
-        bigspriteImageView = (ImageView)findViewById(R.id.iv_bigsprite);
-        bottomProgressBar = (ProgressBar)findViewById(R.id.pb_spinner);
+        nameTextView = (TextView) findViewById(R.id.tv_name);
+        bigspriteImageView = (ImageView) findViewById(R.id.iv_bigsprite);
+        bottomProgressBar = (ProgressBar) findViewById(R.id.pb_spinner);
         bottomProgressBar.setVisibility(View.GONE);
 
         Intent intent = getIntent();
@@ -55,7 +60,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         final PokemonSpecies theOne = speciesQueries.getOneSpeciesById(id);
         nameTextView.setText(theOne.getFullName());
 
-        SimpleTarget<GifDrawable> simpleTarget = new SimpleTarget<GifDrawable>(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL) {
+        SimpleTarget<GifDrawable> simpleTarget = new SimpleTarget<GifDrawable>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
 
             @Override
             public void onResourceReady(GifDrawable resource, GlideAnimation<? super GifDrawable> glideAnimation) {
@@ -63,7 +68,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
                 String spriteFilePath = Environment.getExternalStorageDirectory().toString();
                 OutputStream out = null;
 
-                File newSpriteFile = new File(spriteFilePath, "bigsprite"+theOne.getId()+".png");
+                File newSpriteFile = new File(spriteFilePath, "bigsprite" + theOne.getId() + ".png");
                 try {
                     out = new FileOutputStream(newSpriteFile);
                     byte[] gifData = resource.getData();
@@ -85,23 +90,23 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
             }
         };
 
-        if(theOne.getBigspritePath() == null) {
+        if (theOne.getBigspritePath() == null) {
 
-                System.out.println("the sprite is null for " + theOne.getName());
+            System.out.println("the sprite is null for " + theOne.getName());
 
-                Glide.with(this).load(theOne.getBigspriteString())
-                        .asGif()
-                        .into(simpleTarget);
+            Glide.with(this).load(theOne.getBigspriteString())
+                    .asGif()
+                    .into(simpleTarget);
 
-                Glide.with(this).load(theOne.getBigspriteString()).asGif().dontTransform().fitCenter().placeholder(R.drawable.placeholder).into(bigspriteImageView);
+            Glide.with(this).load(theOne.getBigspriteString()).asGif().dontTransform().fitCenter().placeholder(R.drawable.placeholder).into(bigspriteImageView);
 
         } else {
-            System.out.println("could find bigspritepath at "+theOne.getBigspritePath()+" so loading from file.. this pokemon is " + theOne.getName());
+            System.out.println("could find bigspritepath at " + theOne.getBigspritePath() + " so loading from file.. this pokemon is " + theOne.getName());
             Glide.with(this).load(new File(theOne.getBigspritePath())).asGif().dontTransform().fitCenter().placeholder(R.drawable.placeholder).into(bigspriteImageView);
         }
 
         //get details
-        if(theOne.getColorString() == null) {
+        if (theOne.getColorString() == null) {
             FetchDetailsAsyncTask fetchDetailsAsyncTask = new FetchDetailsAsyncTask(this);
             fetchDetailsAsyncTask.delegate = this;
             fetchDetailsAsyncTask.execute(theOne);
@@ -126,18 +131,23 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         bottomProgressBar.setVisibility(View.GONE);
         System.out.println("hey i filled the details for " + pokemonSpecies.getName() + " the color is " + pokemonSpecies.getColorString());
         thePokemon = pokemonSpecies;
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        DetailsBottom detailsBottom = new DetailsBottom();
+//        fragmentTransaction.add(R.id.rl_fragmentcontainer, detailsBottom);
+//        fragmentTransaction.commit();
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        DetailsBottom detailsBottom = new DetailsBottom();
-        fragmentTransaction.add(R.id.rl_fragmentcontainer, detailsBottom);
-        fragmentTransaction.commit();
+        viewPager = (ViewPager) findViewById(R.id.vp_pager);
+        FragmentPagerAdapter vpAdapter = new PagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(vpAdapter);
+
 
 
         int themeToSet = 0;
 
-        switch(pokemonSpecies.getColorString()) {
-            case "green" : themeToSet = R.style.detailGreen;
+        switch (pokemonSpecies.getColorString()) {
+            case "green":
+                themeToSet = R.style.detailGreen;
         }
     }
 
@@ -160,5 +170,31 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
 
     public PokemonSpecies getThePokemon() {
         return thePokemon;
+    }
+
+    //https://guides.codepath.com/android/ViewPager-with-FragmentPagerAdapter
+    public static class PagerAdapter extends FragmentPagerAdapter {
+        private static int NUM_ITEMS = 3;
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0: // Fragment # 0 - This will show FirstFragment
+                    return DetailsBottom.newInstance("hi","Page 1");
+                default:
+                    return DetailsBottom.newInstance("hi", "Page 1");
+            }
+        }
+
+        public PagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        // Returns total number of pages
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
     }
 }

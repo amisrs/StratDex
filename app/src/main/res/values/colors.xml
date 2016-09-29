@@ -11,7 +11,7 @@
 
     <color name="defaultBackground">#FFFFFF</color>
 
-    <color name="greenBackground">#F1F8E9</color>
+    <color name="greenBackground">#E8F5E9</color>
     <color name="greenAccent">#76FF03</color>
     <color name="greenText">#33691E</color>
 
@@ -32,4 +32,5 @@
     <color name="whiteBackrgound">#FFFFFF</color>
 
     <color name="pinkBackground">#FCE4EC</color>
+    <color name="black">#00671a</color>
 </resources>
