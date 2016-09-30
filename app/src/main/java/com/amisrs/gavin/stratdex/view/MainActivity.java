@@ -15,7 +15,7 @@ import android.widget.Button;
 import com.amisrs.gavin.stratdex.controller.PokemonSpeciesAdapter;
 import com.amisrs.gavin.stratdex.R;
 import com.amisrs.gavin.stratdex.controller.FetchDexAsyncTask;
-import com.amisrs.gavin.stratdex.controller.SpeciesQueries;
+import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 
 public class MainActivity extends AppCompatActivity {
     private static RecyclerView rv;

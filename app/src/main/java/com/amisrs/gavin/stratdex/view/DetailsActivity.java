@@ -1,17 +1,17 @@
 package com.amisrs.gavin.stratdex.view;
 
+import android.graphics.pdf.PdfDocument;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -19,9 +19,10 @@ import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.controller.PokemonSpeciesAdapter;
 import com.amisrs.gavin.stratdex.R;
+import com.amisrs.gavin.stratdex.db.AbilityQueries;
 import com.amisrs.gavin.stratdex.db.AsyncResponse;
 import com.amisrs.gavin.stratdex.controller.FetchDetailsAsyncTask;
-import com.amisrs.gavin.stratdex.controller.SpeciesQueries;
+import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
@@ -37,10 +38,12 @@ import java.io.OutputStream;
 
 public class DetailsActivity extends AppCompatActivity implements AsyncResponse, DetailsBottom.OnFragmentInteractionListener {
     private TextView nameTextView;
+    private TextView idTextView;
     private ImageView bigspriteImageView;
     private ProgressBar bottomProgressBar;
     private PokemonSpecies thePokemon;
     private ViewPager viewPager;
+    private PagerTabStrip pagerTabStrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +52,23 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         getWindow().setEnterTransition(null);
 
         setContentView(R.layout.activity_details);
+        idTextView = (TextView) findViewById(R.id.tv_id);
         nameTextView = (TextView) findViewById(R.id.tv_name);
         bigspriteImageView = (ImageView) findViewById(R.id.iv_bigsprite);
         bottomProgressBar = (ProgressBar) findViewById(R.id.pb_spinner);
+        pagerTabStrip = (PagerTabStrip) findViewById(R.id.pts_tabs);
         bottomProgressBar.setVisibility(View.GONE);
+        pagerTabStrip.setVisibility(View.GONE);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra(PokemonSpeciesAdapter.LIST_KEY);
-        SpeciesQueries speciesQueries = new SpeciesQueries(MainActivity.context);
+        SpeciesQueries speciesQueries = new SpeciesQueries(this);
+        AbilityQueries abilityQueries = new AbilityQueries(this);
         final PokemonSpecies theOne = speciesQueries.getOneSpeciesById(id);
+        theOne.setAbilities(abilityQueries.getAbilitiesForPokemon(Integer.parseInt(theOne.getId())));
+
         nameTextView.setText(theOne.getFullName());
+        idTextView.setText("#"+theOne.getId());
 
         SimpleTarget<GifDrawable> simpleTarget = new SimpleTarget<GifDrawable>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
 
@@ -114,6 +124,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
 
         } else {
             System.out.println("you got the details for this one already");
+
             giveFilledPokemon(theOne);
         }
         //show progress spinner
@@ -129,7 +140,8 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
     @Override
     public void giveFilledPokemon(PokemonSpecies pokemonSpecies) {
         bottomProgressBar.setVisibility(View.GONE);
-        System.out.println("hey i filled the details for " + pokemonSpecies.getName() + " the color is " + pokemonSpecies.getColorString());
+        System.out.println("hey i filled the details for " + pokemonSpecies.getName() + " the color is " + pokemonSpecies.getColorString()
+                + " and it has " + pokemonSpecies.getAbilities().size() + " abilities");
         thePokemon = pokemonSpecies;
 //        FragmentManager fragmentManager = getSupportFragmentManager();
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -140,15 +152,8 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         viewPager = (ViewPager) findViewById(R.id.vp_pager);
         FragmentPagerAdapter vpAdapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(vpAdapter);
+        pagerTabStrip.setVisibility(View.VISIBLE);
 
-
-
-        int themeToSet = 0;
-
-        switch (pokemonSpecies.getColorString()) {
-            case "green":
-                themeToSet = R.style.detailGreen;
-        }
     }
 
     @Override
@@ -174,7 +179,6 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
 
     //https://guides.codepath.com/android/ViewPager-with-FragmentPagerAdapter
     public static class PagerAdapter extends FragmentPagerAdapter {
-        private static int NUM_ITEMS = 3;
 
         @Override
         public Fragment getItem(int position) {
@@ -193,7 +197,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         // Returns total number of pages
         @Override
         public int getCount() {
-            return NUM_ITEMS;
+            return 3;
         }
 
     }

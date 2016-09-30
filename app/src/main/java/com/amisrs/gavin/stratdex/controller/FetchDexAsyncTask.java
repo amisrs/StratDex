@@ -4,8 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
-import com.amisrs.gavin.stratdex.controller.SpeciesQueries;
+import com.amisrs.gavin.stratdex.db.AbilityQueries;
+import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 import com.amisrs.gavin.stratdex.db.DexSQLHelper;
+import com.amisrs.gavin.stratdex.model.Ability;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -56,6 +59,7 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
                 .baseUrl("http://pokeapi.co/")
                 .client(okHttpClient)
                 .build();
+
         CountFromPokeAPIService countService = retrofitPokeAPI.create(CountFromPokeAPIService.class);
         Call<ResponseBody> getCountCall = countService.getCountFromPokeAPI();
         String count = "";
@@ -75,10 +79,28 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
             e.printStackTrace();
         }
 
+        AbilityCountFromPokeAPIService abilityCountService = retrofitPokeAPI.create(AbilityCountFromPokeAPIService.class);
+        Call<ResponseBody> getAbilityCountCall = abilityCountService.getAbilityCountFromPokeAPI();
+        String aCount = "";
+        retrofit2.Response<ResponseBody> abilityCountResponse = null;
+        try {
+            abilityCountResponse = getAbilityCountCall.execute();
+            String aResponseString = abilityCountResponse.body().string();
+
+            JSONObject acJsonObject = new JSONObject(aResponseString);
+            aCount = acJsonObject.getString("count");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         PokemonFromPokeAPIService pokemonService = retrofitPokeAPI.create(PokemonFromPokeAPIService.class);
+        AbilitiesFromPokeAPIService abilitiesService = retrofitPokeAPI.create(AbilitiesFromPokeAPIService.class);
 
         //!!!!IMPROTANT CHANGE THIS BACK TO TAKE COUNT!!!!!
         Call<ResponseBody> getPokemonCall = pokemonService.getPokemonFromPokeAPI(count);
+        Call<ResponseBody> getAbilitiesCall = abilitiesService.getAbilitiesFromPokeAPI(aCount);
 
         retrofit2.Response<ResponseBody> fullListResponse = null;
         String fullListString = "";
@@ -119,6 +141,24 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
             addSpeciesQuery.close();
         }
 
+        retrofit2.Response<ResponseBody> abilityListResponse = null;
+        String abilityList = "";
+        JsonObject aJsonObject = null;
+        JsonArray aJsonArray = null;
+        try {
+            abilityListResponse = getAbilitiesCall.execute();
+            abilityList = abilityListResponse.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        aJsonObject = gson.fromJson(abilityList, JsonObject.class);
+        aJsonArray = aJsonObject.getAsJsonArray("results");
+        Ability[] abilityArray = gson.fromJson(aJsonArray, Ability[].class);
+        AbilityQueries abilityQueries = new AbilityQueries(context);
+        for(int j=0; j < abilityArray.length; j++) {
+            abilityQueries.addAbility(abilityArray[j]);
+        }
+
         return pokemonSpecies;
     }
 
@@ -150,5 +190,15 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
     public interface PokemonFromPokeAPIService {
         @GET("api/v2/pokemon-species/")
         Call<ResponseBody> getPokemonFromPokeAPI(@Query(value="limit", encoded = true) String count);
+    }
+
+    public interface AbilityCountFromPokeAPIService {
+        @GET("api/v2/ability/")
+        Call<ResponseBody> getAbilityCountFromPokeAPI();
+    }
+
+    public interface  AbilitiesFromPokeAPIService {
+        @GET("api/v2/ability/")
+        Call<ResponseBody> getAbilitiesFromPokeAPI(@Query(value="limit",encoded = true) String count);
     }
 }

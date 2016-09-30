@@ -28,7 +28,16 @@ public class TypeContainer {
         }
 
         public String getName() {
-            return name;
+            String capName = name;
+            capName = name.replaceFirst(".", Character.toUpperCase(name.charAt(0))+"");
+            if(capName.contains("-")) {
+                int hyphenIndex = capName.indexOf("-");
+                capName = capName.replaceFirst("-.", "-"+Character.toUpperCase(capName.charAt(hyphenIndex+1))+"");
+            }
+
+            return capName;
         }
+
+
     }
 }

@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,6 +36,15 @@ public class PokemonSpecies {
     private String type1 = "";
     private String type2 = "";
     private String colorString = "";
+    private int stat1 = 0;
+    private int stat2 = 0;
+    private int stat3 = 0;
+    private int stat4 = 0;
+    private int stat5 = 0;
+    private int stat6 = 0;
+    private AbilityContainer[] abilityContainers;
+    private ArrayList<Ability> abilities;
+
 
 
     public PokemonSpecies(String url, String name, String type1, String type2, String spritePath) {
@@ -51,7 +61,8 @@ public class PokemonSpecies {
     }
 
     //constructor for details
-    public PokemonSpecies(String url, String name, String type1, String type2, String spritePath, String bigspritePath, String colorString) {
+    public PokemonSpecies(String url, String name, String type1, String type2, String spritePath, String bigspritePath, String colorString,
+                          int stat1, int stat2, int stat3, int stat4, int stat5, int stat6) {
 
         System.out.println("tihs is the second constructor for " + name + " that takes spritepath " + spritePath + " and bigspritepath " + bigspritePath);
         this.url = url;
@@ -62,8 +73,78 @@ public class PokemonSpecies {
         this.colorString = colorString;
         //Bitmap bmp = BitmapFactory.decodeResource(MainActivity.context.getResources(), R.drawable.default_sprite);
         //smallSprite = bmp;
+        this.stat1 = stat1;
+        this.stat2 = stat2;
+        this.stat3 = stat3;
+        this.stat4 = stat4;
+        this.stat5 = stat5;
+        this.stat6 = stat6;
         isDefaultSprite = true;
 
+    }
+
+    public ArrayList<Ability> getAbilities() {
+        return abilities;
+    }
+
+    public void setAbilities(ArrayList<Ability> abilities) {
+        this.abilities = abilities;
+    }
+
+    public void setStat1(int stat1) {
+        this.stat1 = stat1;
+    }
+
+    public AbilityContainer[] getAbilityContainers() {
+        return abilityContainers;
+    }
+
+    public void setAbilityContainers(AbilityContainer[] abilityContainers) {
+        this.abilityContainers = abilityContainers;
+    }
+
+    public void setStat2(int stat2) {
+        this.stat2 = stat2;
+    }
+
+    public void setStat3(int stat3) {
+        this.stat3 = stat3;
+    }
+
+    public void setStat4(int stat4) {
+        this.stat4 = stat4;
+    }
+
+    public void setStat5(int stat5) {
+        this.stat5 = stat5;
+    }
+
+    public void setStat6(int stat6) {
+        this.stat6 = stat6;
+    }
+
+    public int getStat1() {
+        return stat1;
+    }
+
+    public int getStat2() {
+        return stat2;
+    }
+
+    public int getStat3() {
+        return stat3;
+    }
+
+    public int getStat4() {
+        return stat4;
+    }
+
+    public int getStat5() {
+        return stat5;
+    }
+
+    public int getStat6() {
+        return stat6;
     }
 
     public String getColorString() {

@@ -3,4 +3,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="stat1">HP</string>
+    <string name="stat2">Attack</string>
+    <string name="stat3">Defense</string>
+    <string name="stat4">Sp.Atk</string>
+    <string name="stat5">Sp.Def</string>
+    <string name="stat6">Speed</string>
 </resources>

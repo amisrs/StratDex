@@ -1,4 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    android:id="@+id/sv_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fl_main"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,8 +16,225 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/tv_typesLabel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="30dp"
+        android:textSize="@dimen/heading2"
+        android:text="Type"/>
+    <TextView
+        android:id="@+id/tv_type1"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/tv_typesLabel"
+        android:text=""/>
+    <TextView
+        android:id="@+id/tv_type2"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/tv_typesLabel"
+        android:layout_toRightOf="@id/tv_type1"
+        android:text=""/>
+    
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tv_statsLabel"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/tv_type1"
+        android:textSize="@dimen/heading2"
+        android:text="Stats" />
+
+        <TableLayout
+            android:id="@+id/rl_stats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_statsLabel"
+            android:stretchColumns="1">
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/tv_stat1"
+                    android:layout_width="@dimen/statbarlabel_width"
+                    android:layout_height="@dimen/statbar_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/statbar_gap"
+                    android:text="@string/stat1"/>
+                <ProgressBar
+                    android:id="@+id/pb_stat1"
+                    android:max="255"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_marginBottom="@dimen/statbar_gap"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_toRightOf="@id/tv_stat1"
+                    />
+                <TextView
+                    android:id="@+id/tv_stat1amt"
+                    android:layout_width="50dp"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_marginLeft="@dimen/statbar_gap"
+                    android:layout_toRightOf="@id/pb_stat1"
+                    android:text="0"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/tv_stat2"
+                    android:layout_width="@dimen/statbarlabel_width"
+                    android:layout_height="@dimen/statbar_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/statbar_gap"
+                    android:layout_below="@id/tv_stat1"
+                    android:text="@string/stat2"/>
+
+                <ProgressBar
+                    android:id="@+id/pb_stat2"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:max="255"
+                    android:layout_marginBottom="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_toRightOf="@id/tv_stat2"
+                    android:layout_below="@id/pb_stat1"/>
+                <TextView
+                    android:id="@+id/tv_stat2amt"
+                    android:layout_width="50dp"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_marginLeft="@dimen/statbar_gap"
+                    android:layout_toRightOf="@id/pb_stat2"
+                    android:text="0"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/tv_stat3"
+                    android:layout_width="@dimen/statbarlabel_width"
+                    android:layout_height="@dimen/statbar_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/statbar_gap"
+                    android:layout_below="@id/tv_stat2"
+                    android:text="@string/stat3"/>
+
+                <ProgressBar
+                    android:id="@+id/pb_stat3"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:max="255"
+                    android:layout_marginBottom="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_toRightOf="@id/tv_stat3"
+                    android:layout_below="@id/pb_stat2"/>
+                <TextView
+                    android:id="@+id/tv_stat3amt"
+                    android:layout_width="50dp"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_marginLeft="@dimen/statbar_gap"
+                    android:layout_toRightOf="@id/pb_stat3"
+                    android:text="0"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/tv_stat4"
+                    android:layout_width="@dimen/statbarlabel_width"
+                    android:layout_height="@dimen/statbar_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/statbar_gap"
+                    android:layout_below="@id/tv_stat3"
+                    android:text="@string/stat4"/>
+
+                <ProgressBar
+                    android:id="@+id/pb_stat4"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:max="255"
+                    android:layout_marginBottom="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_toRightOf="@id/tv_stat4"
+                    android:layout_below="@id/pb_stat3"/>
+                <TextView
+                    android:id="@+id/tv_stat4amt"
+                    android:layout_width="50dp"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_marginLeft="@dimen/statbar_gap"
+                    android:layout_toRightOf="@id/pb_stat4"
+                    android:text="0"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/tv_stat5"
+                    android:layout_width="@dimen/statbarlabel_width"
+                    android:layout_height="@dimen/statbar_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/statbar_gap"
+                    android:layout_below="@id/tv_stat4"
+                    android:text="@string/stat5"/>
+
+                <ProgressBar
+                    android:id="@+id/pb_stat5"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:max="255"
+                    android:layout_marginBottom="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_toRightOf="@id/tv_stat5"
+                    android:layout_below="@id/pb_stat4"/>
+                <TextView
+                    android:id="@+id/tv_stat5amt"
+                    android:layout_width="50dp"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_marginLeft="@dimen/statbar_gap"
+                    android:layout_toRightOf="@id/pb_stat5"
+                    android:text="0"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/tv_stat6"
+                    android:layout_width="@dimen/statbarlabel_width"
+                    android:layout_height="@dimen/statbar_height"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/statbar_gap"
+                    android:layout_below="@id/tv_stat5"
+                    android:text="@string/stat6"/>
+
+                <ProgressBar
+                    android:id="@+id/pb_stat6"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:max="255"
+                    android:layout_marginBottom="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_toRightOf="@id/tv_stat6"
+                    android:layout_below="@id/pb_stat5"/>
+                <TextView
+                    android:id="@+id/tv_stat6amt"
+                    android:layout_width="50dp"
+                    android:layout_height="@dimen/statbar_height"
+                    android:layout_marginLeft="@dimen/statbar_gap"
+                    android:layout_toRightOf="@id/pb_stat6"
+                    android:text="0"/>
+            </TableRow>
+
+        </TableLayout>
+
+    <TextView
+        android:id="@+id/tv_abilitiesLabel"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/rl_stats"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/heading2"
+        android:text="Abilities" />
+
+    <LinearLayout
+        android:id="@+id/ll_abilities"
+        android:layout_below="@id/tv_abilitiesLabel"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    </LinearLayout>
+</RelativeLayout>
+</ScrollView>

@@ -11,8 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.R;
+import com.amisrs.gavin.stratdex.model.Ability;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,7 +43,27 @@ public class DetailsBottom extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private FrameLayout frameLayout;
+    private RelativeLayout relativeLayout;
+    private ScrollView scrollView;
+    private LinearLayout linearLayout;
+
+    private TextView type1text;
+    private TextView type2text;
+
+    private ProgressBar stat1Bar;
+    private ProgressBar stat2Bar;
+    private ProgressBar stat3Bar;
+    private ProgressBar stat4Bar;
+    private ProgressBar stat5Bar;
+    private ProgressBar stat6Bar;
+
+    private TextView stat1amt;
+    private TextView stat2amt;
+    private TextView stat3amt;
+    private TextView stat4amt;
+    private TextView stat5amt;
+    private TextView stat6amt;
+
 
     public DetailsBottom() {
         // Required empty public constructor
@@ -82,35 +112,62 @@ public class DetailsBottom extends Fragment {
 //
 //        System.out.println("theme is : " + view.getContext().getTheme());
         DetailsActivity parentActivity = (DetailsActivity) getActivity();
-        int colorToSet = R.color.defaultBackground;
-        switch(parentActivity.getThePokemon().getColorString()) {
-            case "green"  : colorToSet = R.color.greenBackground;
-                            break;
-            case "red"    : colorToSet = R.color.redBackground;
-                            break;
-            case "blue"   : colorToSet = R.color.blueBackground;
-                            break;
-            case "yellow" : colorToSet = R.color.yellowBackground;
-                            break;
-            case "purple" : colorToSet = R.color.purpleBackground;
-                            break;
-            case "black"  : colorToSet = R.color.blackBackground;
-                            break;
-            case "pink"   : colorToSet = R.color.pinkBackground;
-                            break;
-            case "brown"  : colorToSet = R.color.brownBackground;
-                            break;
-            case "grey"   : colorToSet = R.color.greyBackground;
-                            break;
-            case "white"  : colorToSet = R.color.whiteBackrgound;
-                            break;
-            default      : colorToSet = R.color.defaultBackground;
-                            break;
-        }
+        int colorToSet = DetailsBaseFragment.getColorToSet(parentActivity.getThePokemon().getColorString());
+
         onCreate(savedInstanceState);
 
-        frameLayout = (FrameLayout)view.findViewById(R.id.fl_main);
-        frameLayout.setBackgroundColor(ContextCompat.getColor(this.getContext(),colorToSet));
+        type1text = (TextView)view.findViewById(R.id.tv_type1);
+        type2text = (TextView)view.findViewById(R.id.tv_type2);
+
+        stat1Bar = (ProgressBar)view.findViewById(R.id.pb_stat1);
+        stat2Bar = (ProgressBar)view.findViewById(R.id.pb_stat2);
+        stat3Bar = (ProgressBar)view.findViewById(R.id.pb_stat3);
+        stat4Bar = (ProgressBar)view.findViewById(R.id.pb_stat4);
+        stat5Bar = (ProgressBar)view.findViewById(R.id.pb_stat5);
+        stat6Bar = (ProgressBar)view.findViewById(R.id.pb_stat6);
+
+        stat1amt = (TextView)view.findViewById(R.id.tv_stat1amt);
+        stat2amt = (TextView)view.findViewById(R.id.tv_stat2amt);
+        stat3amt = (TextView)view.findViewById(R.id.tv_stat3amt);
+        stat4amt = (TextView)view.findViewById(R.id.tv_stat4amt);
+        stat5amt = (TextView)view.findViewById(R.id.tv_stat5amt);
+        stat6amt = (TextView)view.findViewById(R.id.tv_stat6amt);
+
+        type1text.setText(parentActivity.getThePokemon().getType1());
+        type2text.setText(parentActivity.getThePokemon().getType2());
+
+        stat1Bar.setProgress(parentActivity.getThePokemon().getStat1());
+        stat2Bar.setProgress(parentActivity.getThePokemon().getStat2());
+        stat3Bar.setProgress(parentActivity.getThePokemon().getStat3());
+        stat4Bar.setProgress(parentActivity.getThePokemon().getStat4());
+        stat5Bar.setProgress(parentActivity.getThePokemon().getStat5());
+        stat6Bar.setProgress(parentActivity.getThePokemon().getStat6());
+
+        stat1amt.setText(String.valueOf(parentActivity.getThePokemon().getStat1()));
+        stat2amt.setText(String.valueOf(parentActivity.getThePokemon().getStat2()));
+        stat3amt.setText(String.valueOf(parentActivity.getThePokemon().getStat3()));
+        stat4amt.setText(String.valueOf(parentActivity.getThePokemon().getStat4()));
+        stat5amt.setText(String.valueOf(parentActivity.getThePokemon().getStat5()));
+        stat6amt.setText(String.valueOf(parentActivity.getThePokemon().getStat6()));
+
+
+
+        linearLayout = (LinearLayout)view.findViewById(R.id.ll_abilities);
+        ArrayList<Ability> abilities = parentActivity.getThePokemon().getAbilities();
+        for(Ability a : abilities) {
+            TextView abilityName = new TextView(this.getContext());
+            TextView abilityDesc = new TextView(this.getContext());
+
+            abilityName.setTextSize(getResources().getDimension(R.dimen.heading3forprogram));
+            abilityName.setText(a.getCleanName());
+            abilityDesc.setText(a.getDesc() + "\n");
+
+            linearLayout.addView(abilityName);
+            linearLayout.addView(abilityDesc);
+        }
+        relativeLayout = (RelativeLayout)view.findViewById(R.id.fl_main);
+        scrollView = (ScrollView)view.findViewById(R.id.sv_main);
+        scrollView.setBackgroundColor(ContextCompat.getColor(this.getContext(),colorToSet));
         // Inflate the layout for this fragment
         return view;
     }
@@ -149,6 +206,7 @@ public class DetailsBottom extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

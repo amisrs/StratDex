@@ -15,11 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.R;
+import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 import com.amisrs.gavin.stratdex.view.DetailsActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 
 
 import java.io.File;
@@ -94,36 +96,37 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
 
             System.out.println("try loading image for " + data.getId());
             bmp = data.getSmallSprite();
-            SimpleTarget<Bitmap> simpleTarget = new SimpleTarget<Bitmap>(96,96) {
-                @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    System.out.println("onresourceready simpletarget");
-                    String spriteFilePath = Environment.getExternalStorageDirectory().toString();
-                    OutputStream out = null;
-
-                    File newSpriteFile = new File(spriteFilePath, id+".png");
-                    try {
-                        out = new FileOutputStream(newSpriteFile);
-                        resource.compress(Bitmap.CompressFormat.PNG, 100, out);
-                        System.out.println("compressing image");
-                        out.flush();
-                        out.close();
-                        MediaStore.Images.Media.insertImage(context.getContentResolver(), newSpriteFile.getAbsolutePath(), newSpriteFile.getName(), newSpriteFile.getName());
-                        System.out.println("image is stored");
-                        SpeciesQueries speciesQueries = new SpeciesQueries(context);
-                        speciesQueries.addSpriteFilePathForSpecies(id, newSpriteFile.getAbsolutePath(), "small");
-                        System.out.println("image path is stored in database");
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
 
 
             if(data.getSpritePath() == null) {
                 System.out.println("the sprite is null for " + data.getName());
+                SimpleTarget<Bitmap> simpleTarget = new SimpleTarget<Bitmap>(75,75) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        System.out.println("onresourceready simpletarget");
+                        String spriteFilePath = Environment.getExternalStorageDirectory().toString();
+                        OutputStream out = null;
+
+                        File newSpriteFile = new File(spriteFilePath, id+".png");
+                        try {
+                            out = new FileOutputStream(newSpriteFile);
+                            resource.compress(Bitmap.CompressFormat.PNG, 100, out);
+                            System.out.println("compressing image");
+                            out.flush();
+                            out.close();
+                            MediaStore.Images.Media.insertImage(context.getContentResolver(), newSpriteFile.getAbsolutePath(), newSpriteFile.getName(), newSpriteFile.getName());
+                            System.out.println("image is stored");
+                            SpeciesQueries speciesQueries = new SpeciesQueries(context);
+                            speciesQueries.addSpriteFilePathForSpecies(id, newSpriteFile.getAbsolutePath(), "small");
+                            System.out.println("image path is stored in database");
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
 
 
                 Glide.with(context).load(data.getSpriteString())

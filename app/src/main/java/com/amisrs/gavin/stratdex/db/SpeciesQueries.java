@@ -1,4 +1,4 @@
-package com.amisrs.gavin.stratdex.controller;
+package com.amisrs.gavin.stratdex.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -26,7 +26,7 @@ public class SpeciesQueries {
     public void addSpecies(String url, String name, String type1, String type2, String spritePath) {
         open();
         PokemonSpecies dummy = new PokemonSpecies(url, name, type1, type2, spritePath);
-
+        //what a dumb way to do this... just make it accept pokemonspecies as param................
         dummy.setIdFromUrl();
 
         //InputStream in = null;
@@ -65,10 +65,22 @@ public class SpeciesQueries {
         close();
     }
 
-    public void addDetailsForSpecies(String id, String color) {
+    public void addDetailsForSpecies(String id, String color,
+                                     int s1, int s2, int s3, int s4, int s5, int s6,
+                                     String type1, String type2) {
         open();
         String updateString = "UPDATE " + DexContract.PokemonTable.TABLE_NAME + " SET " +
-                DexContract.PokemonTable.COLUMN_NAME_COLOR + " = \"" + color + "\" WHERE " +
+                DexContract.PokemonTable.COLUMN_NAME_COLOR + " = \"" + color + "\"," +
+                DexContract.PokemonTable.COLUMN_NAME_STAT1 + " = " + s1 + "," +
+                DexContract.PokemonTable.COLUMN_NAME_STAT2 + " = " + s2 + "," +
+                DexContract.PokemonTable.COLUMN_NAME_STAT3 + " = " + s3 + "," +
+                DexContract.PokemonTable.COLUMN_NAME_STAT4 + " = " + s4 + "," +
+                DexContract.PokemonTable.COLUMN_NAME_STAT5 + " = " + s5 + "," +
+                DexContract.PokemonTable.COLUMN_NAME_STAT6 + " = " + s6 + "," +
+                DexContract.PokemonTable.COLUMN_NAME_TYPE1 + " = \"" + type1 + "\"" + "," +
+                DexContract.PokemonTable.COLUMN_NAME_TYPE2 + " = \"" + type2 + "\"" +
+
+                " WHERE " +
                 DexContract.PokemonTable.COLUMN_NAME_ID + " = " + id;
         db.execSQL(updateString);
 
@@ -123,7 +135,14 @@ public class SpeciesQueries {
                 DexContract.PokemonTable.COLUMN_NAME_TYPE1,
                 DexContract.PokemonTable.COLUMN_NAME_TYPE2,
                 DexContract.PokemonTable.COLUMN_NAME_BIGSPRITE,
-                DexContract.PokemonTable.COLUMN_NAME_COLOR
+                DexContract.PokemonTable.COLUMN_NAME_COLOR,
+                DexContract.PokemonTable.COLUMN_NAME_STAT1,
+                DexContract.PokemonTable.COLUMN_NAME_STAT2,
+                DexContract.PokemonTable.COLUMN_NAME_STAT3,
+                DexContract.PokemonTable.COLUMN_NAME_STAT4,
+                DexContract.PokemonTable.COLUMN_NAME_STAT5,
+                DexContract.PokemonTable.COLUMN_NAME_STAT6
+
         };
 
         String selection = DexContract.PokemonTable.COLUMN_NAME_ID + " = ?";
@@ -140,7 +159,8 @@ public class SpeciesQueries {
 
         c.moveToFirst();
         System.out.println("giving requested pokemon " + c.getString(1) + " bigsprite is follows: " + c.getString(6));
-        PokemonSpecies toGet = new PokemonSpecies(c.getString(2), c.getString(1), c.getString(4), c.getString(5), c.getString(3), c.getString(6), c.getString(7));
+        PokemonSpecies toGet = new PokemonSpecies(c.getString(2), c.getString(1), c.getString(4), c.getString(5), c.getString(3), c.getString(6), c.getString(7)
+                , c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11), c.getInt(12), c.getInt(13));
         System.out.println(" has smallsp " + toGet.getSpritePath() + " and bigsp " + toGet.getBigspritePath());
         toGet.setIdFromUrl();
         c.close();
@@ -156,6 +176,7 @@ public class SpeciesQueries {
 
     public void close() {
         dsh.close();
+        db.close();
     }
 
 }

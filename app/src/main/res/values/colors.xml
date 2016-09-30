@@ -11,11 +11,11 @@
 
     <color name="defaultBackground">#FFFFFF</color>
 
-    <color name="greenBackground">#E8F5E9</color>
+    <color name="greenBackground">#eef4ee</color>
     <color name="greenAccent">#76FF03</color>
     <color name="greenText">#33691E</color>
 
-    <color name="redBackground">#FFEBEE</color>
+    <color name="redBackground">#f7f1f2</color>
 
     <color name="blueBackground">#E3F2FD</color>
 
