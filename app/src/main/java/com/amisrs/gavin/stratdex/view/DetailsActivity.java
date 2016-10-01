@@ -1,6 +1,5 @@
 package com.amisrs.gavin.stratdex.view;
 
-import android.graphics.pdf.PdfDocument;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
@@ -36,7 +35,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class DetailsActivity extends AppCompatActivity implements AsyncResponse, DetailsBottom.OnFragmentInteractionListener {
+public class DetailsActivity extends AppCompatActivity implements AsyncResponse, DetailsBottomFragment.OnFragmentInteractionListener, DetailsMiscFragment.OnFragmentInteractionListener {
     private TextView nameTextView;
     private TextView idTextView;
     private ImageView bigspriteImageView;
@@ -44,6 +43,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
     private PokemonSpecies thePokemon;
     private ViewPager viewPager;
     private PagerTabStrip pagerTabStrip;
+    private SlidingTabLayout slidingTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +57,8 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         bigspriteImageView = (ImageView) findViewById(R.id.iv_bigsprite);
         bottomProgressBar = (ProgressBar) findViewById(R.id.pb_spinner);
         pagerTabStrip = (PagerTabStrip) findViewById(R.id.pts_tabs);
+        slidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
+
         bottomProgressBar.setVisibility(View.GONE);
         pagerTabStrip.setVisibility(View.GONE);
 
@@ -145,14 +147,23 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         thePokemon = pokemonSpecies;
 //        FragmentManager fragmentManager = getSupportFragmentManager();
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        DetailsBottom detailsBottom = new DetailsBottom();
+//        DetailsBottomFragment detailsBottom = new DetailsBottomFragment();
 //        fragmentTransaction.add(R.id.rl_fragmentcontainer, detailsBottom);
 //        fragmentTransaction.commit();
 
         viewPager = (ViewPager) findViewById(R.id.vp_pager);
         FragmentPagerAdapter vpAdapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(vpAdapter);
-        pagerTabStrip.setVisibility(View.VISIBLE);
+        slidingTabLayout.setDistributeEvenly(true);
+        slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return getResources().getColor(DetailsBaseFragment.getTabColorToSet(thePokemon.getColorString()));
+            }
+        });
+
+        slidingTabLayout.setViewPager(viewPager);
+        //pagerTabStrip.setVisibility(View.VISIBLE);
 
     }
 
@@ -173,6 +184,8 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
 
     }
 
+
+
     public PokemonSpecies getThePokemon() {
         return thePokemon;
     }
@@ -184,9 +197,11 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         public Fragment getItem(int position) {
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
-                    return DetailsBottom.newInstance("hi","Page 1");
+                    return DetailsBottomFragment.newInstance("hi","Page 1");
+                case 1:
+                    return DetailsMiscFragment.newInstance("hi2", "Page 2");
                 default:
-                    return DetailsBottom.newInstance("hi", "Page 1");
+                    return DetailsBottomFragment.newInstance("hi", "Page 1");
             }
         }
 
@@ -199,6 +214,21 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         public int getCount() {
             return 3;
         }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch(position) {
+                case 0:
+                    return "Attributes";
+                case 1:
+                    return "Tab2";
+                case 2:
+                    return "Misc";
+                default:
+                    return "default";
+            }
+        }
+
 
     }
 }

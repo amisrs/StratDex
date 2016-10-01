@@ -20,8 +20,8 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:background="@color/spriteCircle"
-        android:elevation="4dp"
+        android:background="@color/defaultBackground"
+        android:elevation="0dp"
         android:clipToPadding="false"
     >
         <RelativeLayout
@@ -55,7 +55,10 @@
             android:layout_below="@id/tv_id"
             android:layout_toRightOf="@id/rl_bigspritecontainer"/>
 
+
+
     </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/rl_bottom"
@@ -63,6 +66,17 @@
         android:layout_height="match_parent"
         android:layout_below="@id/rl_topbar"
         android:elevation="1dp">
+
+        <com.amisrs.gavin.stratdex.view.SlidingTabLayout
+            android:id="@+id/stl_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@color/defaultBackground"
+            android:elevation="2dp">
+
+        </com.amisrs.gavin.stratdex.view.SlidingTabLayout>
+
+
 
         <ProgressBar
             android:id="@+id/pb_spinner"
@@ -73,6 +87,7 @@
             />
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_pager"
+            android:layout_below="@id/stl_tabs"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <android.support.v4.view.PagerTabStrip
@@ -83,9 +98,11 @@
 
             </android.support.v4.view.PagerTabStrip>
 
+
         </android.support.v4.view.ViewPager>
         <RelativeLayout
             android:id="@+id/rl_fragmentcontainer"
+            android:layout_below="@id/stl_tabs"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </RelativeLayout>

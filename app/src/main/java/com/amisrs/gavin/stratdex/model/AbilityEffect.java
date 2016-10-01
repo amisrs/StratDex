@@ -24,6 +24,7 @@ public class AbilityEffect {
 
         public void cleanText() {
             effect = effect.replace("\"", "\\\"");
+            short_effect = short_effect.replace("\"", "\\\"");
         }
     }
 }

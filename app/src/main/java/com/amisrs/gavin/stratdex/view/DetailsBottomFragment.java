@@ -1,16 +1,17 @@
 package com.amisrs.gavin.stratdex.view;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.Layout;
-import android.view.ContextThemeWrapper;
+import android.telecom.Call;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -20,19 +21,18 @@ import android.widget.TextView;
 import com.amisrs.gavin.stratdex.R;
 import com.amisrs.gavin.stratdex.model.Ability;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link DetailsBottom.OnFragmentInteractionListener} interface
+ * {@link DetailsBottomFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link DetailsBottom#newInstance} factory method to
+ * Use the {@link DetailsBottomFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DetailsBottom extends Fragment {
+public class DetailsBottomFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -65,7 +65,7 @@ public class DetailsBottom extends Fragment {
     private TextView stat6amt;
 
 
-    public DetailsBottom() {
+    public DetailsBottomFragment() {
         // Required empty public constructor
     }
 
@@ -75,11 +75,11 @@ public class DetailsBottom extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailsBottom.
+     * @return A new instance of fragment DetailsBottomFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DetailsBottom newInstance(String param1, String param2) {
-        DetailsBottom fragment = new DetailsBottom();
+    public static DetailsBottomFragment newInstance(String param1, String param2) {
+        DetailsBottomFragment fragment = new DetailsBottomFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -142,6 +142,25 @@ public class DetailsBottom extends Fragment {
         stat4Bar.setProgress(parentActivity.getThePokemon().getStat4());
         stat5Bar.setProgress(parentActivity.getThePokemon().getStat5());
         stat6Bar.setProgress(parentActivity.getThePokemon().getStat6());
+
+        ArrayList<ProgressBar> progressBars = new ArrayList<>();
+        progressBars.add(stat1Bar);
+        progressBars.add(stat2Bar);
+        progressBars.add(stat3Bar);
+        progressBars.add(stat4Bar);
+        progressBars.add(stat5Bar);
+        progressBars.add(stat6Bar);
+
+        //http://stackoverflow.com/questions/2020882/how-to-change-progress-bars-progress-color-in-android
+        //user mieszk3
+        int barColor = ContextCompat.getColor(parentActivity, DetailsBaseFragment.getTabColorToSet(parentActivity.getThePokemon().getColorString()));
+        for(ProgressBar pb : progressBars) {
+            LayerDrawable layerDrawable = (LayerDrawable) pb.getProgressDrawable();
+            Drawable progressDrawable = layerDrawable.findDrawableByLayerId(android.R.id.progress);
+            Drawable bgDrawable = layerDrawable.findDrawableByLayerId(android.R.id.background);
+            bgDrawable.setAlpha(0);
+            progressDrawable.setColorFilter(barColor, PorterDuff.Mode.SRC_IN);
+        }
 
         stat1amt.setText(String.valueOf(parentActivity.getThePokemon().getStat1()));
         stat2amt.setText(String.valueOf(parentActivity.getThePokemon().getStat2()));

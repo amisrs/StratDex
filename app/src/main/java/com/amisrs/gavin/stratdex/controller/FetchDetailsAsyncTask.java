@@ -150,7 +150,7 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
             }
 
             AbilityQueries abilityQueries = new AbilityQueries(context);
-            abilityQueries.addDescToAbility(abilityContainers[k].getAbility().getId(), abilityEffect.getEffect_entries()[0].getEffect());
+            abilityQueries.addDescToAbility(abilityContainers[k].getAbility().getId(), abilityEffect.getEffect_entries()[0].getShort_effect());
         }
 
         params[0].setAbilityContainers(abilityContainers);

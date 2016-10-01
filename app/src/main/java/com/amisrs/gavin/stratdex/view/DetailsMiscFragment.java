@@ -3,7 +3,7 @@ package com.amisrs.gavin.stratdex.view;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +13,12 @@ import com.amisrs.gavin.stratdex.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link DetailsBaseFragment.OnFragmentInteractionListener} interface
+ * {@link DetailsMiscFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link DetailsBaseFragment#newInstance} factory method to
+ * Use the {@link DetailsMiscFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DetailsBaseFragment extends Fragment {
+public class DetailsMiscFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +30,7 @@ public class DetailsBaseFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public DetailsBaseFragment() {
+    public DetailsMiscFragment() {
         // Required empty public constructor
     }
 
@@ -40,77 +40,17 @@ public class DetailsBaseFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailsBaseFragment.
+     * @return A new instance of fragment DetailsMiscFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DetailsBaseFragment newInstance(String param1, String param2) {
-        DetailsBaseFragment fragment = new DetailsBaseFragment();
+    public static DetailsMiscFragment newInstance(String param1, String param2) {
+        DetailsMiscFragment fragment = new DetailsMiscFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
-    public static int getColorToSet(String color) {
-        int colorToSet = 0;
-        switch(color) {
-            case "green"  : colorToSet = R.color.greenBackground;
-                break;
-            case "red"    : colorToSet = R.color.redBackground;
-                break;
-            case "blue"   : colorToSet = R.color.blueBackground;
-                break;
-            case "yellow" : colorToSet = R.color.yellowBackground;
-                break;
-            case "purple" : colorToSet = R.color.purpleBackground;
-                break;
-            case "black"  : colorToSet = R.color.blackBackground;
-                break;
-            case "pink"   : colorToSet = R.color.pinkBackground;
-                break;
-            case "brown"  : colorToSet = R.color.brownBackground;
-                break;
-            case "grey"   : colorToSet = R.color.greyBackground;
-                break;
-            case "white"  : colorToSet = R.color.whiteBackrgound;
-                break;
-            default      : colorToSet = R.color.defaultBackground;
-                break;
-        }
-
-        return colorToSet;
-    }
-
-    public static int getTabColorToSet(String color) {
-        int colorToSet = 0;
-        switch(color) {
-            case "green"  : colorToSet = R.color.greenAccent;
-                break;
-            case "red"    : colorToSet = R.color.redAccent;
-                break;
-            case "blue"   : colorToSet = R.color.blueAccent;
-                break;
-            case "yellow" : colorToSet = R.color.yellowAccent;
-                break;
-            case "purple" : colorToSet = R.color.purpleAccent;
-                break;
-            case "black"  : colorToSet = R.color.blackAccent;
-                break;
-            case "pink"   : colorToSet = R.color.pinkAccent;
-                break;
-            case "brown"  : colorToSet = R.color.brownAccent;
-                break;
-            case "grey"   : colorToSet = R.color.greyAccent;
-                break;
-            case "white"  : colorToSet = R.color.whiteAccent;
-                break;
-            default      : colorToSet = R.color.blueAccent;
-                break;
-        }
-
-        return colorToSet;
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,8 +64,15 @@ public class DetailsBaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_details_misc, container, false);
+////        System.out.println("theme is : " + view.getContext().getTheme());
+
+        DetailsActivity parentActivity = (DetailsActivity) getActivity();
+        int colorToSet = DetailsBaseFragment.getColorToSet(parentActivity.getThePokemon().getColorString());
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_details_base, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
