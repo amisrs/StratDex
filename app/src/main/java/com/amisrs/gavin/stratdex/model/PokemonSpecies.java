@@ -44,6 +44,8 @@ public class PokemonSpecies {
     private int stat6 = 0;
     private AbilityContainer[] abilityContainers;
     private ArrayList<Ability> abilities;
+    private PMove[] moves;
+    private ArrayList<PMove> moveArrayList;
 
 
 
@@ -81,6 +83,22 @@ public class PokemonSpecies {
         this.stat6 = stat6;
         isDefaultSprite = true;
 
+    }
+
+    public ArrayList<PMove> getMoveArrayList() {
+        return moveArrayList;
+    }
+
+    public void setMoveArrayList(ArrayList<PMove> moveArrayList) {
+        this.moveArrayList = moveArrayList;
+    }
+
+    public PMove[] getMoves() {
+        return moves;
+    }
+
+    public void setMoves(PMove[] PMoves) {
+        this.moves = PMoves;
     }
 
     public ArrayList<Ability> getAbilities() {

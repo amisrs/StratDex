@@ -35,7 +35,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class DetailsActivity extends AppCompatActivity implements AsyncResponse, DetailsBottomFragment.OnFragmentInteractionListener, DetailsMiscFragment.OnFragmentInteractionListener {
+public class DetailsActivity extends AppCompatActivity implements AsyncResponse, DetailsBottomFragment.OnFragmentInteractionListener, DetailsMovesFragment.OnFragmentInteractionListener {
     private TextView nameTextView;
     private TextView idTextView;
     private ImageView bigspriteImageView;
@@ -199,7 +199,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
                 case 0: // Fragment # 0 - This will show FirstFragment
                     return DetailsBottomFragment.newInstance("hi","Page 1");
                 case 1:
-                    return DetailsMiscFragment.newInstance("hi2", "Page 2");
+                    return DetailsMovesFragment.newInstance("hi2", "Page 2");
                 default:
                     return DetailsBottomFragment.newInstance("hi", "Page 1");
             }
@@ -221,7 +221,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
                 case 0:
                     return "Attributes";
                 case 1:
-                    return "Tab2";
+                    return "Moves";
                 case 2:
                     return "Misc";
                 default:

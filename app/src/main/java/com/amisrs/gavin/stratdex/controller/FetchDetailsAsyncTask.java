@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.amisrs.gavin.stratdex.db.AbilityQueries;
+import com.amisrs.gavin.stratdex.db.MoveQueries;
 import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 import com.amisrs.gavin.stratdex.db.AsyncResponse;
 import com.amisrs.gavin.stratdex.model.Ability;
@@ -11,10 +12,12 @@ import com.amisrs.gavin.stratdex.model.AbilityContainer;
 import com.amisrs.gavin.stratdex.model.AbilityEffect;
 import com.amisrs.gavin.stratdex.model.DetailsFromPokemon;
 import com.amisrs.gavin.stratdex.model.DetailsFromSpecies;
+import com.amisrs.gavin.stratdex.model.PMove;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 import com.amisrs.gavin.stratdex.model.TypeContainer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -90,6 +93,10 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
 
         JsonObject jsonObject2 = gson.fromJson(responseString2, JsonObject.class);
         DetailsFromPokemon detailsFromPokemon = gson.fromJson(jsonObject2, DetailsFromPokemon.class);
+        //System.out.printf("HERES JSON: \n " + jsonObject2.get("moves").toString());
+        JsonElement moveElement = jsonObject2.get("moves");
+        PMove[] pMoves = gson.fromJson(moveElement, PMove[].class);
+        System.out.println("hey made pmoves length " + pMoves.length);
 
         System.out.println("the first stat for " + detailsFromPokemon.getId() + "    is " + detailsFromPokemon.getStats()[1].getBaseStat());
         System.out.println("it has " + detailsFromPokemon.getStats().length + " stats");
@@ -152,7 +159,7 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
             AbilityQueries abilityQueries = new AbilityQueries(context);
             abilityQueries.addDescToAbility(abilityContainers[k].getAbility().getId(), abilityEffect.getEffect_entries()[0].getShort_effect());
         }
-
+        params[0].setMoves(pMoves);
         params[0].setAbilityContainers(abilityContainers);
 
 
@@ -177,8 +184,20 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         abilityArrayList = abilityQueries.getAbilitiesForPokemon(Integer.parseInt(pokemonSpecies.getId()));
         System.out.println("hey heres size of ability arraylist " + abilityArrayList.size());
         pokemonSpecies.setAbilities(abilityArrayList);
+
+        MoveQueries moveQueries = new MoveQueries(context);
+        PMove[] PMoveArray = pokemonSpecies.getMoves();
+        for(int i = 0; i< PMoveArray.length; i++) {
+            PMoveArray[i].getMove().setIdFromUrl();
+            moveQueries.linkMoveToPokemon(Integer.parseInt(pokemonSpecies.getId()), Integer.parseInt(PMoveArray[i].getMove().getId()), PMoveArray[i].getVersion_group_details()[0].getLevel_learned_at());
+        }
+        ArrayList<PMove> pMoveArrayList = new ArrayList<>();
+        pMoveArrayList = moveQueries.getMovesForPokemon(Integer.parseInt(pokemonSpecies.getId()));
+        pokemonSpecies.setMoveArrayList(pMoveArrayList);
+
         delegate.giveFilledPokemon(pokemonSpecies);
         System.out.println("the color of the pokemon you clicked is " + pokemonSpecies.getColorString());
+
 
     }
 

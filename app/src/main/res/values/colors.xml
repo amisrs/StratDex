@@ -11,18 +11,18 @@
 
     <color name="defaultBackground">#FFFFFF</color>
 
-    <color name="greenBackground">#eef4ee</color>
+    <color name="greenBackground">#fbfdfb</color>
     <color name="greenAccent">#76FF03</color>
     <color name="greenText">#33691E</color>
 
-    <color name="redBackground">#f7f1f2</color>
+    <color name="redBackground">#fcf9f9</color>
     <color name="redAccent">#f44336</color>
 
-    <color name="blueBackground">#E3F2FD</color>
+    <color name="blueBackground">#f5fbff</color>
     <color name="blueAccent">#40c4ff</color>
 
 
-    <color name="yellowBackground">#FFFDE7</color>
+    <color name="yellowBackground">#fffef6</color>
     <color name="yellowAccent">#fdd835</color>
 
     <color name="blackBackground">#F5F5F5</color>
@@ -31,16 +31,16 @@
     <color name="greyBackground">#ECEFF1</color>
     <color name="greyAccent">#757575</color>
 
-    <color name="purpleBackground">#EDE7F6</color>
+    <color name="purpleBackground">#f9f6ff</color>
     <color name="purpleAccent">#651fff</color>
 
-    <color name="brownBackground">#EFEBE9</color>
+    <color name="brownBackground">#f7f4f3</color>
     <color name="brownAccent">#795548</color>
 
     <color name="whiteBackrgound">#FFFFFF</color>
     <color name="whiteAccent">#cfd8dc</color>
 
-    <color name="pinkBackground">#FCE4EC</color>
+    <color name="pinkBackground">#faf4f6</color>
     <color name="pinkAccent">#ea80fc</color>
 
     <color name="black">#00671a</color>

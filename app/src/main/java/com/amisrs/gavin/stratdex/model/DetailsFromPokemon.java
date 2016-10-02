@@ -8,6 +8,11 @@ public class DetailsFromPokemon {
     private TypeContainer[] types;
     private int id;
     private AbilityContainer[] abilities;
+    private PMove[] PMoves;
+
+    public PMove[] getPMoves() {
+        return PMoves;
+    }
 
     public int getId() {
         return id;

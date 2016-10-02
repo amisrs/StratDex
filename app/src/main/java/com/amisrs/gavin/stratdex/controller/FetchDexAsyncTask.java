@@ -5,9 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.amisrs.gavin.stratdex.db.AbilityQueries;
+import com.amisrs.gavin.stratdex.db.MoveQueries;
 import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 import com.amisrs.gavin.stratdex.db.DexSQLHelper;
 import com.amisrs.gavin.stratdex.model.Ability;
+import com.amisrs.gavin.stratdex.model.Move;
+import com.amisrs.gavin.stratdex.model.PMove;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -95,12 +97,30 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
             e.printStackTrace();
         }
 
+        MoveCountFromPokeAPIService moveCountService = retrofitPokeAPI.create(MoveCountFromPokeAPIService.class);
+        Call<ResponseBody> getMoveCountCall = moveCountService.getMoveCountFromPokeAPI();
+        String mCount = "";
+        retrofit2.Response<ResponseBody> moveCountResponse = null;
+        try {
+            moveCountResponse = getMoveCountCall.execute();
+            String mResponseString = moveCountResponse.body().string();
+
+            JSONObject mcJsonObject=  new JSONObject(mResponseString);
+            mCount = mcJsonObject.getString("count");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         PokemonFromPokeAPIService pokemonService = retrofitPokeAPI.create(PokemonFromPokeAPIService.class);
         AbilitiesFromPokeAPIService abilitiesService = retrofitPokeAPI.create(AbilitiesFromPokeAPIService.class);
+        MovesFromPokeAPIService movesService = retrofitPokeAPI.create(MovesFromPokeAPIService.class);
 
         //!!!!IMPROTANT CHANGE THIS BACK TO TAKE COUNT!!!!!
         Call<ResponseBody> getPokemonCall = pokemonService.getPokemonFromPokeAPI(count);
         Call<ResponseBody> getAbilitiesCall = abilitiesService.getAbilitiesFromPokeAPI(aCount);
+        Call<ResponseBody> getMovesCall = movesService.getMoveFromPokeAPI(mCount);
 
         retrofit2.Response<ResponseBody> fullListResponse = null;
         String fullListString = "";
@@ -159,6 +179,24 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
             abilityQueries.addAbility(abilityArray[j]);
         }
 
+        retrofit2.Response<ResponseBody> moveListResponse = null;
+        String moveList = "";
+        JsonObject mJsonObject = null;
+        JsonArray mJsonArray = null;
+        try {
+            moveListResponse = getMovesCall.execute();
+            moveList = moveListResponse.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mJsonObject = gson.fromJson(moveList, JsonObject.class);
+        mJsonArray = mJsonObject.getAsJsonArray("results");
+        Move[] moves = gson.fromJson(mJsonArray, Move[].class);
+        MoveQueries moveQueries = new MoveQueries(context);
+        for(int j = 0; j < moves.length; j++) {
+            moveQueries.addMove(moves[j]);
+        }
+
         return pokemonSpecies;
     }
 
@@ -201,4 +239,15 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
         @GET("api/v2/ability/")
         Call<ResponseBody> getAbilitiesFromPokeAPI(@Query(value="limit",encoded = true) String count);
     }
+
+    public interface MoveCountFromPokeAPIService {
+        @GET("api/v2/move/")
+        Call<ResponseBody> getMoveCountFromPokeAPI();
+    }
+
+    public interface  MovesFromPokeAPIService {
+        @GET("api/v2/move/")
+        Call<ResponseBody> getMoveFromPokeAPI(@Query(value="limit",encoded = true) String count);
+    }
+
 }

@@ -2,6 +2,8 @@ package com.amisrs.gavin.stratdex.db;
 
 import android.provider.BaseColumns;
 
+import com.amisrs.gavin.stratdex.view.SlidingTabLayout;
+
 /**
  * Created by Gavin on 15/09/2016.
  */
@@ -47,6 +49,20 @@ public final class DexContract     {
         public static final String TABLE_NAME = "abilitypokemon";
         public static final String COLUMN_NAME_POKEMON_ID = "pid";
         public static final String COLUMN_NAME_ABILITY_ID = "aid";
+    }
+
+    public static class MoveTable implements BaseColumns {
+        public static final String TABLE_NAME = "move";
+        public static final String COLUMN_NAME_ID = "id";
+        public static final String COLUMN_NAME_URL = "url";
+        public static final String COLUMN_NAME_NAME = "name";
+    }
+
+    public static class MoveForPokemonTable implements BaseColumns {
+        public static final String TABLE_NAME = "movepokemon";
+        public static final String COLUMN_NAME_POKEMON_ID = "pid";
+        public static final String COLUMN_NAME_MOVE_ID = "mid";
+        public static final String COLUMN_NAME_LEVEL = "level";
     }
 
 //    public static class PokemonNames implements BaseColumns {
