@@ -5,23 +5,59 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
-   <Button
-       android:id="@+id/btn_update"
-       android:layout_width="100dp"
-       android:layout_height="50dp"
-       android:text="Load"/>
-    <Button
-        android:id="@+id/btn_refresh"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_toEndOf="@id/btn_update"/>
+    <RelativeLayout
+        android:id="@+id/rl_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/defaultBackground"
+        android:elevation="1dp">
+        <ProgressBar
+            android:id="@+id/pb_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_centerInParent="true"/>
+        <TextView
+            android:id="@+id/hi"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Hello! Click load to begin populating the PokéDex"
+            android:layout_above="@id/btn_update"
+            android:gravity="center"/>
 
+        <Button
+            android:id="@+id/btn_update"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:text="Load"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_menu"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/btn_setting"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:text="set"/>
+    </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/btn_update">
+        android:layout_below="@id/rl_menu">
 
     </android.support.v7.widget.RecyclerView>
 </RelativeLayout>
+
+

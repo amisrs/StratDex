@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.R;
+import com.amisrs.gavin.stratdex.db.DbBitmapUtility;
 import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 import com.amisrs.gavin.stratdex.view.DetailsActivity;
@@ -104,20 +105,23 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         System.out.println("onresourceready simpletarget");
-                        String spriteFilePath = Environment.getExternalStorageDirectory().toString();
+                        String spriteFilePath = context.getFilesDir().toString();
                         OutputStream out = null;
 
                         File newSpriteFile = new File(spriteFilePath, id+".png");
                         try {
-                            out = new FileOutputStream(newSpriteFile);
-                            resource.compress(Bitmap.CompressFormat.PNG, 100, out);
+                            //out = new FileOutputStream(newSpriteFile);
+                            out = context.openFileOutput(id+".png", Context.MODE_PRIVATE);
+
+                            //resource.compress(Bitmap.CompressFormat.PNG, 100, out);
+                            out.write(DbBitmapUtility.getBytes(resource));
                             System.out.println("compressing image");
                             out.flush();
                             out.close();
-                            MediaStore.Images.Media.insertImage(context.getContentResolver(), newSpriteFile.getAbsolutePath(), newSpriteFile.getName(), newSpriteFile.getName());
+                            //MediaStore.Images.Media.insertImage(context.getContentResolver(), newSpriteFile.getAbsolutePath(), newSpriteFile.getName(), newSpriteFile.getName());
                             System.out.println("image is stored");
                             SpeciesQueries speciesQueries = new SpeciesQueries(context);
-                            speciesQueries.addSpriteFilePathForSpecies(id, newSpriteFile.getAbsolutePath(), "small");
+                            speciesQueries.addSpriteFilePathForSpecies(id, spriteFilePath+"/"+id+".png", "small");
                             System.out.println("image path is stored in database");
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();

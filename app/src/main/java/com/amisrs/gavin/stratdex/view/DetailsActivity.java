@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -77,21 +78,21 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
             @Override
             public void onResourceReady(GifDrawable resource, GlideAnimation<? super GifDrawable> glideAnimation) {
                 System.out.println("onresourceready simpletarget");
-                String spriteFilePath = Environment.getExternalStorageDirectory().toString();
+                String spriteFilePath = getFilesDir().toString();
                 OutputStream out = null;
 
                 File newSpriteFile = new File(spriteFilePath, "bigsprite" + theOne.getId() + ".png");
                 try {
-                    out = new FileOutputStream(newSpriteFile);
+                    //out = new FileOutputStream(newSpriteFile);
+                    out = openFileOutput("bigsprite"+theOne.getId()+".png", MODE_PRIVATE);
                     byte[] gifData = resource.getData();
                     out.write(gifData);
-                    System.out.println("compressing image");
                     out.flush();
                     out.close();
-                    MediaStore.Images.Media.insertImage(getContentResolver(), newSpriteFile.getAbsolutePath(), newSpriteFile.getName(), newSpriteFile.getName());
+                    //MediaStore.Images.Media.insertImage(getContentResolver(), newSpriteFile.getAbsolutePath(), newSpriteFile.getName(), newSpriteFile.getName());
                     System.out.println("image is stored");
                     SpeciesQueries speciesQueries = new SpeciesQueries(getApplicationContext());
-                    speciesQueries.addSpriteFilePathForSpecies(theOne.getId(), newSpriteFile.getAbsolutePath(), "big");
+                    speciesQueries.addSpriteFilePathForSpecies(theOne.getId(), spriteFilePath+"/"+theOne.getId()+".png", "big");
                     System.out.println("image path is stored in database");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -183,6 +184,8 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+
 
 
 

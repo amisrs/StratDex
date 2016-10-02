@@ -1,6 +1,8 @@
 package com.amisrs.gavin.stratdex.view;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -11,17 +13,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.controller.PokemonSpeciesAdapter;
 import com.amisrs.gavin.stratdex.R;
 import com.amisrs.gavin.stratdex.controller.FetchDexAsyncTask;
+import com.amisrs.gavin.stratdex.db.LoadResponse;
 import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 
-public class MainActivity extends AppCompatActivity {
-    private static RecyclerView rv;
-    private static LinearLayoutManager llm;
-    public static Context context;
-    public static PokemonSpeciesAdapter psa;
+public class MainActivity extends AppCompatActivity implements LoadResponse {
+    private RecyclerView rv;
+    private LinearLayoutManager llm;
+    public Context context;
+    public PokemonSpeciesAdapter psa;
+    public RelativeLayout coverLayout;
+    public ProgressBar progressBar;
+    public TextView loadingMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +39,11 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         llm = new LinearLayoutManager(this);
         rv = (RecyclerView)findViewById(R.id.rv);
+        coverLayout = (RelativeLayout)findViewById(R.id.rl_cover);
+        progressBar = (ProgressBar)findViewById(R.id.pb_load);
+        loadingMsg = (TextView)findViewById(R.id.hi);
+        progressBar.setVisibility(View.GONE);
         refreshRecycler();
-        MainActivity.verifyStoragePermissions(this);
 
         Button updateButton = (Button)findViewById(R.id.btn_update);
         updateButton.setOnClickListener(new View.OnClickListener() {
@@ -39,14 +51,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 System.out.println("clicked");
                 updateButtonClick(v);
-            }
-        });
+                progressBar.setVisibility(View.VISIBLE);
+                v.setVisibility(View.GONE);
 
-        Button refreshButton = (Button)findViewById(R.id.btn_refresh);
-        refreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refreshRecycler();
             }
         });
     }
@@ -60,58 +67,48 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateButtonClick(View v) {
         FetchDexAsyncTask fetch = new FetchDexAsyncTask(getApplicationContext());
+        fetch.delegate = this;
         fetch.execute();
     }
 
-    public void goToDetails() {
-
+    @Override
+    public void updateLoadingMsg(String msg) {
+        loadingMsg.setText(msg);
     }
 
-    public static void dataSetChange() {
-        psa.notifyDataSetChanged();
+    public void finishedLoading(){
+        coverLayout.setVisibility(View.GONE);
     }
 
-    public static void refreshRecycler() {
+
+    public void refreshRecycler() {
         SpeciesQueries speciesQueries = new SpeciesQueries(context);
         speciesQueries.open();
-        PokemonSpeciesAdapter pokemonSpeciesAdapter = new PokemonSpeciesAdapter(speciesQueries.getBasicSpecies(), MainActivity.context);
+        PokemonSpeciesAdapter pokemonSpeciesAdapter = new PokemonSpeciesAdapter(speciesQueries.getBasicSpecies(), context);
         psa = pokemonSpeciesAdapter;
         speciesQueries.close();
         System.out.println("new recylcer");
         rv.setAdapter(pokemonSpeciesAdapter);
         rv.setLayoutManager(llm);
+        if (pokemonSpeciesAdapter.getItemCount() == 0) {
+            coverLayout.setVisibility(View.VISIBLE);
+        } else {
+            coverLayout.animate()
+                    .alpha(0f)
+                    .setDuration(1)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            coverLayout.setVisibility(View.GONE);
 
-    }
-
-
-    //following from Stack Overflow user easyspeak
-    // http://stackoverflow.com/questions/23527767/open-failed-eacces-permission-denied
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
-    /**
-     * Checks if the app has permission to write to device storage
-     *
-     * If the app does not has permission then the user will be prompted to grant permissions
-     *
-     * @param activity
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
+                        }
+                    });
         }
+
     }
 
+    @Override
+    public void sayHasLoaded() {
+        refreshRecycler();
+    }
 }

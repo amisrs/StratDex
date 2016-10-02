@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.amisrs.gavin.stratdex.db.AbilityQueries;
+import com.amisrs.gavin.stratdex.db.LoadResponse;
 import com.amisrs.gavin.stratdex.db.MoveQueries;
 import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 import com.amisrs.gavin.stratdex.db.DexSQLHelper;
@@ -12,6 +13,7 @@ import com.amisrs.gavin.stratdex.model.Ability;
 import com.amisrs.gavin.stratdex.model.Move;
 import com.amisrs.gavin.stratdex.model.PMove;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
+import com.amisrs.gavin.stratdex.view.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -34,8 +36,9 @@ import retrofit2.http.Query;
 /**
  * Created by Gavin on 15/09/2016.
  */
-public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSpecies>> {
+public class FetchDexAsyncTask extends AsyncTask<Void, Integer, ArrayList<PokemonSpecies>> {
     private Context context;
+    public LoadResponse delegate = null;
     //public AsyncResponse delegate = null;
 
 
@@ -45,6 +48,7 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
 
     @Override
     protected ArrayList<PokemonSpecies> doInBackground(Void[] voids) {
+        int prog = 0;
         DexSQLHelper dexSQLHelper = new DexSQLHelper(context);
         SQLiteDatabase db = dexSQLHelper.getWritableDatabase();
         db.execSQL(dexSQLHelper.SQL_DELETE_TABLES);
@@ -122,6 +126,8 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
         Call<ResponseBody> getAbilitiesCall = abilitiesService.getAbilitiesFromPokeAPI(aCount);
         Call<ResponseBody> getMovesCall = movesService.getMoveFromPokeAPI(mCount);
 
+        prog = 1;
+        publishProgress(prog);
         retrofit2.Response<ResponseBody> fullListResponse = null;
         String fullListString = "";
         JsonObject jsonObject = null;
@@ -160,6 +166,8 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
             addSpeciesQuery.addSpecies(allPokemon[i].getUrl(),allPokemon[i].getName(), allPokemon[i].getType1(), allPokemon[i].getType2(), allPokemon[i].getSpritePath());
             addSpeciesQuery.close();
         }
+        prog = 2;
+        publishProgress(prog);
 
         retrofit2.Response<ResponseBody> abilityListResponse = null;
         String abilityList = "";
@@ -179,6 +187,8 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
             abilityQueries.addAbility(abilityArray[j]);
         }
 
+        prog = 3;
+        publishProgress(prog);
         retrofit2.Response<ResponseBody> moveListResponse = null;
         String moveList = "";
         JsonObject mJsonObject = null;
@@ -201,11 +211,30 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Void, ArrayList<PokemonSp
     }
 
     @Override
+    protected void onProgressUpdate(Integer... values) {
+        String text = "";
+        switch(values[0]) {
+            case 0 : text = "Starting...";
+                        break;
+            case 1 : text = "Loading Pokemon...";
+                        break;
+            case 2 : text = "Loading abilities...";
+                        break;
+            case 3 : text = "Loading moves...";
+                        break;
+            default: text = "Loading...";
+        }
+
+        delegate.updateLoadingMsg(text);
+    }
+
+    @Override
     protected void onPostExecute(ArrayList<PokemonSpecies> pokemonSpecies) {
 
         //SpeciesQueries addSpeciesQuery = new SpeciesQueries(context);
         //addSpeciesQuery.open();
         System.out.println("inside fetchdexasync");
+        delegate.sayHasLoaded();
 
 
 //        for(PokemonSpecies p : pokemonSpecies) {
