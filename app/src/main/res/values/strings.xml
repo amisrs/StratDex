@@ -1,8 +1,19 @@
 <resources>
     <string name="app_name">StratDex</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="greeting">Hello! Click load to begin populating the PokéDex</string>
+
+    <string name="aboutLabel">About</string>
+    <string name="reinitialiseLabel">Reinitialise</string>
+    <string name="about">
+        Pokemon data from: PokeAPI \n https://pokeapi.co/ \n\n
+        Pokemon GIFs from: Smogon \n smogon.com/dex/xy/pokemon/ \n\n
+        Pokemon sprites from: PokeAPI \n https://github.com/PokeAPI/pokeapi/tree/master/data/v2/sprites/pokemon
+    </string>
+    <string name="reinitialise">Hey this is gonna reset everything!
+        \nGenerally you want to do this when new stuff comes out so it pulls the new data.
+        \n\nOr you can do it for fun, I\'m not gonna stop you.
+    </string>
 
     <string name="stat1">HP</string>
     <string name="stat2">Attack</string>

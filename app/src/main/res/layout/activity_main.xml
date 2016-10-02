@@ -3,28 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
+    tools:context=".view.MainActivity"
+    android:background="@color/entryLight">
 
     <RelativeLayout
         android:id="@+id/rl_cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/defaultBackground"
-        android:elevation="1dp">
+        android:elevation="3dp">
         <ProgressBar
             android:id="@+id/pb_load"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="?android:attr/progressBarStyleLarge"
             android:layout_centerInParent="true"/>
-        <TextView
-            android:id="@+id/hi"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Hello! Click load to begin populating the PokéDex"
-            android:layout_above="@id/btn_update"
-            android:gravity="center"/>
-
         <Button
             android:id="@+id/btn_update"
             android:layout_width="100dp"
@@ -32,23 +25,41 @@
             android:layout_centerInParent="true"
             android:text="Load"/>
 
+        <TextView
+            android:id="@+id/hi"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/greeting"
+            android:layout_above="@id/btn_update"
+            android:gravity="center"/>
+
+
     </RelativeLayout>
 
 
     <RelativeLayout
         android:id="@+id/rl_menu"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <EditText
-            android:id="@+id/et_search"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <Button
+        android:layout_height="50dp"
+        android:background="@color/entryDark"
+        android:elevation="2dp">
+
+        <ImageButton
             android:id="@+id/btn_setting"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:text="set"/>
+            style="?android:attr/borderlessButtonStyle"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_settings"/>
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_toLeftOf="@id/btn_setting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="5dp"
+            android:background="@color/entryLight"/>
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv"

@@ -131,9 +131,8 @@ public class DexSQLHelper extends SQLiteOpenHelper {
     public void dropTables(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(SQL_DELETE_TABLES);
         sqLiteDatabase.execSQL(SQL_DELETE_ABILITYTABLE);
-        sqLiteDatabase.execSQL(SQL_CREATE_ABILITYPOKEMONTABLE);
+        sqLiteDatabase.execSQL(SQL_DELETE_ABILITYPOKEMONTABLE);
         sqLiteDatabase.execSQL(SQL_DELETE_MOVE);
-
         sqLiteDatabase.execSQL(SQL_DELETE_MOVEPOKEMONTABLE);
 
     }

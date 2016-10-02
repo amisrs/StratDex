@@ -146,7 +146,7 @@
                     android:id="@+id/pb_stat4"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:max="255"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="1dp"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/statbar_height"
                     android:layout_toRightOf="@id/tv_stat4"
