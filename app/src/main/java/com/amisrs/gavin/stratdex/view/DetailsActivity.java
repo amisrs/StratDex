@@ -3,11 +3,8 @@ package com.amisrs.gavin.stratdex.view;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +17,7 @@ import android.widget.TextView;
 import com.amisrs.gavin.stratdex.controller.PokemonSpeciesAdapter;
 import com.amisrs.gavin.stratdex.R;
 import com.amisrs.gavin.stratdex.db.AbilityQueries;
-import com.amisrs.gavin.stratdex.db.AsyncResponse;
+import com.amisrs.gavin.stratdex.controller.AsyncResponse;
 import com.amisrs.gavin.stratdex.controller.FetchDetailsAsyncTask;
 import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
@@ -32,11 +29,13 @@ import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class DetailsActivity extends AppCompatActivity implements AsyncResponse, DetailsBottomFragment.OnFragmentInteractionListener, DetailsMovesFragment.OnFragmentInteractionListener {
+public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
+        DetailsBottomFragment.OnFragmentInteractionListener,
+        DetailsMovesFragment.OnFragmentInteractionListener,
+        DetailsMiscFragment.OnFragmentInteractionListener {
     private TextView nameTextView;
     private TextView idTextView;
     private ImageView bigspriteImageView;
@@ -70,6 +69,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         final PokemonSpecies theOne = speciesQueries.getOneSpeciesById(id);
         theOne.setAbilities(abilityQueries.getAbilitiesForPokemon(Integer.parseInt(theOne.getId())));
 
+
         nameTextView.setText(theOne.getFullName());
         idTextView.setText("#"+theOne.getId());
 
@@ -92,7 +92,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
                     //MediaStore.Images.Media.insertImage(getContentResolver(), newSpriteFile.getAbsolutePath(), newSpriteFile.getName(), newSpriteFile.getName());
                     System.out.println("image is stored");
                     SpeciesQueries speciesQueries = new SpeciesQueries(getApplicationContext());
-                    speciesQueries.addSpriteFilePathForSpecies(theOne.getId(), spriteFilePath+"/"+theOne.getId()+".png", "big");
+                    speciesQueries.addSpriteFilePathForSpecies(theOne.getId(), spriteFilePath+"/bigsprite"+theOne.getId()+".png", "big");
                     System.out.println("image path is stored in database");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -203,6 +203,8 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
                     return DetailsBottomFragment.newInstance("hi","Page 1");
                 case 1:
                     return DetailsMovesFragment.newInstance("hi2", "Page 2");
+                case 2:
+                    return DetailsMiscFragment.newInstance("hi3", "Page 3");
                 default:
                     return DetailsBottomFragment.newInstance("hi", "Page 1");
             }

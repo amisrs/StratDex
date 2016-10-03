@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import com.amisrs.gavin.stratdex.db.AbilityQueries;
 import com.amisrs.gavin.stratdex.db.MoveQueries;
 import com.amisrs.gavin.stratdex.db.SpeciesQueries;
-import com.amisrs.gavin.stratdex.db.AsyncResponse;
 import com.amisrs.gavin.stratdex.model.Ability;
 import com.amisrs.gavin.stratdex.model.AbilityContainer;
 import com.amisrs.gavin.stratdex.model.AbilityEffect;
@@ -76,6 +75,12 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
 
         JsonObject jsonObject = gson.fromJson(responseString, JsonObject.class);
         DetailsFromSpecies detailsFromSpecies = gson.fromJson(jsonObject, DetailsFromSpecies.class);
+        JsonElement flavorElemet = jsonObject.get("flavor_text_entries");
+        JsonElement genusElement = jsonObject.get("genera");
+        DetailsFromSpecies.FlavorTextEntry[] flavs = gson.fromJson(flavorElemet, DetailsFromSpecies.FlavorTextEntry[].class);
+        DetailsFromSpecies.Genus[] genera = gson.fromJson(genusElement, DetailsFromSpecies.Genus[].class);
+        System.out.println("HERES JSON \n" + jsonObject.get("flavor_text_entries").toString());
+        System.out.println("lmao this better not be empty " + detailsFromSpecies.getFlavor_text_entries().length);
 
         DetailsFromPokemonService detailsFromPokemonService = retrofitPokeAPI.create(DetailsFromPokemonService.class);
         Call<ResponseBody> detailsCall2 = detailsFromPokemonService.getDetailsFromPokemon(params[0].getId());
@@ -159,6 +164,38 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
             AbilityQueries abilityQueries = new AbilityQueries(context);
             abilityQueries.addDescToAbility(abilityContainers[k].getAbility().getId(), abilityEffect.getEffect_entries()[0].getShort_effect());
         }
+
+        String desc = "";
+        boolean foundF = false;
+
+        for(int i=0; i < flavs.length && foundF == false; i++) {
+            System.out.println("im looking at the descs number " + i);
+            if(flavs[i].getLanguage().getName().equals("en")) {
+                desc = flavs[i].getFlavor_text();
+                System.out.println("aha found the neglish desc " + desc);
+                foundF = true;
+            } else {
+                System.out.println("its not in english");
+            }
+        }
+
+        String genus = "";
+        boolean foundG = false;
+        for(int i=0; i < genera.length && foundG == false; i++) {
+            if(genera[i].getLanguage().getName().equals("en")) {
+                genus = genera[i].getGenus();
+                foundG = true;
+            } else {
+                System.out.println("its not in english");
+            }
+        }
+
+
+
+        params[0].setGenus(genus);
+        params[0].setDesc(desc);
+        params[0].setHeight(detailsFromPokemon.getHeight());
+        params[0].setWeight(detailsFromPokemon.getWeight());
         params[0].setMoves(pMoves);
         params[0].setAbilityContainers(abilityContainers);
 
@@ -172,7 +209,9 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         SpeciesQueries speciesQueries = new SpeciesQueries(context);
         speciesQueries.addDetailsForSpecies(pokemonSpecies.getId(), pokemonSpecies.getColorString()
                 , pokemonSpecies.getStat1(), pokemonSpecies.getStat2(), pokemonSpecies.getStat3(), pokemonSpecies.getStat4(), pokemonSpecies.getStat5(), pokemonSpecies.getStat6()
-                , pokemonSpecies.getType1(), pokemonSpecies.getType2());
+                , pokemonSpecies.getType1(), pokemonSpecies.getType2()
+                , pokemonSpecies.getHeight(), pokemonSpecies.getWeight()
+                , pokemonSpecies.getDesc(), pokemonSpecies.getGenus());
 
         AbilityQueries abilityQueries = new AbilityQueries(context);
 
@@ -197,8 +236,6 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
 
         delegate.giveFilledPokemon(pokemonSpecies);
         System.out.println("the color of the pokemon you clicked is " + pokemonSpecies.getColorString());
-
-
     }
 
     public interface DetailsFromSpeciesService {

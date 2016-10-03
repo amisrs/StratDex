@@ -5,15 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.amisrs.gavin.stratdex.db.AbilityQueries;
-import com.amisrs.gavin.stratdex.db.LoadResponse;
 import com.amisrs.gavin.stratdex.db.MoveQueries;
 import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 import com.amisrs.gavin.stratdex.db.DexSQLHelper;
 import com.amisrs.gavin.stratdex.model.Ability;
 import com.amisrs.gavin.stratdex.model.Move;
-import com.amisrs.gavin.stratdex.model.PMove;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
-import com.amisrs.gavin.stratdex.view.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;

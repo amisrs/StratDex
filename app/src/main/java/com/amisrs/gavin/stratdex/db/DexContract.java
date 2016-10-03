@@ -32,6 +32,10 @@ public final class DexContract     {
         public static final String COLUMN_NAME_STAT4 = "stat4";
         public static final String COLUMN_NAME_STAT5 = "stat5";
         public static final String COLUMN_NAME_STAT6 = "stat6";
+        public static final String COLUMN_NAME_HEIGHT = "height";
+        public static final String COLUMN_NAME_WEIGHT = "weight";
+        public static final String COLUMN_NAME_DESC = "desc";
+        public static final String COLUMN_NAME_GENUS = "genus";
         public static final String COLUMN_NAME_ABILITIES = "abilities";
         public static final String COLUMN_NAME_EVOCHAIN = "evolution-chain";
         public static final String COLUMN_NAME_FORMS = "forms";

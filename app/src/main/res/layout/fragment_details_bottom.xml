@@ -19,8 +19,9 @@
         android:id="@+id/tv_typesLabel"
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:layout_marginBottom="@dimen/statbar_gap"
         android:textSize="@dimen/heading2"
-        android:text="Type"/>
+        android:text="@string/typeLabel"/>
     <TextView
         android:id="@+id/tv_type1"
         android:layout_width="50dp"
@@ -41,8 +42,9 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_below="@id/tv_type1"
+        android:layout_marginBottom="@dimen/statbar_gap"
         android:textSize="@dimen/heading2"
-        android:text="Stats" />
+        android:text="@string/typeLabel" />
 
         <TableLayout
             android:id="@+id/rl_stats"
@@ -224,8 +226,9 @@
         android:layout_height="30dp"
         android:layout_below="@id/rl_stats"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="@dimen/statbar_gap"
         android:textSize="@dimen/heading2"
-        android:text="Abilities" />
+        android:text="@string/abilitiesLabel" />
 
     <LinearLayout
         android:id="@+id/ll_abilities"

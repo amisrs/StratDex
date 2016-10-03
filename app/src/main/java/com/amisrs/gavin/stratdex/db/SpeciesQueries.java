@@ -67,7 +67,9 @@ public class SpeciesQueries {
 
     public void addDetailsForSpecies(String id, String color,
                                      int s1, int s2, int s3, int s4, int s5, int s6,
-                                     String type1, String type2) {
+                                     String type1, String type2,
+                                     int height, int weight,
+                                     String desc, String genus) {
         open();
         String updateString = "UPDATE " + DexContract.PokemonTable.TABLE_NAME + " SET " +
                 DexContract.PokemonTable.COLUMN_NAME_COLOR + " = \"" + color + "\"," +
@@ -78,7 +80,11 @@ public class SpeciesQueries {
                 DexContract.PokemonTable.COLUMN_NAME_STAT5 + " = " + s5 + "," +
                 DexContract.PokemonTable.COLUMN_NAME_STAT6 + " = " + s6 + "," +
                 DexContract.PokemonTable.COLUMN_NAME_TYPE1 + " = \"" + type1 + "\"" + "," +
-                DexContract.PokemonTable.COLUMN_NAME_TYPE2 + " = \"" + type2 + "\"" +
+                DexContract.PokemonTable.COLUMN_NAME_TYPE2 + " = \"" + type2 + "\"" + "," +
+                DexContract.PokemonTable.COLUMN_NAME_HEIGHT + " = " + height + "," +
+                DexContract.PokemonTable.COLUMN_NAME_WEIGHT + " = " + weight + "," +
+                DexContract.PokemonTable.COLUMN_NAME_DESC + " = \"" + desc + "\"" + "," +
+                DexContract.PokemonTable.COLUMN_NAME_GENUS + " = \"" + genus + "\"" +
 
                 " WHERE " +
                 DexContract.PokemonTable.COLUMN_NAME_ID + " = " + id;
@@ -141,7 +147,11 @@ public class SpeciesQueries {
                 DexContract.PokemonTable.COLUMN_NAME_STAT3,
                 DexContract.PokemonTable.COLUMN_NAME_STAT4,
                 DexContract.PokemonTable.COLUMN_NAME_STAT5,
-                DexContract.PokemonTable.COLUMN_NAME_STAT6
+                DexContract.PokemonTable.COLUMN_NAME_STAT6,
+                DexContract.PokemonTable.COLUMN_NAME_HEIGHT,
+                DexContract.PokemonTable.COLUMN_NAME_WEIGHT,
+                DexContract.PokemonTable.COLUMN_NAME_DESC,
+                DexContract.PokemonTable.COLUMN_NAME_GENUS
 
         };
 
@@ -160,7 +170,7 @@ public class SpeciesQueries {
         c.moveToFirst();
         System.out.println("giving requested pokemon " + c.getString(1) + " bigsprite is follows: " + c.getString(6));
         PokemonSpecies toGet = new PokemonSpecies(c.getString(2), c.getString(1), c.getString(4), c.getString(5), c.getString(3), c.getString(6), c.getString(7)
-                , c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11), c.getInt(12), c.getInt(13));
+                , c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11), c.getInt(12), c.getInt(13), c.getInt(14), c.getInt(15), c.getString(16), c.getString(17));
         System.out.println(" has smallsp " + toGet.getSpritePath() + " and bigsp " + toGet.getBigspritePath());
         toGet.setIdFromUrl();
         c.close();

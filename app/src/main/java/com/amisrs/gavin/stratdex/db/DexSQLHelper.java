@@ -35,7 +35,11 @@ public class DexSQLHelper extends SQLiteOpenHelper {
                     DexContract.PokemonTable.COLUMN_NAME_STAT3 + INTEGER_TYPE + COMMA_SEP +
                     DexContract.PokemonTable.COLUMN_NAME_STAT4 + INTEGER_TYPE + COMMA_SEP +
                     DexContract.PokemonTable.COLUMN_NAME_STAT5 + INTEGER_TYPE + COMMA_SEP +
-                    DexContract.PokemonTable.COLUMN_NAME_STAT6 + INTEGER_TYPE
+                    DexContract.PokemonTable.COLUMN_NAME_STAT6 + INTEGER_TYPE + COMMA_SEP +
+                    DexContract.PokemonTable.COLUMN_NAME_HEIGHT + INTEGER_TYPE + COMMA_SEP +
+                    DexContract.PokemonTable.COLUMN_NAME_WEIGHT + INTEGER_TYPE + COMMA_SEP +
+                    DexContract.PokemonTable.COLUMN_NAME_DESC + TEXT_TYPE + COMMA_SEP +
+                    DexContract.PokemonTable.COLUMN_NAME_GENUS + TEXT_TYPE
             + ")";
 
     public static final String SQL_CREATE_ABILITYTABLE =

@@ -1,15 +1,11 @@
 package com.amisrs.gavin.stratdex.view;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,8 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -34,7 +28,7 @@ import com.amisrs.gavin.stratdex.controller.PokemonSpeciesAdapter;
 import com.amisrs.gavin.stratdex.R;
 import com.amisrs.gavin.stratdex.controller.FetchDexAsyncTask;
 import com.amisrs.gavin.stratdex.db.DexSQLHelper;
-import com.amisrs.gavin.stratdex.db.LoadResponse;
+import com.amisrs.gavin.stratdex.controller.LoadResponse;
 import com.amisrs.gavin.stratdex.db.SpeciesQueries;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 

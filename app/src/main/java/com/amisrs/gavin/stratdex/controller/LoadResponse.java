@@ -1,4 +1,4 @@
-package com.amisrs.gavin.stratdex.db;
+package com.amisrs.gavin.stratdex.controller;
 
 /**
  * Created by Gavin on 2/10/2016.

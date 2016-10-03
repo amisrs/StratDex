@@ -13,12 +13,10 @@ public class Move {
 
 
     public void setIdFromUrl() {
-        System.out.println("setting id from url");
         Pattern idPattern = Pattern.compile(".+?/move/(.+)*/");
         Matcher idMatcher = idPattern.matcher(url);
-        System.out.println("trying to match for " + url + "  " + idMatcher.find());
+        idMatcher.find();
         id = idMatcher.group(1);
-        System.out.println(id);
     }
 
     public String getCleanName() {

@@ -46,6 +46,10 @@ public class PokemonSpecies {
     private ArrayList<Ability> abilities;
     private PMove[] moves;
     private ArrayList<PMove> moveArrayList;
+    private int height;
+    private int weight;
+    private String desc;
+    private String genus;
 
 
 
@@ -64,7 +68,9 @@ public class PokemonSpecies {
 
     //constructor for details
     public PokemonSpecies(String url, String name, String type1, String type2, String spritePath, String bigspritePath, String colorString,
-                          int stat1, int stat2, int stat3, int stat4, int stat5, int stat6) {
+                          int stat1, int stat2, int stat3, int stat4, int stat5, int stat6,
+                          int height, int weight,
+                          String desc, String genus) {
 
         System.out.println("tihs is the second constructor for " + name + " that takes spritepath " + spritePath + " and bigspritepath " + bigspritePath);
         this.url = url;
@@ -81,8 +87,44 @@ public class PokemonSpecies {
         this.stat4 = stat4;
         this.stat5 = stat5;
         this.stat6 = stat6;
+        this.height = height;
+        this.weight = weight;
+        this.desc = desc;
+        this.genus = genus;
         isDefaultSprite = true;
 
+    }
+
+    public String getGenus() {
+        return genus;
+    }
+
+    public void setGenus(String genus) {
+        this.genus = genus;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 
     public ArrayList<PMove> getMoveArrayList() {
@@ -214,13 +256,13 @@ public class PokemonSpecies {
     }
 
 
-    public Boolean getDefaultSprite() {
-        return isDefaultSprite;
-    }
-
-    public void setSmallSprite(Bitmap smallSprite) {
-        this.smallSprite = smallSprite;
-    }
+//    public Boolean getDefaultSprite() {
+//        return isDefaultSprite;
+//    }
+//
+//    public void setSmallSprite(Bitmap smallSprite) {
+//        this.smallSprite = smallSprite;
+//    }
 
 
     public String getFullName() {

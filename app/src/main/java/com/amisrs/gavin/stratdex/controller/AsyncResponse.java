@@ -1,4 +1,4 @@
-package com.amisrs.gavin.stratdex.db;
+package com.amisrs.gavin.stratdex.controller;
 
 import com.amisrs.gavin.stratdex.model.DetailsFromSpecies;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
