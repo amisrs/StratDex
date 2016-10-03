@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
     public RelativeLayout coverLayout;
     public ProgressBar progressBar;
     public TextView loadingMsg;
+    public TextView searchMsg;
     public EditText editText;
     public String searchString = "";
     public Button updateButton;
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
         progressBar = (ProgressBar)findViewById(R.id.pb_load);
         loadingMsg = (TextView)findViewById(R.id.hi);
         editText = (EditText)findViewById(R.id.et_search);
+        searchMsg = (TextView)findViewById(R.id.tv_searchno);
+        searchMsg.setVisibility(View.GONE);
 
         progressBar.setVisibility(View.GONE);
         refreshRecycler();
@@ -200,6 +203,11 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
             if(p.getFullName().toUpperCase().contains(searchString.toUpperCase())) {
                 searchList.add(p);
             }
+        }
+        if(searchList.size() == 0) {
+            searchMsg.setVisibility(View.VISIBLE);
+        } else {
+            searchMsg.setVisibility(View.GONE);
         }
 
         PokemonSpeciesAdapter pokemonSpeciesAdapter = new PokemonSpeciesAdapter(searchList, context);

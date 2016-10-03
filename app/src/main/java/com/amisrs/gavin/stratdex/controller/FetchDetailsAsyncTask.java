@@ -38,7 +38,7 @@ import retrofit2.http.Path;
 /**
  * Created by Gavin on 27/09/2016.
  */
-public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, PokemonSpecies> {
+public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Integer, PokemonSpecies> {
     private Context context;
     private static final String TAG = "FetchDetailsAsyncTask";
     public AsyncResponse delegate = null;
@@ -48,10 +48,32 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         this.context = context;
     }
 
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        String text = "";
+        switch(values[0]) {
+            case 0 : text = "Starting...";
+                break;
+            case 1 : text = "Loading species data...";
+                break;
+            case 2 : text = "Loading Pokemon data...";
+                break;
+            case 3 : text = "Loading abilities...";
+                break;
+            case 4 : text = "Loading evolutions...";
+                break;
+            case 5 : text = "Passing over...";
+            default: text = "Loading...";
+        }
+
+        delegate.updateLoadingMsg(text);
+
+    }
 
     @Override
     protected PokemonSpecies doInBackground(PokemonSpecies... params) {
-
+        int prog = 0;
+        publishProgress(prog);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
@@ -80,6 +102,8 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
 
+        prog = 1;
+        publishProgress(prog);
         JsonObject jsonObject = gson.fromJson(responseString, JsonObject.class);
         DetailsFromSpecies detailsFromSpecies = gson.fromJson(jsonObject, DetailsFromSpecies.class);
         JsonElement flavorElemet = jsonObject.get("flavor_text_entries");
@@ -96,8 +120,8 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         Log.d(TAG, "got the evochain id it is " + evoChainId);
 
         params[0].setEvoChainId(evoChainId);
-
-
+        prog = 2;
+        publishProgress(prog);
         //get details from the /pokemon/{id} resource
         DetailsFromPokemonService detailsFromPokemonService = retrofitPokeAPI.create(DetailsFromPokemonService.class);
         Call<ResponseBody> detailsCall2 = detailsFromPokemonService.getDetailsFromPokemon(params[0].getId());
@@ -112,6 +136,7 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         JsonObject jsonObject2 = gson.fromJson(responseString2, JsonObject.class);
         DetailsFromPokemon detailsFromPokemon = gson.fromJson(jsonObject2, DetailsFromPokemon.class);
@@ -156,6 +181,8 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         params[0].setType2(type2);
         params[0].setType1(type1);
 
+        prog = 3;
+        publishProgress(prog);
         //get ability descriptions from the /ability/{id} resource
         AbilityContainer[] abilityContainers = detailsFromPokemon.getAbilities();
         DescFromAbilityService descFromAbilityService = retrofitPokeAPI.create(DescFromAbilityService.class);
@@ -210,6 +237,8 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
 
         //get evolution chain from the /evolution-chain/{id} resource
 
+        prog = 4;
+        publishProgress(prog);
         EvolutionChainService evolutionChainService = retrofitPokeAPI.create(EvolutionChainService.class);
         //dont use pkmn id.. have to get its evochain id
         Call<ResponseBody> evoCall = evolutionChainService.getEvolutionChainForId(String.valueOf(params[0].getEvoChainId()));
@@ -228,7 +257,9 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
 
         Log.d(TAG,"I HAVE evochain now it is " + evolutionChain.getId() + " and the first one is.. " + evolutionChain.getChain().getSpecies().getName());
 
-
+        prog = 5;
+        publishProgress(prog);
+        params[0].setGeneration(detailsFromSpecies.getGeneration().getName());
         params[0].setEvoChainTemp(evolutionChain);
         params[0].setGenus(genus);
         params[0].setDesc(desc);
@@ -250,7 +281,8 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
                 , pokemonSpecies.getType1(), pokemonSpecies.getType2()
                 , pokemonSpecies.getHeight(), pokemonSpecies.getWeight()
                 , pokemonSpecies.getDesc(), pokemonSpecies.getGenus()
-                , pokemonSpecies.getEvoChainId());
+                , pokemonSpecies.getEvoChainId()
+                , pokemonSpecies.getGeneration());
 
         AbilityQueries abilityQueries = new AbilityQueries(context);
 

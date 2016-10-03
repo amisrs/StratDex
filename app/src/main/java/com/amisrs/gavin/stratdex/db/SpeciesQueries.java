@@ -70,7 +70,8 @@ public class SpeciesQueries {
                                      String type1, String type2,
                                      int height, int weight,
                                      String desc, String genus,
-                                     int evochain) {
+                                     int evochain,
+                                     String generation) {
         open();
         String updateString = "UPDATE " + DexContract.PokemonTable.TABLE_NAME + " SET " +
                 DexContract.PokemonTable.COLUMN_NAME_COLOR + " = \"" + color + "\"," +
@@ -86,7 +87,8 @@ public class SpeciesQueries {
                 DexContract.PokemonTable.COLUMN_NAME_WEIGHT + " = " + weight + "," +
                 DexContract.PokemonTable.COLUMN_NAME_DESC + " = \"" + desc + "\"" + "," +
                 DexContract.PokemonTable.COLUMN_NAME_GENUS + " = \"" + genus + "\"" + "," +
-                DexContract.PokemonTable.COLUMN_NAME_EVOCHAIN + " = " + evochain +
+                DexContract.PokemonTable.COLUMN_NAME_EVOCHAIN + " = " + evochain  + "," +
+                DexContract.PokemonTable.COLUMN_NAME_GENERATION + " = \"" + generation + "\"" +
 
                 " WHERE " +
                 DexContract.PokemonTable.COLUMN_NAME_ID + " = " + id;
@@ -151,7 +153,8 @@ public class SpeciesQueries {
                 DexContract.PokemonTable.COLUMN_NAME_WEIGHT,
                 DexContract.PokemonTable.COLUMN_NAME_DESC,
                 DexContract.PokemonTable.COLUMN_NAME_GENUS,
-                DexContract.PokemonTable.COLUMN_NAME_EVOCHAIN
+                DexContract.PokemonTable.COLUMN_NAME_EVOCHAIN,
+                DexContract.PokemonTable.COLUMN_NAME_GENERATION
 
         };
 
@@ -169,7 +172,8 @@ public class SpeciesQueries {
 
         c.moveToFirst();
         PokemonSpecies toGet = new PokemonSpecies(c.getString(2), c.getString(1), c.getString(4), c.getString(5), c.getString(3), c.getString(6), c.getString(7)
-                , c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11), c.getInt(12), c.getInt(13), c.getInt(14), c.getInt(15), c.getString(16), c.getString(17), c.getInt(18));
+                , c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11), c.getInt(12), c.getInt(13), c.getInt(14)
+                , c.getInt(15), c.getString(16), c.getString(17), c.getInt(18), c.getString(19));
         toGet.setIdFromUrl();
         c.close();
         close();

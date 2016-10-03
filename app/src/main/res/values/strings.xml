@@ -11,14 +11,16 @@
     <string name="aboutLabel">About</string>
     <string name="reinitialiseLabel">Reinitialise</string>
     <string name="about">
-        Pokemon data from: PokeAPI \n https://pokeapi.co/ \n\n
-        Pokemon GIFs from: Smogon \n smogon.com/dex/xy/pokemon/ \n\n
-        Pokemon sprites from: PokeAPI \n https://github.com/PokeAPI/pokeapi/tree/master/data/v2/sprites/pokemon
+        Pokémon data from: PokeAPI \n https://pokeapi.co/ \n\n
+        Pokémon GIFs from: Smogon \n smogon.com/dex/xy/pokemon/ \n\n
+        Pokémon sprites from: PokeAPI \n https://github.com/PokeAPI/pokeapi/tree/master/data/v2/sprites/pokemon
     </string>
     <string name="reinitialise">Hey this is gonna reset everything!
         \nGenerally you want to do this when new stuff comes out so it pulls the new data.
         \n\nOr you can do it for fun, I\'m not gonna stop you.
     </string>
+
+    <string name="searchNone">No Pokémon found! Try searching something else.</string>
 
 
     <string name="typeLabel">Type</string>
@@ -35,6 +37,8 @@
 
     <string name="heightLabel">Height</string>
     <string name="weightLabel">Weight</string>
+    <string name="genLabel">Generation</string>
+    <string name="regionLabel">Home Region</string>
     <string name="descLabel">Description</string>
     <string name="evolutionLabel">Evolution</string>
     <!-- TODO: Remove or change this placeholder text -->

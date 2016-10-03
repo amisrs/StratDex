@@ -39,11 +39,17 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
     private TextView nameTextView;
     private TextView idTextView;
     private ImageView bigspriteImageView;
+    private TextView loadingMsg;
     private ProgressBar bottomProgressBar;
     private PokemonSpecies thePokemon;
     private ViewPager viewPager;
     private PagerTabStrip pagerTabStrip;
     private SlidingTabLayout slidingTabLayout;
+
+    @Override
+    public void updateLoadingMsg(String msg) {
+        loadingMsg.setText(msg);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         bottomProgressBar = (ProgressBar) findViewById(R.id.pb_spinner);
         pagerTabStrip = (PagerTabStrip) findViewById(R.id.pts_tabs);
         slidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
+        loadingMsg = (TextView) findViewById(R.id.tv_load);
 
         bottomProgressBar.setVisibility(View.GONE);
         pagerTabStrip.setVisibility(View.GONE);

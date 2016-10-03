@@ -41,6 +41,7 @@ public class DexSQLHelper extends SQLiteOpenHelper {
                     DexContract.PokemonTable.COLUMN_NAME_DESC + TEXT_TYPE + COMMA_SEP +
                     DexContract.PokemonTable.COLUMN_NAME_GENUS + TEXT_TYPE + COMMA_SEP +
                     DexContract.PokemonTable.COLUMN_NAME_EVOCHAIN + INTEGER_TYPE + COMMA_SEP +
+                    DexContract.PokemonTable.COLUMN_NAME_GENERATION + TEXT_TYPE + COMMA_SEP +
                     " FOREIGN KEY (" +
                         DexContract.PokemonTable.COLUMN_NAME_EVOCHAIN +
                     ") REFERENCES " +

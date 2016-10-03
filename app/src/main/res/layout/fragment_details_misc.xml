@@ -61,12 +61,31 @@
                     android:layout_width="0dp"
                     android:id="@+id/tv_height"
                     android:text=""
+                    android:layout_marginBottom="5dp"
                     />
                 <TextView
                     android:layout_width="0dp"
                     android:id="@+id/tv_weight"
                     android:text=""
                     />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:text="@string/genLabel"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:text="@string/regionLabel"
+                    android:textStyle="bold"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/tv_gen"
+                    android:text=""/>
+                <TextView
+                    android:id="@+id/tv_region"
+                    android:text=""/>
             </TableRow>
 
         </TableLayout>

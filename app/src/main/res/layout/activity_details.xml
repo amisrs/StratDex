@@ -85,6 +85,13 @@
             style="?android:attr/progressBarStyleLarge"
             android:layout_centerInParent="true"
             />
+        <TextView
+            android:id="@+id/tv_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@id/pb_spinner"/>
+
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_pager"
             android:layout_below="@id/stl_tabs"

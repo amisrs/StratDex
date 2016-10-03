@@ -61,6 +61,8 @@ public class DetailsMiscFragment extends Fragment {
     private TextView weightText;
     private TextView descText;
     private TextView genusText;
+    private TextView generationText;
+    private TextView regionText;
     private RelativeLayout relativeLayout;
     private String mParam1;
     private String mParam2;
@@ -111,6 +113,8 @@ public class DetailsMiscFragment extends Fragment {
         weightText = (TextView)view.findViewById(R.id.tv_weight);
         descText = (TextView)view.findViewById(R.id.tv_desc);
         genusText = (TextView)view.findViewById(R.id.tv_descLabel);
+        generationText = (TextView)view.findViewById(R.id.tv_gen);
+        regionText = (TextView)view.findViewById(R.id.tv_region);
 
         float height = (float)parentActivity.getThePokemon().getHeight()/10;
         float weight = (float)parentActivity.getThePokemon().getWeight()/10;
@@ -118,6 +122,12 @@ public class DetailsMiscFragment extends Fragment {
         weightText.setText(weight + "kg");
         descText.setText(parentActivity.getThePokemon().getDesc());
         genusText.setText("The " + parentActivity.getThePokemon().getGenus() + " Pokémon");
+
+        String genNumeral = parentActivity.getThePokemon().getGeneration();
+        genNumeral = genNumeral.substring(genNumeral.indexOf("-")+1, genNumeral.length()).toUpperCase();
+
+        generationText.setText(genNumeral);
+        regionText.setText(parentActivity.getThePokemon().regionFromGeneration(parentActivity.getThePokemon().getGeneration()));
 
         SpeciesQueries speciesQueries = new SpeciesQueries(this.getContext());
         EvolutionQueries evolutionQueries = new EvolutionQueries(this.getContext());
@@ -153,14 +163,23 @@ public class DetailsMiscFragment extends Fragment {
                     final PokemonSpecies newPokemon = speciesQueries.getOneSpeciesById(String.valueOf(e.getPid()));
                     newPokemon.setIdFromUrl();
                     TextView evoName = new TextView(this.getContext());
+
                     evoName.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    evoName.setId(View.generateViewId());
                     evoName.setText(newPokemon.getFullName());
-                    evoName.setTextSize(10);
+
+                    //hardcoding font size; but i had to do it just for eevee because there are so many evos
+                    evoName.setTextSize(11);
 
                     evoName.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                     ImageView imageView = new ImageView(this.getContext());
-                    imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+                    RelativeLayout.LayoutParams pc2 = (RelativeLayout.LayoutParams)imageView.getLayoutParams();
+                    pc2.addRule(RelativeLayout.BELOW, evoName.getId());
+                    imageView.setLayoutParams(pc2);
+                    imageView.setBackground(ContextCompat.getDrawable(context, R.drawable.spritecircle));
+
                     File file = new File(newPokemon.getSpriteString());
                     if(file.exists()) {
                         Glide.with(this.getContext()).load(file).placeholder(R.drawable.placeholder).into(imageView);
@@ -201,6 +220,7 @@ public class DetailsMiscFragment extends Fragment {
                     final RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
                     relativeLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                     relativeLayout.addView(imageView);
+
                     relativeLayout.addView(evoName);
                     OnPokemonClick onPokemonClick = new OnPokemonClick(newPokemon, this.getContext(), "DETAILS");
                     relativeLayout.setClickable(true);
@@ -210,7 +230,7 @@ public class DetailsMiscFragment extends Fragment {
                             if(event.getAction() == MotionEvent.ACTION_DOWN ) {
                                 relativeLayout.setBackgroundColor(ContextCompat.getColor(context,R.color.entryDark));
                             } else {
-                                relativeLayout.setBackgroundColor(ContextCompat.getColor(context,R.color.defaultBackground));
+                                relativeLayout.setBackgroundColor(ContextCompat.getColor(context,android.R.color.transparent));
                             }
                             return false;
                         }
@@ -224,10 +244,12 @@ public class DetailsMiscFragment extends Fragment {
                 Log.d(TAG, "Adding the thing between tiers");
                 TableRow betweenRow = new TableRow(this.getContext());
                 newRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                TextView arrow = new TextView(this.getContext());
+                ImageView arrow = new ImageView(this.getContext());
                 arrow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                arrow.setText("V");
-                arrow.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                arrow.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.downarrow));
+                arrow.getLayoutParams().height = 50;
+                arrow.getLayoutParams().width = 50;
+
                 betweenRow.addView(arrow);
 
                 tableLayout.addView(betweenRow);

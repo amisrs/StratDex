@@ -57,6 +57,7 @@ public class PokemonSpecies {
     private String genus;
     private int evoChainId;
     private EvolutionChain evoChainTemp;
+    private String generation;
 
 
 
@@ -78,7 +79,8 @@ public class PokemonSpecies {
                           int stat1, int stat2, int stat3, int stat4, int stat5, int stat6,
                           int height, int weight,
                           String desc, String genus,
-                          int evoChainId) {
+                          int evoChainId,
+                          String generation) {
 
         Log.d(TAG, "constructing the pokemonspecies that should be passed to details view...  name = " + name);
         this.url = url;
@@ -101,8 +103,17 @@ public class PokemonSpecies {
         this.desc = desc;
         this.genus = genus;
         this.evoChainId = evoChainId;
+        this.generation = generation;
         isDefaultSprite = true;
 
+    }
+
+    public String getGeneration() {
+        return generation;
+    }
+
+    public void setGeneration(String generation) {
+        this.generation = generation;
     }
 
     public EvolutionChain getEvoChainTemp() {
@@ -298,6 +309,27 @@ public class PokemonSpecies {
         idMatcher.find();
         id = idMatcher.group(1);
         //System.out.println(id);
+    }
+
+    public String regionFromGeneration(String gen) {
+        switch(gen) {
+            case "Generation-I":
+                return "Kanto";
+            case "Generation-Ii" :
+                return "Johto";
+            case "Generation-Iii" :
+                return "Hoenn";
+            case "Generation-Iv" :
+                return "Sinnoh";
+            case "Generation-V" :
+                return "Unova";
+            case "Generation-Vi" :
+                return "Kalos";
+            case "Generation-Vii" :
+                return "Alola";
+            default:
+                return "N/A";
+        }
     }
 
 

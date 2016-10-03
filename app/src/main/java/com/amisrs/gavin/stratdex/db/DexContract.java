@@ -38,6 +38,7 @@ public final class DexContract     {
         public static final String COLUMN_NAME_GENUS = "genus";
         public static final String COLUMN_NAME_ABILITIES = "abilities";
         public static final String COLUMN_NAME_EVOCHAIN = "evochain";
+        public static final String COLUMN_NAME_GENERATION = "generation";
         public static final String COLUMN_NAME_FORMS = "forms";
     }
 

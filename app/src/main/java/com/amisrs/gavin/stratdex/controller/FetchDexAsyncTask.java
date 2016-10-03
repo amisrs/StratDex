@@ -48,6 +48,7 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Integer, ArrayList<Pokemo
     @Override
     protected ArrayList<PokemonSpecies> doInBackground(Void[] voids) {
         int prog = 0;
+        publishProgress(prog);
         DexSQLHelper dexSQLHelper = new DexSQLHelper(context);
         SQLiteDatabase db = dexSQLHelper.getWritableDatabase();
         db.execSQL(dexSQLHelper.SQL_DELETE_TABLES);
