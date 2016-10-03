@@ -64,12 +64,17 @@ public class EvolutionQueries {
         to.getSpecies().setIdFromUrl();
         int fromId = Integer.parseInt(from.getSpecies().getId());
         int toId = Integer.parseInt(to.getSpecies().getId());
+        int level = 0;
+        if(to.getEvolution_details().length > 0) {
+            level = to.getEvolution_details()[0].getMin_level();
+        }
         Log.d(TAG, "Associating FROM: " + fromId + " and NEXT: " + toId);
 
         open();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DexContract.EvolutionArrayTable.COLUMN_NAME_BASE, fromId);
         contentValues.put(DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN, toId);
+        contentValues.put(DexContract.EvolutionArrayTable.COLUMN_NAME_LEVEL, level);
 
         long newRowId = db.insert(DexContract.EvolutionArrayTable.TABLE_NAME, null, contentValues);
         close();
@@ -88,20 +93,21 @@ public class EvolutionQueries {
 
         // [eevee] [vaporeon] [flareon] [leafeon] [etc]
         // [1] [2] [2] [2] [2] ...
+        //
+        // easier to just make an object i guess
 
         //step 1: get base = this;
         open();
         ArrayList<EvoSlot> evoSlots = new ArrayList<>();
+        boolean addedSelf = false;
 
-        //dont forget to add yourself
-        evoSlots.add(new EvoSlot(pid, baseTier));
 
-        String query = "SELECT " + DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN + "," + DexContract.EvolutionArrayTable.COLUMN_NAME_BASE +
+        String query = "SELECT " + DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN + "," + DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + "," + DexContract.EvolutionArrayTable.COLUMN_NAME_LEVEL +
                        " FROM " + DexContract.EvolutionArrayTable.TABLE_NAME +
                        " WHERE " + DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + " =  ?;";
 
 
-        String query2 = "SELECT " + DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + "," + DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN +
+        String query2 = "SELECT " + DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + "," + DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN + "," + DexContract.EvolutionArrayTable.COLUMN_NAME_LEVEL +
                 " FROM " + DexContract.EvolutionArrayTable.TABLE_NAME +
                 " WHERE " + DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN + " =  ?;";
 
@@ -111,14 +117,21 @@ public class EvolutionQueries {
             c.moveToFirst();
             while (!c.isAfterLast()) {
                 Log.d(TAG, "Found a pokemon that this evolves to, adding it to tier " + (baseTier + 1));
-                evoSlots.add(new EvoSlot(c.getInt(0), baseTier + 1));
+                evoSlots.add(new EvoSlot(c.getInt(0), baseTier + 1, c.getInt(2)));
+
+                //dont forget to add yourself
+                if(!addedSelf) {
+                    evoSlots.add(new EvoSlot(pid, baseTier, c.getInt(2)));
+                    addedSelf = true;
+                }
+
 
                 //should put this whole thing in a function so no repeat, but works for now
                 Cursor cnest = db.rawQuery(query, new String[]{Integer.toString(c.getInt(0))});
                 if(cnest != null && c.getCount() > 0) {
                     cnest.moveToFirst();
                     while(!cnest.isAfterLast()) {
-                        evoSlots.add(new EvoSlot(cnest.getInt(0), baseTier + 2));
+                        evoSlots.add(new EvoSlot(cnest.getInt(0), baseTier + 2, cnest.getInt(2)));
                         cnest.moveToNext();
                     }
                 }
@@ -140,13 +153,18 @@ public class EvolutionQueries {
                 Log.d(TAG, "Found a pokemon that evolves to this, adding it to tier " + (baseTier - 1));
                 int evoID = c2.getInt(0);
 
-                evoSlots.add(new EvoSlot(evoID, baseTier - 1));
+                evoSlots.add(new EvoSlot(evoID, baseTier - 1, c2.getInt(2)));
+                //dont forget to add yourself
+                if(!addedSelf) {
+                    evoSlots.add(new EvoSlot(pid, baseTier, c2.getInt(2)));
+                    addedSelf = true;
+                }
 
                 Cursor c2nest = db.rawQuery(query2, new String[]{Integer.toString(c2.getInt(0))});
                 if(c2nest != null && c2nest.getCount() > 0) {
                     c2nest.moveToFirst();
                     while(!c2nest.isAfterLast()) {
-                        evoSlots.add(new EvoSlot(c2nest.getInt(0), baseTier - 2));
+                        evoSlots.add(new EvoSlot(c2nest.getInt(0), baseTier - 2, c2nest.getInt(2)));
                         c2nest.moveToNext();
                     }
                 }

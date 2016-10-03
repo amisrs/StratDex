@@ -10,6 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,6 +47,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
     private ViewPager viewPager;
     private PagerTabStrip pagerTabStrip;
     private SlidingTabLayout slidingTabLayout;
+    private ImageButton refreshButton;
 
     @Override
     public void updateLoadingMsg(String msg) {
@@ -65,6 +68,9 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         pagerTabStrip = (PagerTabStrip) findViewById(R.id.pts_tabs);
         slidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
         loadingMsg = (TextView) findViewById(R.id.tv_load);
+        refreshButton = (ImageButton) findViewById(R.id.btn_refresh);
+
+
 
         bottomProgressBar.setVisibility(View.GONE);
         pagerTabStrip.setVisibility(View.GONE);
@@ -75,6 +81,12 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         AbilityQueries abilityQueries = new AbilityQueries(this);
         final PokemonSpecies theOne = speciesQueries.getOneSpeciesById(id);
         theOne.setAbilities(abilityQueries.getAbilitiesForPokemon(Integer.parseInt(theOne.getId())));
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendRequest(theOne);
+            }
+        });
 
 
         nameTextView.setText(theOne.getFullName());
@@ -127,16 +139,13 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
 
         //get details
         if (theOne.getColorString() == null) {
-            FetchDetailsAsyncTask fetchDetailsAsyncTask = new FetchDetailsAsyncTask(this);
-            fetchDetailsAsyncTask.delegate = this;
-            fetchDetailsAsyncTask.execute(theOne);
-            bottomProgressBar.setVisibility(View.VISIBLE);
-
+            sendRequest(theOne);
         } else {
             System.out.println("you got the details for this one already");
 
             giveFilledPokemon(theOne);
         }
+
         //show progress spinner
 
 //        while(fetchDetailsAsyncTask.getStatus() != AsyncTask.Status.FINISHED) {
@@ -144,6 +153,13 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
 //        }
         //
 
+
+    }
+    public void sendRequest(PokemonSpecies theOne) {
+        FetchDetailsAsyncTask fetchDetailsAsyncTask = new FetchDetailsAsyncTask(this);
+        fetchDetailsAsyncTask.delegate = this;
+        fetchDetailsAsyncTask.execute(theOne);
+        bottomProgressBar.setVisibility(View.VISIBLE);
 
     }
 

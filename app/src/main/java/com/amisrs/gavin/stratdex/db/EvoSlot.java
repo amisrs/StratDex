@@ -6,12 +6,23 @@ package com.amisrs.gavin.stratdex.db;
 public class EvoSlot implements Comparable<EvoSlot> {
     public int pid;
     public int tier;
+    public int level;
 
 
-    public EvoSlot(int pid, int tier) {
+    public EvoSlot(int pid, int tier, int level) {
         this.pid = pid;
         this.tier = tier;
+        this.level = level;
     }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public int getPid() {
         return pid;
     }

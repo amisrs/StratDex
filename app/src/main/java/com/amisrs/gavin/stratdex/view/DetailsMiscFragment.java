@@ -135,138 +135,143 @@ public class DetailsMiscFragment extends Fragment {
         Collections.sort(slotArrayList);
         Log.d(TAG, "sorted the evo list, size is " + slotArrayList.size());
         // get lowest tier and highest tier subtract = number of rows needed
-        int lowest = slotArrayList.get(0).getTier() ;
-        int highest = slotArrayList.get(slotArrayList.size()-1).getTier();
+        if(!slotArrayList.isEmpty()) {
+            int lowest = slotArrayList.get(0).getTier();
+            int highest = slotArrayList.get(slotArrayList.size() - 1).getTier();
 
 
+            int diff = highest - lowest;
+            Log.d(TAG, "The difference in tiers is " + diff);
 
+            TableLayout tableLayout = new TableLayout(this.getContext());
+            //http://stackoverflow.com/questions/3277196/can-i-set-androidlayout-below-at-runtime-programmatically
+            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            p.addRule(RelativeLayout.BELOW, R.id.tv_evolutionLabel);
+            p.addRule(RelativeLayout.CENTER_IN_PARENT, R.id.rl_main);
+            tableLayout.setLayoutParams(p);
+            tableLayout.setShrinkAllColumns(true);
+            for (int i = lowest; i <= highest; i++) {
+                //making new row
+                Log.d(TAG, "Making the table, currently on tier " + i);
+                TableRow newRow = new TableRow(this.getContext());
+                newRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                for (EvoSlot e : slotArrayList) {
+                    if (e.getTier() == i) {
+                        //new text add to the row
+                        Log.d(TAG, "Adding pokemon to row " + i + ", currently adding " + e.getPid());
+                        final PokemonSpecies newPokemon = speciesQueries.getOneSpeciesById(String.valueOf(e.getPid()));
+                        newPokemon.setIdFromUrl();
+                        TextView evoName = new TextView(this.getContext());
 
-        int diff = highest-lowest;
-        Log.d(TAG, "The difference in tiers is " + diff);
+                        evoName.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                        evoName.setId(View.generateViewId());
+                        evoName.setText(newPokemon.getFullName());
 
-        TableLayout tableLayout = new TableLayout(this.getContext());
-        //http://stackoverflow.com/questions/3277196/can-i-set-androidlayout-below-at-runtime-programmatically
-        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        p.addRule(RelativeLayout.BELOW, R.id.tv_evolutionLabel);
-        p.addRule(RelativeLayout.CENTER_IN_PARENT, R.id.rl_main);
-        tableLayout.setLayoutParams(p);
-        tableLayout.setShrinkAllColumns(true);
-        for(int i=lowest; i <= highest; i++) {
-            //making new row
-            Log.d(TAG, "Making the table, currently on tier "+ i );
-            TableRow newRow = new TableRow(this.getContext());
-            newRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-            for(EvoSlot e : slotArrayList) {
-                if(e.getTier() == i) {
-                    //new text add to the row
-                    Log.d(TAG, "Adding pokemon to row " + i + ", currently adding " + e.getPid());
-                    final PokemonSpecies newPokemon = speciesQueries.getOneSpeciesById(String.valueOf(e.getPid()));
-                    newPokemon.setIdFromUrl();
-                    TextView evoName = new TextView(this.getContext());
+                        //hardcoding font size; but i had to do it just for eevee because there are so many evos
+                        evoName.setTextSize(11);
+                        evoName.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-                    evoName.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                    evoName.setId(View.generateViewId());
-                    evoName.setText(newPokemon.getFullName());
+                        TextView evoLevel = new TextView(this.getContext());
+                        evoLevel.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) evoLevel.getLayoutParams();
+                        layoutParams.addRule(RelativeLayout.BELOW, evoName.getId());
+                        evoLevel.setLayoutParams(layoutParams);
+                        evoLevel.setId(View.generateViewId());
+                        evoLevel.setText("Lv. " + e.getLevel());
+                        evoLevel.setTextSize(11);
+                        evoLevel.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-                    //hardcoding font size; but i had to do it just for eevee because there are so many evos
-                    evoName.setTextSize(11);
+                        ImageView imageView = new ImageView(this.getContext());
+                        imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+                        RelativeLayout.LayoutParams pc2 = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+                        pc2.addRule(RelativeLayout.BELOW, evoLevel.getId());
+                        imageView.setLayoutParams(pc2);
+                        imageView.setBackground(ContextCompat.getDrawable(context, R.drawable.spritecircle));
 
-                    evoName.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        File file = new File(newPokemon.getSpriteString());
+                        if (file.exists()) {
+                            Glide.with(this.getContext()).load(file).placeholder(R.drawable.placeholder).into(imageView);
+                        } else {
+                            SimpleTarget<Bitmap> simpleTarget = new SimpleTarget<Bitmap>(75, 75) {
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    String spriteFilePath = context.getFilesDir().toString();
+                                    OutputStream out = null;
 
-                    ImageView imageView = new ImageView(this.getContext());
-                    imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-                    RelativeLayout.LayoutParams pc2 = (RelativeLayout.LayoutParams)imageView.getLayoutParams();
-                    pc2.addRule(RelativeLayout.BELOW, evoName.getId());
-                    imageView.setLayoutParams(pc2);
-                    imageView.setBackground(ContextCompat.getDrawable(context, R.drawable.spritecircle));
-
-                    File file = new File(newPokemon.getSpriteString());
-                    if(file.exists()) {
-                        Glide.with(this.getContext()).load(file).placeholder(R.drawable.placeholder).into(imageView);
-                    } else
-                    {
-                        SimpleTarget<Bitmap> simpleTarget = new SimpleTarget<Bitmap>(75,75) {
-                            @Override
-                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                String spriteFilePath = context.getFilesDir().toString();
-                                OutputStream out = null;
-
-                                File newSpriteFile = new File(spriteFilePath, newPokemon.getId()+".png");
-                                try {
-                                    out = context.openFileOutput(newPokemon.getId()+".png", Context.MODE_PRIVATE);
-                                    out.write(DbBitmapUtility.getBytes(resource));
-                                    out.flush();
-                                    out.close();
-                                    SpeciesQueries speciesQueries = new SpeciesQueries(context);
-                                    speciesQueries.addSpriteFilePathForSpecies(newPokemon.getId(), spriteFilePath+"/"+newPokemon.getId()+".png", "small");
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                    File newSpriteFile = new File(spriteFilePath, newPokemon.getId() + ".png");
+                                    try {
+                                        out = context.openFileOutput(newPokemon.getId() + ".png", Context.MODE_PRIVATE);
+                                        out.write(DbBitmapUtility.getBytes(resource));
+                                        out.flush();
+                                        out.close();
+                                        SpeciesQueries speciesQueries = new SpeciesQueries(context);
+                                        speciesQueries.addSpriteFilePathForSpecies(newPokemon.getId(), spriteFilePath + "/" + newPokemon.getId() + ".png", "small");
+                                    } catch (FileNotFoundException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                            }
-                        };
+                            };
 
 
+                            Glide.with(context).load(newPokemon.getSpriteString())
+                                    .asBitmap()
+                                    .into(simpleTarget);
 
-                        Glide.with(context).load(newPokemon.getSpriteString())
-                                .asBitmap()
-                                .into(simpleTarget);
+                            Glide.with(context).load(newPokemon.getSpriteString()).placeholder(R.drawable.placeholder).into(imageView);
 
-                        Glide.with(context).load(newPokemon.getSpriteString()).placeholder(R.drawable.placeholder).into(imageView);
-
-                    }
-
-                    final RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
-                    relativeLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                    relativeLayout.addView(imageView);
-
-                    relativeLayout.addView(evoName);
-                    OnPokemonClick onPokemonClick = new OnPokemonClick(newPokemon, this.getContext(), "DETAILS");
-                    relativeLayout.setClickable(true);
-                    relativeLayout.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if(event.getAction() == MotionEvent.ACTION_DOWN ) {
-                                relativeLayout.setBackgroundColor(ContextCompat.getColor(context,R.color.entryDark));
-                            } else {
-                                relativeLayout.setBackgroundColor(ContextCompat.getColor(context,android.R.color.transparent));
-                            }
-                            return false;
                         }
-                    });
-                    relativeLayout.setOnClickListener(onPokemonClick);
-                    newRow.addView(relativeLayout);
+
+                        final RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
+                        relativeLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                        relativeLayout.addView(imageView);
+                        relativeLayout.addView(evoLevel);
+                        relativeLayout.addView(evoName);
+                        OnPokemonClick onPokemonClick = new OnPokemonClick(newPokemon, this.getContext(), "DETAILS");
+                        relativeLayout.setClickable(true);
+                        relativeLayout.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                    relativeLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.entryDark));
+                                } else {
+                                    relativeLayout.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+                                }
+                                return false;
+                            }
+                        });
+                        relativeLayout.setOnClickListener(onPokemonClick);
+                        newRow.addView(relativeLayout);
+                    }
+                }
+                tableLayout.addView(newRow);
+                if (i != highest) {
+                    Log.d(TAG, "Adding the thing between tiers");
+                    TableRow betweenRow = new TableRow(this.getContext());
+                    newRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    ImageView arrow = new ImageView(this.getContext());
+                    arrow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    arrow.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.downarrow));
+                    arrow.getLayoutParams().height = 50;
+                    arrow.getLayoutParams().width = 50;
+
+                    betweenRow.addView(arrow);
+
+                    tableLayout.addView(betweenRow);
                 }
             }
-            tableLayout.addView(newRow);
-            if(i != highest) {
-                Log.d(TAG, "Adding the thing between tiers");
-                TableRow betweenRow = new TableRow(this.getContext());
-                newRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                ImageView arrow = new ImageView(this.getContext());
-                arrow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                arrow.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.downarrow));
-                arrow.getLayoutParams().height = 50;
-                arrow.getLayoutParams().width = 50;
 
-                betweenRow.addView(arrow);
 
-                tableLayout.addView(betweenRow);
-            }
+            relativeLayout = (RelativeLayout) view.findViewById(R.id.rl_main);
+            RelativeLayout.LayoutParams what = (RelativeLayout.LayoutParams) tableLayout.getLayoutParams();
+            what.addRule(RelativeLayout.CENTER_VERTICAL, 1);
+
+            relativeLayout.addView(tableLayout);
+
+            scrollView = (ScrollView) view.findViewById(R.id.sv_main);
+            scrollView.setBackgroundColor(ContextCompat.getColor(this.getContext(), colorToSet));
         }
-
-
-
-        relativeLayout = (RelativeLayout)view.findViewById(R.id.rl_main);
-        RelativeLayout.LayoutParams what = (RelativeLayout.LayoutParams) tableLayout.getLayoutParams();
-        what.addRule(RelativeLayout.CENTER_VERTICAL, 1);
-
-        relativeLayout.addView(tableLayout);
-
-        scrollView = (ScrollView)view.findViewById(R.id.sv_main);
-        scrollView.setBackgroundColor(ContextCompat.getColor(this.getContext(),colorToSet));
-
         return view;
     }
 

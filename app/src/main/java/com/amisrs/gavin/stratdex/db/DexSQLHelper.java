@@ -117,6 +117,7 @@ public class DexSQLHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + DexContract.EvolutionArrayTable.TABLE_NAME + "(" +
                     DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + INTEGER_TYPE + COMMA_SEP +
                     DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN + INTEGER_TYPE + COMMA_SEP +
+                    DexContract.EvolutionArrayTable.COLUMN_NAME_LEVEL + INTEGER_TYPE + COMMA_SEP +
                     " PRIMARY KEY (" + DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + COMMA_SEP +
                                         DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN +
                     ")" + COMMA_SEP +
