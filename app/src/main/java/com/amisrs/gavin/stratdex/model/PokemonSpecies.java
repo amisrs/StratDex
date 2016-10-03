@@ -85,6 +85,7 @@ public class PokemonSpecies {
         this.name = name;
         this.type1 = type1;
         this.type2 = type2;
+        this.spritePath = spritePath;
         this.bigspritePath = bigspritePath;
         this.colorString = colorString;
         //Bitmap bmp = BitmapFactory.decodeResource(MainActivity.context.getResources(), R.drawable.default_sprite);
@@ -296,7 +297,7 @@ public class PokemonSpecies {
         Matcher idMatcher = idPattern.matcher(url);
         idMatcher.find();
         id = idMatcher.group(1);
-        System.out.println(id);
+        //System.out.println(id);
     }
 
 

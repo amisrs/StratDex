@@ -168,10 +168,8 @@ public class SpeciesQueries {
         );
 
         c.moveToFirst();
-        System.out.println("giving requested pokemon " + c.getString(1) + " bigsprite is follows: " + c.getString(6));
         PokemonSpecies toGet = new PokemonSpecies(c.getString(2), c.getString(1), c.getString(4), c.getString(5), c.getString(3), c.getString(6), c.getString(7)
                 , c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11), c.getInt(12), c.getInt(13), c.getInt(14), c.getInt(15), c.getString(16), c.getString(17), c.getInt(18));
-        System.out.println(" has smallsp " + toGet.getSpritePath() + " and bigsp " + toGet.getBigspritePath());
         toGet.setIdFromUrl();
         c.close();
         close();

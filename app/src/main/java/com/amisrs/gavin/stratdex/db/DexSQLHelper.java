@@ -115,13 +115,13 @@ public class DexSQLHelper extends SQLiteOpenHelper {
     public static final String SQL_CREATE_EVOLUTIONARRAYTABLE =
             "CREATE TABLE " + DexContract.EvolutionArrayTable.TABLE_NAME + "(" +
                     DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + INTEGER_TYPE + COMMA_SEP +
-                    DexContract.EvolutionArrayTable.COLUMN_NAME_NEXT + INTEGER_TYPE + COMMA_SEP +
+                    DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN + INTEGER_TYPE + COMMA_SEP +
                     " PRIMARY KEY (" + DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + COMMA_SEP +
-                                        DexContract.EvolutionArrayTable.COLUMN_NAME_NEXT +
+                                        DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN +
                     ")" + COMMA_SEP +
                     " FOREIGN KEY (" + DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + ") REFERENCES " +
                     DexContract.EvolutionObjectTable.TABLE_NAME + "(" + DexContract.EvolutionObjectTable.COLUMN_NAME_POKEMON_ID + ")" + COMMA_SEP +
-                    " FOREIGN KEY (" + DexContract.EvolutionArrayTable.COLUMN_NAME_NEXT + ") REFERENCES " +
+                    " FOREIGN KEY (" + DexContract.EvolutionArrayTable.COLUMN_NAME_GROWN + ") REFERENCES " +
                     DexContract.EvolutionObjectTable.TABLE_NAME + "(" + DexContract.EvolutionObjectTable.COLUMN_NAME_POKEMON_ID + ")"
             + ");";
 

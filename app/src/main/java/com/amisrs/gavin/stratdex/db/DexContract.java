@@ -85,7 +85,7 @@ public final class DexContract     {
     public static class EvolutionArrayTable implements BaseColumns {
         public static final String TABLE_NAME = "evolutionarray";
         public static final String COLUMN_NAME_BASE = "base";
-        public static final String COLUMN_NAME_NEXT = "next";
+        public static final String COLUMN_NAME_GROWN = "grown";
     }
 
 //    public static class PokemonNames implements BaseColumns {

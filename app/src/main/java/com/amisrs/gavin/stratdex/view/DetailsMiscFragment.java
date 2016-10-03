@@ -1,17 +1,39 @@
 package com.amisrs.gavin.stratdex.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.R;
+import com.amisrs.gavin.stratdex.db.DbBitmapUtility;
+import com.amisrs.gavin.stratdex.db.EvoSlot;
+import com.amisrs.gavin.stratdex.db.EvolutionQueries;
+import com.amisrs.gavin.stratdex.db.SpeciesQueries;
+import com.amisrs.gavin.stratdex.model.PokemonSpecies;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +48,7 @@ public class DetailsMiscFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "DetailsMiscFragment";
 
     // TODO: Rename and change types of parameters
     private ScrollView scrollView;
@@ -33,6 +56,7 @@ public class DetailsMiscFragment extends Fragment {
     private TextView weightText;
     private TextView descText;
     private TextView genusText;
+    private RelativeLayout relativeLayout;
     private String mParam1;
     private String mParam2;
 
@@ -76,6 +100,7 @@ public class DetailsMiscFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_details_misc, container, false);
         DetailsActivity parentActivity = (DetailsActivity)getActivity();
         int colorToSet = DetailsBaseFragment.getColorToSet(parentActivity.getThePokemon().getColorString());
+        final Context context = this.getContext();
 
         heightText = (TextView)view.findViewById(R.id.tv_height);
         weightText = (TextView)view.findViewById(R.id.tv_weight);
@@ -88,6 +113,109 @@ public class DetailsMiscFragment extends Fragment {
         weightText.setText(weight + "kg");
         descText.setText(parentActivity.getThePokemon().getDesc());
         genusText.setText("The " + parentActivity.getThePokemon().getGenus() + " Pokémon");
+
+        SpeciesQueries speciesQueries = new SpeciesQueries(this.getContext());
+        EvolutionQueries evolutionQueries = new EvolutionQueries(this.getContext());
+        ArrayList<EvoSlot> slotArrayList = evolutionQueries.getSimpleChain(Integer.parseInt(parentActivity.getThePokemon().getId()));
+        Collections.sort(slotArrayList);
+        Log.d(TAG, "sorted the evo list, size is " + slotArrayList.size());
+        // get lowest tier and highest tier subtract = number of rows needed
+        int lowest = slotArrayList.get(0).getTier() ;
+        int highest = slotArrayList.get(slotArrayList.size()-1).getTier();
+
+
+
+
+        int diff = highest-lowest;
+        Log.d(TAG, "The difference in tiers is " + diff);
+
+        TableLayout tableLayout = new TableLayout(this.getContext());
+        //http://stackoverflow.com/questions/3277196/can-i-set-androidlayout-below-at-runtime-programmatically
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        p.addRule(RelativeLayout.BELOW, R.id.tv_evolutionLabel);
+        tableLayout.setLayoutParams(p);
+        for(int i=lowest; i <= highest; i++) {
+            //making new row
+            Log.d(TAG, "Making the table, currently on tier "+ i );
+            TableRow newRow = new TableRow(this.getContext());
+            newRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            for(EvoSlot e : slotArrayList) {
+                if(e.getTier() == i) {
+                    //new text add to the row
+                    Log.d(TAG, "Adding pokemon to row " + i + ", currently adding " + e.getPid());
+                    final PokemonSpecies newPokemon = speciesQueries.getOneSpeciesById(String.valueOf(e.getPid()));
+                    newPokemon.setIdFromUrl();
+                    TextView evoName = new TextView(this.getContext());
+                    evoName.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    evoName.setText(newPokemon.getFullName());
+
+                    ImageView imageView = new ImageView(this.getContext());
+                    imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    File file = new File(newPokemon.getSpriteString());
+                    if(file.exists()) {
+                        Glide.with(this.getContext()).load(file).placeholder(R.drawable.placeholder).into(imageView);
+                    } else
+                    {
+                        SimpleTarget<Bitmap> simpleTarget = new SimpleTarget<Bitmap>(75,75) {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                String spriteFilePath = context.getFilesDir().toString();
+                                OutputStream out = null;
+
+                                File newSpriteFile = new File(spriteFilePath, newPokemon.getId()+".png");
+                                try {
+                                    out = context.openFileOutput(newPokemon.getId()+".png", Context.MODE_PRIVATE);
+                                    out.write(DbBitmapUtility.getBytes(resource));
+                                    out.flush();
+                                    out.close();
+                                    SpeciesQueries speciesQueries = new SpeciesQueries(context);
+                                    speciesQueries.addSpriteFilePathForSpecies(newPokemon.getId(), spriteFilePath+"/"+newPokemon.getId()+".png", "small");
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+
+
+
+                        Glide.with(context).load(newPokemon.getSpriteString())
+                                .asBitmap()
+                                .into(simpleTarget);
+
+                        Glide.with(context).load(newPokemon.getSpriteString()).placeholder(R.drawable.placeholder).into(imageView);
+
+                    }
+
+
+                    TextView evoText = new TextView(this.getContext());
+                    evoText.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    evoText.setText(String.valueOf(e.getPid()));
+
+
+                    newRow.addView(evoText);
+                    newRow.addView(imageView);
+                    newRow.addView(evoName);
+                }
+            }
+            tableLayout.addView(newRow);
+            if(i != highest) {
+                Log.d(TAG, "Adding the thing between tiers");
+                TableRow betweenRow = new TableRow(this.getContext());
+                newRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                TextView arrow = new TextView(this.getContext());
+                arrow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                arrow.setText("evolves to");
+                betweenRow.addView(arrow);
+                tableLayout.addView(betweenRow);
+            }
+        }
+
+
+
+        relativeLayout = (RelativeLayout)view.findViewById(R.id.rl_main);
+        relativeLayout.addView(tableLayout);
 
         scrollView = (ScrollView)view.findViewById(R.id.sv_main);
         scrollView.setBackgroundColor(ContextCompat.getColor(this.getContext(),colorToSet));

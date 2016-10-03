@@ -3,6 +3,7 @@ package com.amisrs.gavin.stratdex.controller;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.amisrs.gavin.stratdex.db.AbilityQueries;
 import com.amisrs.gavin.stratdex.db.MoveQueries;
@@ -34,6 +35,7 @@ import retrofit2.http.Query;
  * Created by Gavin on 15/09/2016.
  */
 public class FetchDexAsyncTask extends AsyncTask<Void, Integer, ArrayList<PokemonSpecies>> {
+    private static final String TAG = "FetchDexAsyncTask";
     private Context context;
     public LoadResponse delegate = null;
     //public AsyncResponse delegate = null;
@@ -132,17 +134,17 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Integer, ArrayList<Pokemo
         try {
             fullListResponse = getPokemonCall.execute();
             fullListString = fullListResponse.body().string();
-            System.out.println(fullListString);
+            //System.out.println(fullListString);
         } catch (IOException e) {
             e.printStackTrace();
         }
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
-        System.out.println(fullListString);
+        //System.out.println(fullListString);
         jsonObject = gson.fromJson(fullListString, JsonObject.class);
 
         resultsArray = jsonObject.getAsJsonArray("results");
-        System.out.println(resultsArray.toString());
+        //System.out.println(resultsArray.toString());
         PokemonSpecies[] allPokemon = gson.fromJson(resultsArray, PokemonSpecies[].class);
 
         ArrayList<PokemonSpecies> pokemonSpecies = new ArrayList<>();
@@ -156,7 +158,7 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Integer, ArrayList<Pokemo
 
 
             allPokemon[i].setIdFromUrl();
-            System.out.println("created pokemon " + allPokemon[i].getName());
+            Log.d(TAG,"created pokemon " + allPokemon[i].getName());
             pokemonSpecies.add(allPokemon[i]);
             SpeciesQueries addSpeciesQuery = new SpeciesQueries(context);
             addSpeciesQuery.open();
@@ -230,7 +232,6 @@ public class FetchDexAsyncTask extends AsyncTask<Void, Integer, ArrayList<Pokemo
 
         //SpeciesQueries addSpeciesQuery = new SpeciesQueries(context);
         //addSpeciesQuery.open();
-        System.out.println("inside fetchdexasync");
         delegate.sayHasLoaded();
 
 

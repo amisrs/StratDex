@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
  * Created by Gavin on 15/09/2016.
  */
 public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAdapter.SpeciesViewHolder> {
+    private static final String TAG = "PokemonSpeciesAdapter";
     private ArrayList<PokemonSpecies> species;
     private Context context;
     public static String LIST_KEY = "LIST";
@@ -95,16 +97,14 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
             final String id = data.getId();
 
 
-            System.out.println("try loading image for " + data.getId());
+            Log.d(TAG, "try loading image for " + data.getId());
             bmp = data.getSmallSprite();
 
 
             if(data.getSpritePath() == null) {
-                System.out.println("the sprite is null for " + data.getName());
                 SimpleTarget<Bitmap> simpleTarget = new SimpleTarget<Bitmap>(75,75) {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        System.out.println("onresourceready simpletarget");
                         String spriteFilePath = context.getFilesDir().toString();
                         OutputStream out = null;
 
@@ -115,14 +115,14 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
 
                             //resource.compress(Bitmap.CompressFormat.PNG, 100, out);
                             out.write(DbBitmapUtility.getBytes(resource));
-                            System.out.println("compressing image");
+                            //System.out.println("compressing image");
                             out.flush();
                             out.close();
                             //MediaStore.Images.Media.insertImage(context.getContentResolver(), newSpriteFile.getAbsolutePath(), newSpriteFile.getName(), newSpriteFile.getName());
-                            System.out.println("image is stored");
+                           // System.out.println("image is stored");
                             SpeciesQueries speciesQueries = new SpeciesQueries(context);
                             speciesQueries.addSpriteFilePathForSpecies(id, spriteFilePath+"/"+id+".png", "small");
-                            System.out.println("image path is stored in database");
+                           // System.out.println("image path is stored in database");
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -140,7 +140,7 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
                 Glide.with(context).load(data.getSpriteString()).placeholder(R.drawable.placeholder).into(ssImageView);
 
             } else {
-                System.out.println("could find spritepath so loading from file.. this pokemon is " + data.getName());
+                Log.d(TAG, "could find spritepath so loading from file.. this pokemon is " + data.getName());
                 Glide.with(context).load(new File(data.getSpritePath())).placeholder(R.drawable.placeholder).into(ssImageView);
             }
 

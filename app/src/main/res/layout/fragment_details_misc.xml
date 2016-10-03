@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sv_main"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:scrollbars="horizontal">
 
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -71,6 +72,7 @@
         </TableLayout>
 
         <TextView
+            android:id="@+id/tv_evolutionLabel"
             android:layout_below="@id/tl_heightweight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

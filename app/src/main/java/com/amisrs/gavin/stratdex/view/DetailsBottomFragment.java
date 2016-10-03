@@ -16,9 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.R;
+import com.amisrs.gavin.stratdex.db.EvoSlot;
+import com.amisrs.gavin.stratdex.db.EvolutionQueries;
 import com.amisrs.gavin.stratdex.model.Ability;
 
 import java.util.ArrayList;
@@ -184,6 +187,8 @@ public class DetailsBottomFragment extends Fragment {
             linearLayout.addView(abilityName);
             linearLayout.addView(abilityDesc);
         }
+
+
         relativeLayout = (RelativeLayout)view.findViewById(R.id.fl_main);
         scrollView = (ScrollView)view.findViewById(R.id.sv_main);
         scrollView.setBackgroundColor(ContextCompat.getColor(this.getContext(),colorToSet));
