@@ -181,6 +181,14 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(getIntent().getStringExtra("FROM").equals("DETAILS")) {
+            overridePendingTransition(R.anim.blank, R.anim.lefttoright);
+        }
+    }
+    @Override
     public void onFragmentInteraction(Uri uri) {
 
     }

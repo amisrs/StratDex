@@ -7,12 +7,15 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.R;
@@ -61,6 +64,7 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
     @Override
     public void onBindViewHolder(PokemonSpeciesAdapter.SpeciesViewHolder holder, int position) {
         PokemonSpecies pokemonSpecies = species.get(position);
+
         holder.bindSpecies(pokemonSpecies);
     }
 
@@ -74,6 +78,7 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
         public TextView t1TextView;
         public TextView t2TextView;
         public Context context;
+        public RelativeLayout relativeLayout;
 
         public ImageView ssImageView;
         public Bitmap bmp;
@@ -86,10 +91,12 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
             nameTextView = (TextView)v.findViewById(R.id.tv_name);
             idTextView = (TextView)v.findViewById(R.id.tv_id);
             ssImageView = (ImageView)v.findViewById(R.id.iv_ss);
+            relativeLayout = (RelativeLayout)v.findViewById(R.id.rl_main);
+
 
         }
 
-        public void bindSpecies(PokemonSpecies pokemonSpecies) {
+        public void bindSpecies(final PokemonSpecies pokemonSpecies) {
             data = pokemonSpecies;
 
             //get/set sprite
@@ -148,8 +155,35 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
 
 
             Drawable d = ssImageView.getDrawable();
+            final int down = ContextCompat.getColor(context,R.color.entryLight);
+            final int up = ContextCompat.getColor(context,R.color.defaultBackground);
 
-            OnPokemonClick onPokemonClick = new OnPokemonClick(pokemonSpecies, context);
+            relativeLayout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if(event.getAction() == MotionEvent.ACTION_DOWN ) {
+                        v.setBackgroundColor(down);
+
+                    } else if(event.getAction() == MotionEvent.ACTION_UP){
+                        v.setBackgroundColor(up);
+                        Activity activity = (Activity)v.getContext();
+
+                        Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+                        intent.putExtra(LIST_KEY, pokemonSpecies.getId());
+                        intent.putExtra("FROM", LIST_KEY);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        //intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        activity.startActivity(intent);
+                        activity.overridePendingTransition(R.anim.rightoleft,R.anim.blank);
+
+                    } else if(event.getAction() == MotionEvent.ACTION_CANCEL) {
+                        v.setBackgroundColor(up);
+                    }
+                    return true;
+                }
+            });
+
+            OnPokemonClick onPokemonClick = new OnPokemonClick(pokemonSpecies, context, LIST_KEY);
             getView().setOnClickListener(onPokemonClick);
 
 
@@ -159,29 +193,6 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
             return view;
         }
 
-        public class OnPokemonClick implements View.OnClickListener {
-            PokemonSpecies clickedSpecies;
-            Context context;
-
-            public OnPokemonClick(PokemonSpecies clickedSpecies, Context context) {
-                this.clickedSpecies = clickedSpecies;
-                this.context = context;
-            }
-
-            @Override
-            public void onClick(View v) {
-                Activity activity = (Activity)v.getContext();
-
-                Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-                intent.putExtra(LIST_KEY, clickedSpecies.getId());
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.rightoleft,R.anim.blank);
-
-            }
-
-        }
 
     }
 }

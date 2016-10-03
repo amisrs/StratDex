@@ -2,8 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <gradient
-        android:startColor="@color/spriteCircle"
-        android:endColor="@color/spriteCircle"
+        android:startColor="@color/entryLight"
+        android:endColor="@color/entryLight"
         android:angle="270"
         />
 

@@ -3,12 +3,15 @@ package com.amisrs.gavin.stratdex.view;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,6 +22,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.amisrs.gavin.stratdex.R;
+import com.amisrs.gavin.stratdex.controller.OnPokemonClick;
+import com.amisrs.gavin.stratdex.controller.PokemonSpeciesAdapter;
 import com.amisrs.gavin.stratdex.db.DbBitmapUtility;
 import com.amisrs.gavin.stratdex.db.EvoSlot;
 import com.amisrs.gavin.stratdex.db.EvolutionQueries;
@@ -193,10 +198,24 @@ public class DetailsMiscFragment extends Fragment {
 
                     }
 
-                    RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
+                    final RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
                     relativeLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                     relativeLayout.addView(imageView);
                     relativeLayout.addView(evoName);
+                    OnPokemonClick onPokemonClick = new OnPokemonClick(newPokemon, this.getContext(), "DETAILS");
+                    relativeLayout.setClickable(true);
+                    relativeLayout.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if(event.getAction() == MotionEvent.ACTION_DOWN ) {
+                                relativeLayout.setBackgroundColor(ContextCompat.getColor(context,R.color.entryDark));
+                            } else {
+                                relativeLayout.setBackgroundColor(ContextCompat.getColor(context,R.color.defaultBackground));
+                            }
+                            return false;
+                        }
+                    });
+                    relativeLayout.setOnClickListener(onPokemonClick);
                     newRow.addView(relativeLayout);
                 }
             }
