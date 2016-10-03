@@ -2,10 +2,12 @@ package com.amisrs.gavin.stratdex.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,9 +26,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amisrs.gavin.stratdex.controller.AsyncResponse;
+import com.amisrs.gavin.stratdex.controller.FetchDetailsAsyncTask;
 import com.amisrs.gavin.stratdex.controller.PokemonSpeciesAdapter;
 import com.amisrs.gavin.stratdex.R;
 import com.amisrs.gavin.stratdex.controller.FetchDexAsyncTask;
+import com.amisrs.gavin.stratdex.db.AbilityQueries;
 import com.amisrs.gavin.stratdex.db.DexSQLHelper;
 import com.amisrs.gavin.stratdex.controller.LoadResponse;
 import com.amisrs.gavin.stratdex.db.SpeciesQueries;
@@ -34,7 +39,9 @@ import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements LoadResponse {
+public class MainActivity extends AppCompatActivity implements LoadResponse, AsyncResponse {
+    public static String LIST_KEY = "LIST";
+
     private static final String TAG = "MainActivity";
 
     private RecyclerView rv;
@@ -49,6 +56,13 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
     public String searchString = "";
     public Button updateButton;
 
+//    public RelativeLayout longCoverLayout;
+//    public TextView longLoadMsg;
+//    public ProgressBar longProgressBar;
+//    public Button stopLongLoad;
+    public boolean keepLoading = true;
+    public ArrayList<FetchDetailsAsyncTask> asyncTasks = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +75,26 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
         loadingMsg = (TextView)findViewById(R.id.hi);
         editText = (EditText)findViewById(R.id.et_search);
         searchMsg = (TextView)findViewById(R.id.tv_searchno);
+
+//        longCoverLayout = (RelativeLayout)findViewById(R.id.rl_longloadcover);
+//        longProgressBar = (ProgressBar)findViewById(R.id.pb_longload);
+//        longLoadMsg = (TextView)findViewById(R.id.hi2);
+//        stopLongLoad = (Button)findViewById(R.id.btn_stoplongload);
+//        stopLongLoad.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                longCoverLayout.setVisibility(View.GONE);
+//                keepLoading = false;
+//                Log.i(TAG, "I have set KEEPLOADING to " + keepLoading);
+//                for(FetchDetailsAsyncTask f : asyncTasks) {
+//                        f.cancel(true);
+//
+//                }
+//                Intent intent = new Intent(context, MainActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
         searchMsg.setVisibility(View.GONE);
 
         progressBar.setVisibility(View.GONE);
@@ -77,6 +111,14 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
             }
         });
 
+        Intent intent = getIntent();
+        if(intent != null && intent.hasExtra("LONGLOAD")) {
+            if(intent.getStringExtra("LONGLOAD").equals("ye")) {
+//                longCoverLayout.setVisibility(View.VISIBLE);
+            }
+        } else {
+//            longCoverLayout.setVisibility(View.INVISIBLE);
+        }
         ImageButton imageButton = (ImageButton)findViewById(R.id.btn_setting);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +186,23 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 break;
+            case R.id.item_load         :
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                builder2.setMessage(getResources().getString(R.string.load)).setTitle(getResources().getString(R.string.loadTitle)).setPositiveButton("PUNCH IT", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        loadAll();
+                    }
+                }).setNegativeButton("NEVERMIND", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                AlertDialog dialog2 = builder2.create();
+                dialog2.show();
+
+                break;
             case R.id.item_about        :
                 showAbout();
                 break;
@@ -166,6 +225,35 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
         Intent reIntent = new Intent(this, MainActivity.class);
         startActivity(reIntent);
         this.finish();
+    }
+
+
+    private void loadAll() {
+        //updateButtonClick();
+        SpeciesQueries speciesQueries = new SpeciesQueries(context);
+        ArrayList<PokemonSpecies> pokemonSpecies = speciesQueries.getBasicSpecies();
+
+        Intent reIntent = new Intent(this, MainActivity.class);
+        reIntent.putExtra("LONGLOAD", "ye");
+        startActivity(reIntent);
+
+//        longProgressBar.setVisibility(View.VISIBLE);
+//        longLoadMsg.setVisibility(View.VISIBLE);
+//        stopLongLoad.setVisibility(View.VISIBLE);
+        for(int i=0; i < pokemonSpecies.size() && keepLoading; i++) {
+            Log.i(TAG, "KEEPLOADING = " + keepLoading);
+            Log.d(TAG, "LOAD pokemon " + pokemonSpecies.get(i).getId());
+            AbilityQueries abilityQueries = new AbilityQueries(this);
+            final PokemonSpecies theOne = speciesQueries.getOneSpeciesById(pokemonSpecies.get(i).getId());
+            theOne.setAbilities(abilityQueries.getAbilitiesForPokemon(Integer.parseInt(theOne.getId())));
+
+            FetchDetailsAsyncTask fetchDetailsAsyncTask = new FetchDetailsAsyncTask(this);
+            fetchDetailsAsyncTask.delegate = this;
+            fetchDetailsAsyncTask.execute(theOne);
+            asyncTasks.add(fetchDetailsAsyncTask);
+        }
+//        longCoverLayout.setVisibility(View.INVISIBLE);
+        Log.d(TAG, "Finished loading all.");
     }
 
     public void showAbout() {
@@ -236,6 +324,11 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
         refreshRecycler();
     }
 
+    @Override
+    public void giveFilledPokemon(PokemonSpecies pokemonSpecies) {
+        Log.i(TAG, "Hey a pokmeon has laoded");
+//        longLoadMsg.setText("Loading " + pokemonSpecies.getFullName());
+    }
 }
 
 // TODO:

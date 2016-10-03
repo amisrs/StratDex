@@ -69,7 +69,7 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
         slidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
         loadingMsg = (TextView) findViewById(R.id.tv_load);
         refreshButton = (ImageButton) findViewById(R.id.btn_refresh);
-
+        refreshButton.setVisibility(View.GONE);
 
 
         bottomProgressBar.setVisibility(View.GONE);

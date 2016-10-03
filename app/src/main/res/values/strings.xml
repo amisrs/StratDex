@@ -2,14 +2,9 @@
     <string name="app_name">StratDex</string>
 
     <string name="greeting">Hello! Click load to begin populating the PokéDex</string>
-    <string name="loading1">Loading Pokemon...</string>
-    <string name="loading2">Loading abilities...</string>
-    <string name="loading3">Loading moves...</string>
 
     <string name="searchPlaceholder">Search...</string>
 
-    <string name="aboutLabel">About</string>
-    <string name="reinitialiseLabel">Reinitialise</string>
     <string name="about">
         Pokémon data from: PokeAPI \n https://pokeapi.co/ \n\n
         Pokémon GIFs from: Smogon \n smogon.com/dex/xy/pokemon/ \n\n
@@ -19,12 +14,16 @@
         \nGenerally you want to do this when new stuff comes out so it pulls the new data.
         \n\nOr you can do it for fun, I\'m not gonna stop you.
     </string>
+    <string name="loadTitle">Load all?</string>
+    <string name="load">
+        Hey this is gonna preload everything for all Pokémon so you don\'t have to wait the first time.
+        \n\nThis is actually going to take ages, but you can still use the app while you wait. Just don\'t go too far ahead or you\'ll time out.
+    </string>
 
     <string name="searchNone">No Pokémon found! Try searching something else.</string>
 
 
     <string name="typeLabel">Type</string>
-    <string name="statsLabel">Stats</string>
     <string name="abilitiesLabel">Abilities</string>
 
     <string name="stat1">HP</string>
@@ -42,5 +41,4 @@
     <string name="descLabel">Description</string>
     <string name="evolutionLabel">Evolution</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

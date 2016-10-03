@@ -2,6 +2,7 @@ package com.amisrs.gavin.stratdex.db;
 
 /**
  * Created by Gavin on 3/10/2016.
+ * Stores id and tier of a Pokemon in an evolution chain, and the level it needs
  */
 public class EvoSlot implements Comparable<EvoSlot> {
     public int pid;

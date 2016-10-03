@@ -72,11 +72,8 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
 
     public static class SpeciesViewHolder extends RecyclerView.ViewHolder {
         public View view;
-        public TextView urlTextView;
         public TextView nameTextView;
         public TextView idTextView;
-        public TextView t1TextView;
-        public TextView t2TextView;
         public Context context;
         public RelativeLayout relativeLayout;
 
@@ -105,7 +102,6 @@ public class PokemonSpeciesAdapter extends RecyclerView.Adapter<PokemonSpeciesAd
 
 
             Log.d(TAG, "try loading image for " + data.getId());
-            bmp = data.getSmallSprite();
 
 
             if(data.getSpritePath() == null) {

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
 
-    <color name="spriteCircle"> #E5E5E5 </color>
     <color name="entryDark"> #D8D8D8 </color>
     <color name="entryLight"> #F2F2F2</color>
 
@@ -13,7 +9,6 @@
 
     <color name="greenBackground">#fbfdfb</color>
     <color name="greenAccent">#76FF03</color>
-    <color name="greenText">#33691E</color>
 
     <color name="redBackground">#fcf9f9</color>
     <color name="redAccent">#f44336</color>

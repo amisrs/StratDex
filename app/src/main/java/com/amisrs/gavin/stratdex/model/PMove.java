@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 /**
  * Created by Gavin on 2/10/2016.
+ *
+ * Container class that stores move and level learned
  */
 
 

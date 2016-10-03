@@ -3,25 +3,13 @@ package com.amisrs.gavin.stratdex.model;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-
 /**
  * Created by Gavin on 15/09/2016.
+ * Just stores a whole bunc of stuff
  */
 
 //  TODO: clean this forsaken mess
@@ -30,14 +18,10 @@ public class PokemonSpecies {
 
     private String url = "blank/pokemon-species/0/";
     private String name;
-    private Color color;
-
 
     private String id;
     private String spritePath;
     private String bigspritePath;
-    private Bitmap smallSprite;
-    private Boolean isDefaultSprite;
     private String type1 = "";
     private String type2 = "";
     private String colorString = "";
@@ -70,7 +54,6 @@ public class PokemonSpecies {
         this.spritePath = spritePath;
         //Bitmap bmp = BitmapFactory.decodeResource(MainActivity.context.getResources(), R.drawable.default_sprite);
         //smallSprite = bmp;
-        isDefaultSprite = true;
 
     }
 
@@ -104,7 +87,6 @@ public class PokemonSpecies {
         this.genus = genus;
         this.evoChainId = evoChainId;
         this.generation = generation;
-        isDefaultSprite = true;
 
     }
 
@@ -164,9 +146,6 @@ public class PokemonSpecies {
         this.weight = weight;
     }
 
-    public ArrayList<PMove> getMoveArrayList() {
-        return moveArrayList;
-    }
 
     public void setMoveArrayList(ArrayList<PMove> moveArrayList) {
         this.moveArrayList = moveArrayList;
@@ -188,10 +167,6 @@ public class PokemonSpecies {
         this.abilities = abilities;
     }
 
-    public void setStat1(int stat1) {
-        this.stat1 = stat1;
-    }
-
     public AbilityContainer[] getAbilityContainers() {
         return abilityContainers;
     }
@@ -200,48 +175,52 @@ public class PokemonSpecies {
         this.abilityContainers = abilityContainers;
     }
 
-    public void setStat2(int stat2) {
-        this.stat2 = stat2;
-    }
-
-    public void setStat3(int stat3) {
-        this.stat3 = stat3;
-    }
-
-    public void setStat4(int stat4) {
-        this.stat4 = stat4;
-    }
-
-    public void setStat5(int stat5) {
-        this.stat5 = stat5;
-    }
-
-    public void setStat6(int stat6) {
-        this.stat6 = stat6;
-    }
-
     public int getStat1() {
         return stat1;
+    }
+
+    public void setStat1(int stat1) {
+        this.stat1 = stat1;
     }
 
     public int getStat2() {
         return stat2;
     }
 
+    public void setStat2(int stat2) {
+        this.stat2 = stat2;
+    }
+
     public int getStat3() {
         return stat3;
+    }
+
+    public void setStat3(int stat3) {
+        this.stat3 = stat3;
     }
 
     public int getStat4() {
         return stat4;
     }
 
+    public void setStat4(int stat4) {
+        this.stat4 = stat4;
+    }
+
     public int getStat5() {
         return stat5;
     }
 
+    public void setStat5(int stat5) {
+        this.stat5 = stat5;
+    }
+
     public int getStat6() {
         return stat6;
+    }
+
+    public void setStat6(int stat6) {
+        this.stat6 = stat6;
     }
 
     public String getColorString() {
@@ -286,10 +265,6 @@ public class PokemonSpecies {
 
     public String getId() {
         return id;
-    }
-
-    public Bitmap getSmallSprite() {
-        return smallSprite;
     }
 
     public String getFullName() {

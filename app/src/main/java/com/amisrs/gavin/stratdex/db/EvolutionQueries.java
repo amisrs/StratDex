@@ -96,7 +96,6 @@ public class EvolutionQueries {
         //
         // easier to just make an object i guess
 
-        //step 1: get base = this;
         open();
         ArrayList<EvoSlot> evoSlots = new ArrayList<>();
         boolean addedSelf = false;

@@ -99,6 +99,7 @@ public class SpeciesQueries {
     }
 
     public ArrayList<PokemonSpecies> getBasicSpecies() {
+        open();
         ArrayList<PokemonSpecies> pokemonSpecies = new ArrayList<>();
         String[] projection = {
                 DexContract.PokemonTable.COLUMN_NAME_ID,
@@ -128,6 +129,7 @@ public class SpeciesQueries {
             c.moveToNext();
         }
         c.close();
+        close();
         return pokemonSpecies;
     }
 

@@ -104,6 +104,8 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Integer, Po
 
         prog = 1;
         publishProgress(prog);
+
+        //TODO: ORGANISE THIS PROPERLY
         JsonObject jsonObject = gson.fromJson(responseString, JsonObject.class);
         DetailsFromSpecies detailsFromSpecies = gson.fromJson(jsonObject, DetailsFromSpecies.class);
         JsonElement flavorElemet = jsonObject.get("flavor_text_entries");

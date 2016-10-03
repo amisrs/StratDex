@@ -7,6 +7,7 @@ import com.amisrs.gavin.stratdex.db.EvolutionQueries;
 
 /**
  * Created by Gavin on 3/10/2016.
+ * Follows chain of evolutionObjects and adds each to database.
  */
 public class EvoHelper {
     private static final String TAG = "EvoHelper";

@@ -5,6 +5,9 @@ import java.util.regex.Pattern;
 
 /**
  * Created by Gavin on 2/10/2016.
+ *
+ * This is where the actual move is;
+ * Would include move details if extended
  */
 public class Move {
     private String id;
