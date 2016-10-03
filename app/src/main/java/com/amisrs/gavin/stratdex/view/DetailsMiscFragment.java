@@ -131,9 +131,11 @@ public class DetailsMiscFragment extends Fragment {
 
         TableLayout tableLayout = new TableLayout(this.getContext());
         //http://stackoverflow.com/questions/3277196/can-i-set-androidlayout-below-at-runtime-programmatically
-        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         p.addRule(RelativeLayout.BELOW, R.id.tv_evolutionLabel);
+        p.addRule(RelativeLayout.CENTER_IN_PARENT, R.id.rl_main);
         tableLayout.setLayoutParams(p);
+        tableLayout.setShrinkAllColumns(true);
         for(int i=lowest; i <= highest; i++) {
             //making new row
             Log.d(TAG, "Making the table, currently on tier "+ i );
@@ -148,6 +150,9 @@ public class DetailsMiscFragment extends Fragment {
                     TextView evoName = new TextView(this.getContext());
                     evoName.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                     evoName.setText(newPokemon.getFullName());
+                    evoName.setTextSize(10);
+
+                    evoName.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                     ImageView imageView = new ImageView(this.getContext());
                     imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -188,15 +193,11 @@ public class DetailsMiscFragment extends Fragment {
 
                     }
 
-
-                    TextView evoText = new TextView(this.getContext());
-                    evoText.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                    evoText.setText(String.valueOf(e.getPid()));
-
-
-                    newRow.addView(evoText);
-                    newRow.addView(imageView);
-                    newRow.addView(evoName);
+                    RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
+                    relativeLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    relativeLayout.addView(imageView);
+                    relativeLayout.addView(evoName);
+                    newRow.addView(relativeLayout);
                 }
             }
             tableLayout.addView(newRow);
@@ -206,8 +207,10 @@ public class DetailsMiscFragment extends Fragment {
                 newRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                 TextView arrow = new TextView(this.getContext());
                 arrow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                arrow.setText("evolves to");
+                arrow.setText("V");
+                arrow.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 betweenRow.addView(arrow);
+
                 tableLayout.addView(betweenRow);
             }
         }
@@ -215,6 +218,9 @@ public class DetailsMiscFragment extends Fragment {
 
 
         relativeLayout = (RelativeLayout)view.findViewById(R.id.rl_main);
+        RelativeLayout.LayoutParams what = (RelativeLayout.LayoutParams) tableLayout.getLayoutParams();
+        what.addRule(RelativeLayout.CENTER_VERTICAL, 1);
+
         relativeLayout.addView(tableLayout);
 
         scrollView = (ScrollView)view.findViewById(R.id.sv_main);
