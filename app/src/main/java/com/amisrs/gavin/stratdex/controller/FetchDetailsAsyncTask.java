@@ -2,6 +2,7 @@ package com.amisrs.gavin.stratdex.controller;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.amisrs.gavin.stratdex.db.AbilityQueries;
 import com.amisrs.gavin.stratdex.db.MoveQueries;
@@ -11,6 +12,9 @@ import com.amisrs.gavin.stratdex.model.AbilityContainer;
 import com.amisrs.gavin.stratdex.model.AbilityEffect;
 import com.amisrs.gavin.stratdex.model.DetailsFromPokemon;
 import com.amisrs.gavin.stratdex.model.DetailsFromSpecies;
+import com.amisrs.gavin.stratdex.model.EvoHelper;
+import com.amisrs.gavin.stratdex.model.EvolutionChain;
+import com.amisrs.gavin.stratdex.model.EvolutionObject;
 import com.amisrs.gavin.stratdex.model.PMove;
 import com.amisrs.gavin.stratdex.model.PokemonSpecies;
 import com.amisrs.gavin.stratdex.model.TypeContainer;
@@ -36,6 +40,7 @@ import retrofit2.http.Path;
  */
 public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, PokemonSpecies> {
     private Context context;
+    private static final String TAG = "FetchDetailsAsyncTask";
     public AsyncResponse delegate = null;
 
     public FetchDetailsAsyncTask(Context context) {
@@ -56,6 +61,8 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
                 .client(okHttpClient)
                 .build();
 
+
+        //get details from the /pokemon-species/{id} resource
         DetailsFromSpeciesService detailsFromSpeciesService = retrofitPokeAPI.create(DetailsFromSpeciesService.class);
         Call<ResponseBody> detailsCall = detailsFromSpeciesService.getDetailsFromSpecies(params[0].getId());
 
@@ -77,11 +84,21 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         DetailsFromSpecies detailsFromSpecies = gson.fromJson(jsonObject, DetailsFromSpecies.class);
         JsonElement flavorElemet = jsonObject.get("flavor_text_entries");
         JsonElement genusElement = jsonObject.get("genera");
+
         DetailsFromSpecies.FlavorTextEntry[] flavs = gson.fromJson(flavorElemet, DetailsFromSpecies.FlavorTextEntry[].class);
         DetailsFromSpecies.Genus[] genera = gson.fromJson(genusElement, DetailsFromSpecies.Genus[].class);
-        System.out.println("HERES JSON \n" + jsonObject.get("flavor_text_entries").toString());
-        System.out.println("lmao this better not be empty " + detailsFromSpecies.getFlavor_text_entries().length);
+        Log.d(TAG, "HERES JSON \n" + jsonObject.get("flavor_text_entries").toString());
+        Log.d(TAG, "lmao this better not be empty " + detailsFromSpecies.getFlavor_text_entries().length);
 
+        //get some evochain setup
+        detailsFromSpecies.getEvolution_chain().setIdFromUrl();
+        int evoChainId = detailsFromSpecies.getEvolution_chain().getId();
+        Log.d(TAG, "got the evochain id it is " + evoChainId);
+
+        params[0].setEvoChainId(evoChainId);
+
+
+        //get details from the /pokemon/{id} resource
         DetailsFromPokemonService detailsFromPokemonService = retrofitPokeAPI.create(DetailsFromPokemonService.class);
         Call<ResponseBody> detailsCall2 = detailsFromPokemonService.getDetailsFromPokemon(params[0].getId());
 
@@ -101,10 +118,10 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         //System.out.printf("HERES JSON: \n " + jsonObject2.get("moves").toString());
         JsonElement moveElement = jsonObject2.get("moves");
         PMove[] pMoves = gson.fromJson(moveElement, PMove[].class);
-        System.out.println("hey made pmoves length " + pMoves.length);
+        Log.d(TAG, "hey made pmoves length " + pMoves.length);
 
-        System.out.println("the first stat for " + detailsFromPokemon.getId() + "    is " + detailsFromPokemon.getStats()[1].getBaseStat());
-        System.out.println("it has " + detailsFromPokemon.getStats().length + " stats");
+        Log.d(TAG, "the first stat for " + detailsFromPokemon.getId() + "    is " + detailsFromPokemon.getStats()[1].getBaseStat());
+        Log.d(TAG, "it has " + detailsFromPokemon.getStats().length + " stats");
         params[0].setColorString(detailsFromSpecies.getColor().getName());
 
 
@@ -126,19 +143,20 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         for(TypeContainer t : containers) {
             if(t.getSlot().equals("1")) {
                 type1 = t.getType().getName();
-                System.out.println("slot " + t.getSlot() + " is " + t.getType().getName());
+                Log.d(TAG,"slot " + t.getSlot() + " is " + t.getType().getName());
             } else if (t.getSlot().equals("2")) {
                 type2 = t.getType().getName();
-                System.out.println("slot " + t.getSlot() + " is " + t.getType().getName());
+                Log.d(TAG,"slot " + t.getSlot() + " is " + t.getType().getName());
             } else {
-                System.out.println("theres a type with no slot?");
+                Log.d(TAG,"theres a type with no slot?");
             }
         }
 
-        System.out.println("HEY TYPE 2 = " + type2);
+        Log.d(TAG,"HEY TYPE 2 = " + type2);
         params[0].setType2(type2);
         params[0].setType1(type1);
 
+        //get ability descriptions from the /ability/{id} resource
         AbilityContainer[] abilityContainers = detailsFromPokemon.getAbilities();
         DescFromAbilityService descFromAbilityService = retrofitPokeAPI.create(DescFromAbilityService.class);
 
@@ -168,14 +186,14 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         String desc = "";
         boolean foundF = false;
 
-        for(int i=0; i < flavs.length && foundF == false; i++) {
-            System.out.println("im looking at the descs number " + i);
+        for(int i=0; i < flavs.length && !foundF; i++) {
+            Log.d(TAG,"im looking at the descs number " + i);
             if(flavs[i].getLanguage().getName().equals("en")) {
                 desc = flavs[i].getFlavor_text();
-                System.out.println("aha found the neglish desc " + desc);
+                Log.d(TAG,"aha found the neglish desc " + desc);
                 foundF = true;
             } else {
-                System.out.println("its not in english");
+                Log.d(TAG,"its not in english");
             }
         }
 
@@ -186,12 +204,32 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
                 genus = genera[i].getGenus();
                 foundG = true;
             } else {
-                System.out.println("its not in english");
+                Log.d(TAG,"its not in english");
             }
         }
 
+        //get evolution chain from the /evolution-chain/{id} resource
+
+        EvolutionChainService evolutionChainService = retrofitPokeAPI.create(EvolutionChainService.class);
+        //dont use pkmn id.. have to get its evochain id
+        Call<ResponseBody> evoCall = evolutionChainService.getEvolutionChainForId(String.valueOf(params[0].getEvoChainId()));
+        String evoResponseString = "";
+        try {
+            Response<ResponseBody> evoResponse = evoCall.execute();
+            evoResponseString = evoResponse.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JsonObject evoJsonObject = gson.fromJson(evoResponseString, JsonObject.class);
+        EvolutionChain evolutionChain = gson.fromJson(evoJsonObject, EvolutionChain.class);
 
 
+
+        Log.d(TAG,"I HAVE evochain now it is " + evolutionChain.getId() + " and the first one is.. " + evolutionChain.getChain().getSpecies().getName());
+
+
+        params[0].setEvoChainTemp(evolutionChain);
         params[0].setGenus(genus);
         params[0].setDesc(desc);
         params[0].setHeight(detailsFromPokemon.getHeight());
@@ -211,7 +249,8 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
                 , pokemonSpecies.getStat1(), pokemonSpecies.getStat2(), pokemonSpecies.getStat3(), pokemonSpecies.getStat4(), pokemonSpecies.getStat5(), pokemonSpecies.getStat6()
                 , pokemonSpecies.getType1(), pokemonSpecies.getType2()
                 , pokemonSpecies.getHeight(), pokemonSpecies.getWeight()
-                , pokemonSpecies.getDesc(), pokemonSpecies.getGenus());
+                , pokemonSpecies.getDesc(), pokemonSpecies.getGenus()
+                , pokemonSpecies.getEvoChainId());
 
         AbilityQueries abilityQueries = new AbilityQueries(context);
 
@@ -221,7 +260,7 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         }
         ArrayList<Ability> abilityArrayList = new ArrayList<>();
         abilityArrayList = abilityQueries.getAbilitiesForPokemon(Integer.parseInt(pokemonSpecies.getId()));
-        System.out.println("hey heres size of ability arraylist " + abilityArrayList.size());
+        Log.d(TAG,"hey heres size of ability arraylist " + abilityArrayList.size());
         pokemonSpecies.setAbilities(abilityArrayList);
 
         MoveQueries moveQueries = new MoveQueries(context);
@@ -234,8 +273,13 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
         pMoveArrayList = moveQueries.getMovesForPokemon(Integer.parseInt(pokemonSpecies.getId()));
         pokemonSpecies.setMoveArrayList(pMoveArrayList);
 
+        //do some funky while loop to go thru evo chain
+        EvoHelper evoHelper = new EvoHelper(context);
+        Log.d(TAG, "Look at the evochain about to be passed... it starts with " + pokemonSpecies.getEvoChainTemp().getChain().getSpecies().getName());
+        evoHelper.readWholeChainIntoDatabase(pokemonSpecies.getEvoChainTemp());
+
         delegate.giveFilledPokemon(pokemonSpecies);
-        System.out.println("the color of the pokemon you clicked is " + pokemonSpecies.getColorString());
+        Log.d(TAG,"the color of the pokemon you clicked is " + pokemonSpecies.getColorString());
     }
 
     public interface DetailsFromSpeciesService {
@@ -251,5 +295,10 @@ public class FetchDetailsAsyncTask extends AsyncTask<PokemonSpecies, Void, Pokem
     public interface DescFromAbilityService {
         @GET("api/v2/ability/{number}")
         Call<ResponseBody> getDetailsFromPokemon(@Path(value = "number", encoded = true) String id);
+    }
+
+    public interface EvolutionChainService {
+        @GET("api/v2/evolution-chain/{number}")
+        Call<ResponseBody> getEvolutionChainForId(@Path(value = "number", encoded = true) String id);
     }
 }

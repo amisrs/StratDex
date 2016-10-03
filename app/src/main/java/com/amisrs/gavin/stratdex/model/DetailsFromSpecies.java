@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class DetailsFromSpecies {
     private String id;
     private Color color;
-    private EvolutionChain evolution_chain;
+    private EvolutionChainSkeleton evolution_chain;
     private Generation generation;
     private FlavorTextEntry[] flavor_text_entries;
     private Genus[] genera;
@@ -26,10 +26,29 @@ public class DetailsFromSpecies {
         return color;
     }
 
-    public EvolutionChain getEvolution_chain() {
+    public EvolutionChainSkeleton getEvolution_chain() {
         return evolution_chain;
     }
 
+    public class EvolutionChainSkeleton {
+        private String url;
+        private int id;
+
+        public void setIdFromUrl() {
+            Pattern idPattern = Pattern.compile(".+?/evolution-chain/(.+)*/");
+            Matcher idMatcher = idPattern.matcher(url);
+            idMatcher.find();
+            id = Integer.parseInt(idMatcher.group(1));
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+    }
     public class Generation {
         private String url;
         private String name;

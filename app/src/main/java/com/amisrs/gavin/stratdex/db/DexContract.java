@@ -37,7 +37,7 @@ public final class DexContract     {
         public static final String COLUMN_NAME_DESC = "desc";
         public static final String COLUMN_NAME_GENUS = "genus";
         public static final String COLUMN_NAME_ABILITIES = "abilities";
-        public static final String COLUMN_NAME_EVOCHAIN = "evolution-chain";
+        public static final String COLUMN_NAME_EVOCHAIN = "evochain";
         public static final String COLUMN_NAME_FORMS = "forms";
     }
 
@@ -67,6 +67,25 @@ public final class DexContract     {
         public static final String COLUMN_NAME_POKEMON_ID = "pid";
         public static final String COLUMN_NAME_MOVE_ID = "mid";
         public static final String COLUMN_NAME_LEVEL = "level";
+    }
+
+    public static class EvolutionChainTable implements BaseColumns {
+        public static final String TABLE_NAME = "evolutionchain";
+        public static final String COLUMN_NAME_ID = "id";
+        public static final String COLUMN_NAME_OBJECT = "object";
+    }
+
+    public static class EvolutionObjectTable implements BaseColumns {
+        public static final String TABLE_NAME = "evolutionobject";
+        public static final String COLUMN_NAME_ID = "id";
+        public static final String COLUMN_NAME_POKEMON_ID = "pid";
+        public static final String COLUMN_NAME_LEVEL = "level";
+    }
+
+    public static class EvolutionArrayTable implements BaseColumns {
+        public static final String TABLE_NAME = "evolutionarray";
+        public static final String COLUMN_NAME_BASE = "base";
+        public static final String COLUMN_NAME_NEXT = "next";
     }
 
 //    public static class PokemonNames implements BaseColumns {

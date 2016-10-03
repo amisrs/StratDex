@@ -39,7 +39,12 @@ public class DexSQLHelper extends SQLiteOpenHelper {
                     DexContract.PokemonTable.COLUMN_NAME_HEIGHT + INTEGER_TYPE + COMMA_SEP +
                     DexContract.PokemonTable.COLUMN_NAME_WEIGHT + INTEGER_TYPE + COMMA_SEP +
                     DexContract.PokemonTable.COLUMN_NAME_DESC + TEXT_TYPE + COMMA_SEP +
-                    DexContract.PokemonTable.COLUMN_NAME_GENUS + TEXT_TYPE
+                    DexContract.PokemonTable.COLUMN_NAME_GENUS + TEXT_TYPE + COMMA_SEP +
+                    DexContract.PokemonTable.COLUMN_NAME_EVOCHAIN + INTEGER_TYPE + COMMA_SEP +
+                    " FOREIGN KEY (" +
+                        DexContract.PokemonTable.COLUMN_NAME_EVOCHAIN +
+                    ") REFERENCES " +
+                        DexContract.EvolutionChainTable.TABLE_NAME + "(" + DexContract.EvolutionChainTable.COLUMN_NAME_ID + ")"
             + ")";
 
     public static final String SQL_CREATE_ABILITYTABLE =
@@ -88,6 +93,39 @@ public class DexSQLHelper extends SQLiteOpenHelper {
                     DexContract.MoveTable.TABLE_NAME + "(" + DexContract.MoveTable.COLUMN_NAME_ID + ")"
             + ");";
 
+    public static final String SQL_CREATE_EVOLUTIONCHAINTABLE =
+            "CREATE TABLE " + DexContract.EvolutionChainTable.TABLE_NAME + "(" +
+                    DexContract.EvolutionChainTable.COLUMN_NAME_ID + " INTEGER PRIMARY KEY," +
+                    DexContract.EvolutionChainTable.COLUMN_NAME_OBJECT + INTEGER_TYPE + COMMA_SEP +
+                    " FOREIGN KEY (" +
+                    DexContract.EvolutionChainTable.COLUMN_NAME_OBJECT
+                    + ") REFERENCES " + DexContract.EvolutionObjectTable.TABLE_NAME + "(" + DexContract.EvolutionObjectTable.COLUMN_NAME_ID + ")"
+            + ");";
+
+    public static final String SQL_CREATE_EVOLUTIONOBJECTTABLE =
+            "CREATE TABLE " + DexContract.EvolutionObjectTable.TABLE_NAME + "(" +
+                    DexContract.EvolutionObjectTable.COLUMN_NAME_ID + " INTEGER PRIMARY KEY," +
+                    DexContract.EvolutionObjectTable.COLUMN_NAME_LEVEL + INTEGER_TYPE + COMMA_SEP +
+                    DexContract.EvolutionObjectTable.COLUMN_NAME_POKEMON_ID + INTEGER_TYPE + COMMA_SEP +
+                    " FOREIGN KEY (" +
+                    DexContract.EvolutionObjectTable.COLUMN_NAME_POKEMON_ID
+                    + ") REFERENCES " + DexContract.PokemonTable.TABLE_NAME + "(" + DexContract.PokemonTable.COLUMN_NAME_ID + ")"
+            + ");";
+
+    public static final String SQL_CREATE_EVOLUTIONARRAYTABLE =
+            "CREATE TABLE " + DexContract.EvolutionArrayTable.TABLE_NAME + "(" +
+                    DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + INTEGER_TYPE + COMMA_SEP +
+                    DexContract.EvolutionArrayTable.COLUMN_NAME_NEXT + INTEGER_TYPE + COMMA_SEP +
+                    " PRIMARY KEY (" + DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + COMMA_SEP +
+                                        DexContract.EvolutionArrayTable.COLUMN_NAME_NEXT +
+                    ")" + COMMA_SEP +
+                    " FOREIGN KEY (" + DexContract.EvolutionArrayTable.COLUMN_NAME_BASE + ") REFERENCES " +
+                    DexContract.EvolutionObjectTable.TABLE_NAME + "(" + DexContract.EvolutionObjectTable.COLUMN_NAME_POKEMON_ID + ")" + COMMA_SEP +
+                    " FOREIGN KEY (" + DexContract.EvolutionArrayTable.COLUMN_NAME_NEXT + ") REFERENCES " +
+                    DexContract.EvolutionObjectTable.TABLE_NAME + "(" + DexContract.EvolutionObjectTable.COLUMN_NAME_POKEMON_ID + ")"
+            + ");";
+
+
 
 
     public static final String SQL_DELETE_TABLES =
@@ -98,9 +136,15 @@ public class DexSQLHelper extends SQLiteOpenHelper {
             "DROP TABLE IF EXISTS " + DexContract.AbilityForPokemonTable.TABLE_NAME;
     public static final String SQL_DELETE_MOVE =
             "DROP TABLE IF EXISTS " + DexContract.MoveTable.TABLE_NAME;
-
     public static final String SQL_DELETE_MOVEPOKEMONTABLE =
             "DROP TABLE IF EXISTS " + DexContract.MoveForPokemonTable.TABLE_NAME;
+    public static final String SQL_DELETE_EVOLUTIONCHAINTABLE =
+            "DROP TABLE IF EXISTS " + DexContract.EvolutionChainTable.TABLE_NAME;
+    public static final String SQL_DELETE_EVOLUTIONOBJECTTABLE =
+            "DROP TABLE IF EXISTS " + DexContract.EvolutionObjectTable.TABLE_NAME;
+    public static final String SQL_DELETE_EVOLUTIONARRAYTABLE =
+            "DROP TABLE IF EXISTS " + DexContract.EvolutionArrayTable.TABLE_NAME;
+
 
 
 
@@ -118,6 +162,9 @@ public class DexSQLHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_DELETE_ABILITYPOKEMONTABLE);
         sqLiteDatabase.execSQL(SQL_DELETE_MOVE);
         sqLiteDatabase.execSQL(SQL_DELETE_MOVEPOKEMONTABLE);
+        sqLiteDatabase.execSQL(SQL_DELETE_EVOLUTIONCHAINTABLE);
+        sqLiteDatabase.execSQL(SQL_DELETE_EVOLUTIONOBJECTTABLE);
+        sqLiteDatabase.execSQL(SQL_DELETE_EVOLUTIONARRAYTABLE);
 
         onCreate(sqLiteDatabase);
     }
@@ -129,6 +176,9 @@ public class DexSQLHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_ABILITYPOKEMONTABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_MOVETABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_MOVEPOKEMONTABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_EVOLUTIONCHAINTABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_EVOLUTIONOBJECTTABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_EVOLUTIONARRAYTABLE);
 
     }
 
@@ -138,6 +188,9 @@ public class DexSQLHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_DELETE_ABILITYPOKEMONTABLE);
         sqLiteDatabase.execSQL(SQL_DELETE_MOVE);
         sqLiteDatabase.execSQL(SQL_DELETE_MOVEPOKEMONTABLE);
+        sqLiteDatabase.execSQL(SQL_DELETE_EVOLUTIONCHAINTABLE);
+        sqLiteDatabase.execSQL(SQL_DELETE_EVOLUTIONOBJECTTABLE);
+        sqLiteDatabase.execSQL(SQL_DELETE_EVOLUTIONARRAYTABLE);
 
     }
 

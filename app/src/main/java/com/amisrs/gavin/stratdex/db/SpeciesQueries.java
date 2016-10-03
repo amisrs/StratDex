@@ -69,7 +69,8 @@ public class SpeciesQueries {
                                      int s1, int s2, int s3, int s4, int s5, int s6,
                                      String type1, String type2,
                                      int height, int weight,
-                                     String desc, String genus) {
+                                     String desc, String genus,
+                                     int evochain) {
         open();
         String updateString = "UPDATE " + DexContract.PokemonTable.TABLE_NAME + " SET " +
                 DexContract.PokemonTable.COLUMN_NAME_COLOR + " = \"" + color + "\"," +
@@ -84,7 +85,8 @@ public class SpeciesQueries {
                 DexContract.PokemonTable.COLUMN_NAME_HEIGHT + " = " + height + "," +
                 DexContract.PokemonTable.COLUMN_NAME_WEIGHT + " = " + weight + "," +
                 DexContract.PokemonTable.COLUMN_NAME_DESC + " = \"" + desc + "\"" + "," +
-                DexContract.PokemonTable.COLUMN_NAME_GENUS + " = \"" + genus + "\"" +
+                DexContract.PokemonTable.COLUMN_NAME_GENUS + " = \"" + genus + "\"" + "," +
+                DexContract.PokemonTable.COLUMN_NAME_EVOCHAIN + " = " + evochain +
 
                 " WHERE " +
                 DexContract.PokemonTable.COLUMN_NAME_ID + " = " + id;
@@ -116,9 +118,6 @@ public class SpeciesQueries {
                 null);
         c.moveToFirst();
         while(!c.isAfterLast()) {
-            System.out.println("cursorcount = " + c.getCount());
-            System.out.println("getting from database: url = " + c.getString(1) + " name = " + c.getString(2));
-
             //Bitmap smallSpriteBitmap = DbBitmapUtility.getImage(c.getBlob(3));
             PokemonSpecies newPkmn = new PokemonSpecies(c.getString(2), c.getString(1), c.getString(4), c.getString(5), c.getString(3));
             newPkmn.setIdFromUrl();
@@ -151,7 +150,8 @@ public class SpeciesQueries {
                 DexContract.PokemonTable.COLUMN_NAME_HEIGHT,
                 DexContract.PokemonTable.COLUMN_NAME_WEIGHT,
                 DexContract.PokemonTable.COLUMN_NAME_DESC,
-                DexContract.PokemonTable.COLUMN_NAME_GENUS
+                DexContract.PokemonTable.COLUMN_NAME_GENUS,
+                DexContract.PokemonTable.COLUMN_NAME_EVOCHAIN
 
         };
 
@@ -170,7 +170,7 @@ public class SpeciesQueries {
         c.moveToFirst();
         System.out.println("giving requested pokemon " + c.getString(1) + " bigsprite is follows: " + c.getString(6));
         PokemonSpecies toGet = new PokemonSpecies(c.getString(2), c.getString(1), c.getString(4), c.getString(5), c.getString(3), c.getString(6), c.getString(7)
-                , c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11), c.getInt(12), c.getInt(13), c.getInt(14), c.getInt(15), c.getString(16), c.getString(17));
+                , c.getInt(8), c.getInt(9), c.getInt(10), c.getInt(11), c.getInt(12), c.getInt(13), c.getInt(14), c.getInt(15), c.getString(16), c.getString(17), c.getInt(18));
         System.out.println(" has smallsp " + toGet.getSpritePath() + " and bigsp " + toGet.getBigspritePath());
         toGet.setIdFromUrl();
         c.close();

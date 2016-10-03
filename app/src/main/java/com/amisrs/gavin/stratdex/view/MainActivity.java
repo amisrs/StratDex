@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
         dsh.onCreate(db);
         db.close();
         dsh.close();
-        System.out.println("***** REINITIALISE *****");
+        Log.d(TAG,"***** REINITIALISE *****");
         Intent reIntent = new Intent(this, MainActivity.class);
         startActivity(reIntent);
         this.finish();
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
         PokemonSpeciesAdapter pokemonSpeciesAdapter = new PokemonSpeciesAdapter(searchList, context);
         psa = pokemonSpeciesAdapter;
         speciesQueries.close();
-        System.out.println("new recylcer");
+        Log.d(TAG, "new recylcer");
         rv.setAdapter(pokemonSpeciesAdapter);
         rv.setLayoutManager(llm);
         if (pokemonSpeciesAdapter.getItemCount() == 0) {
@@ -229,3 +229,9 @@ public class MainActivity extends AppCompatActivity implements LoadResponse {
     }
 
 }
+
+// TODO:
+// Optimisations
+// 1. Probably make a superclass for model classes instead of always calling setIdFromUrl(); 10000 times for each one
+// 2. Same for ____Queries classes.
+// 3. Make sure every displayed string is actually a string resource.

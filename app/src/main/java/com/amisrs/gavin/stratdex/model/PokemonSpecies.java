@@ -1,6 +1,7 @@
 package com.amisrs.gavin.stratdex.model;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,7 +23,11 @@ import retrofit2.http.Path;
 /**
  * Created by Gavin on 15/09/2016.
  */
+
+//  TODO: clean this forsaken mess
 public class PokemonSpecies {
+    private static final String TAG = "PokemonSpecies";
+
     private String url = "blank/pokemon-species/0/";
     private String name;
     private Color color;
@@ -50,6 +55,8 @@ public class PokemonSpecies {
     private int weight;
     private String desc;
     private String genus;
+    private int evoChainId;
+    private EvolutionChain evoChainTemp;
 
 
 
@@ -70,9 +77,10 @@ public class PokemonSpecies {
     public PokemonSpecies(String url, String name, String type1, String type2, String spritePath, String bigspritePath, String colorString,
                           int stat1, int stat2, int stat3, int stat4, int stat5, int stat6,
                           int height, int weight,
-                          String desc, String genus) {
+                          String desc, String genus,
+                          int evoChainId) {
 
-        System.out.println("tihs is the second constructor for " + name + " that takes spritepath " + spritePath + " and bigspritepath " + bigspritePath);
+        Log.d(TAG, "constructing the pokemonspecies that should be passed to details view...  name = " + name);
         this.url = url;
         this.name = name;
         this.type1 = type1;
@@ -91,8 +99,25 @@ public class PokemonSpecies {
         this.weight = weight;
         this.desc = desc;
         this.genus = genus;
+        this.evoChainId = evoChainId;
         isDefaultSprite = true;
 
+    }
+
+    public EvolutionChain getEvoChainTemp() {
+        return evoChainTemp;
+    }
+
+    public void setEvoChainTemp(EvolutionChain evoChainTemp) {
+        this.evoChainTemp = evoChainTemp;
+    }
+
+    public int getEvoChainId() {
+        return evoChainId;
+    }
+
+    public void setEvoChainId(int evoChainId) {
+        this.evoChainId = evoChainId;
     }
 
     public String getGenus() {
@@ -255,16 +280,6 @@ public class PokemonSpecies {
         return smallSprite;
     }
 
-
-//    public Boolean getDefaultSprite() {
-//        return isDefaultSprite;
-//    }
-//
-//    public void setSmallSprite(Bitmap smallSprite) {
-//        this.smallSprite = smallSprite;
-//    }
-
-
     public String getFullName() {
         String capName = "";
         capName = name.replaceFirst(".", Character.toUpperCase(name.charAt(0))+"");
@@ -277,10 +292,9 @@ public class PokemonSpecies {
     }
 
     public void setIdFromUrl() {
-        System.out.println("setting id from url");
         Pattern idPattern = Pattern.compile(".+?/pokemon-species/(.+)*/");
         Matcher idMatcher = idPattern.matcher(url);
-        System.out.println("trying to match for " + url + "  " + idMatcher.find());
+        idMatcher.find();
         id = idMatcher.group(1);
         System.out.println(id);
     }
@@ -298,103 +312,8 @@ public class PokemonSpecies {
         System.out.println("get sprite string... for " + name);
         String spriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
 
-        /*DownloadImageAsync downloadImageAsync = new DownloadImageAsync();
-        Bitmap retval = null;
-
-        try {
-            System.out.println("about to execute downloadImageAsync");
-            retval = downloadImageAsync.execute(spriteUrl).get();
-            System.out.println("got the sprite");
-            isDefaultSprite = false;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return retval;*/
         return spriteUrl;
     }
 
-    public void pullDetailsAfterClick() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS)
-                .build();
-        Retrofit retrofitPokeAPI = new Retrofit.Builder()
-                .baseUrl("http://pokeapi.co/")
-                .client(okHttpClient)
-                .build();
-
-        DetailsService detailsService = retrofitPokeAPI.create(DetailsService.class);
-        System.out.println("id shold not be null " + getId());
-        Call<ResponseBody> detailsServiceCall = detailsService.getDetails(getId());
-        Response detResponse = null;
-        ResponseBody responseBody = null;
-        String detString = "";
-        try {
-            detResponse = detailsServiceCall.execute();
-            responseBody = (ResponseBody) detResponse.body();
-            detString = responseBody.string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        GsonBuilder gsonBuilder1 = new GsonBuilder();
-        Gson gson1 = gsonBuilder1.create();
-        TypeContainerContainer typeContainer = gson1.fromJson(detString, TypeContainerContainer.class);
-        System.out.println("looking at " + getName());
-        System.out.println("got types = " + typeContainer.getTypeContainers()[0].getSlot() + " " + typeContainer.getTypeContainers()[0].getType().getName());
-
-        if(typeContainer.getTypeContainers()[0].getSlot() == "1") {
-            setType1(typeContainer.getTypeContainers()[0].getType().getName());
-        } else {
-            setType2(typeContainer.getTypeContainers()[0].getType().getName());
-        }
-        if(typeContainer.getTypeContainers().length == 2) {
-            if (typeContainer.getTypeContainers()[1].getSlot() == "1") {
-                setType1(typeContainer.getTypeContainers()[1].getType().getName());
-            } else {
-                setType2(typeContainer.getTypeContainers()[1].getType().getName());
-            }
-        }
-
-    }
-    public interface DetailsService {
-        @GET("api/v2/pokemon/{id}")
-        Call<ResponseBody> getDetails(@Path(value="id", encoded = true) String id);
-    }
-
-    public interface getDetailsService {
-        @GET("api/v2/pokemon/{id}")
-        Call<ResponseBody> getDetails(@Path(value = "id", encoded = true) String id);
-    }
-
-    /*class DownloadImageAsync extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            Bitmap pic = null;
-
-            try {
-                System.out.println("opening input stream");
-                InputStream in = new URL(strings[0]).openStream();
-                pic = BitmapFactory.decodeStream(in);
-                in.close();
-                System.out.println("inside async...got sprite as bitmap for " + name);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            smallSprite = pic;
-            System.out.println("picture gotten for " + name + "smallsprite = " + smallSprite.getByteCount());
-
-            return pic;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-        }
-
-    }*/
 
 }
