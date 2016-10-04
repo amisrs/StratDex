@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements LoadResponse, Asy
                 System.out.println("clicked");
                 updateButtonClick();
                 progressBar.setVisibility(View.VISIBLE);
+                //editText.setVisibility(View.VISIBLE);
                 v.setVisibility(View.INVISIBLE);
             }
         });

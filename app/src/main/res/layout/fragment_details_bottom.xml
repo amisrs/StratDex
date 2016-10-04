@@ -44,7 +44,7 @@
         android:layout_below="@id/tv_type1"
         android:layout_marginBottom="@dimen/statbar_gap"
         android:textSize="@dimen/heading2"
-        android:text="@string/typeLabel" />
+        android:text="@string/statsLabel" />
 
         <TableLayout
             android:id="@+id/rl_stats"

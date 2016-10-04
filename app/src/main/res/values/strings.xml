@@ -24,6 +24,7 @@
 
 
     <string name="typeLabel">Type</string>
+    <string name="statsLabel">Stats</string>
     <string name="abilitiesLabel">Abilities</string>
 
     <string name="stat1">HP</string>

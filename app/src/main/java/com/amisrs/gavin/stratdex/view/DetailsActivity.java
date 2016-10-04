@@ -130,6 +130,8 @@ public class DetailsActivity extends AppCompatActivity implements AsyncResponse,
                     .asGif()
                     .into(simpleTarget);
 
+
+            //try to make it not scale, but nothing works...
             Glide.with(this).load(theOne.getBigspriteString()).asGif().dontTransform().fitCenter().placeholder(R.drawable.placeholder).into(bigspriteImageView);
 
         } else {
